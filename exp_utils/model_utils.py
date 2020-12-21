@@ -1,6 +1,7 @@
 from torch import nn
 from plnn.modules import Flatten
 from plnn.model import simplify_network
+import pandas as pd
 import torch
 import random
 
@@ -122,17 +123,17 @@ def load_cifar_1to1_exp(model, idx, test=None, cifar_test=None):
         return x, added_prop_layers, test
 
 
-def load_cifar_pgd_exp(model, cifar_test=None):
+def load_cifar_data(model, cifar_test=None):
     if model == 'cifar_base_kw':
-        model_name = './models/cifar_base_kw.pth'
+        model_name = '../models/cifar_base_kw.pth'
         model = cifar_model_m2()
         model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
     elif model == 'cifar_wide_kw':
-        model_name = './models/cifar_wide_kw.pth'
+        model_name = '../models/cifar_wide_kw.pth'
         model = cifar_model()
         model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
     elif model == 'cifar_deep_kw':
-        model_name = './models/cifar_deep_kw.pth'
+        model_name = '../models/cifar_deep_kw.pth'
         model = cifar_model_deep()
         model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
     else:
@@ -143,7 +144,7 @@ def load_cifar_pgd_exp(model, cifar_test=None):
         import torchvision.transforms as transforms
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                          std=[0.225, 0.225, 0.225])
-        cifar_test = datasets.CIFAR10('./cifardata/', train=False, download=True,
+        cifar_test = datasets.CIFAR10('../cifardata/', train=False, download=True,
                                       transform=transforms.Compose([transforms.ToTensor(), normalize]))
 
     # Containers of correctly verified images, their true labels and their indices in the CIFAR dataset
@@ -152,14 +153,56 @@ def load_cifar_pgd_exp(model, cifar_test=None):
     image_indices = []
 
     for image_index in range(len(cifar_test)):
-        x, y = cifar_test[image_index]
-        x = x.unsqueeze(0)
-        y_pred = torch.max(model(x)[0], 0)[1].item()
+        image, true_label = cifar_test[image_index]
+        image = image.unsqueeze(0)
+        predicted_label = torch.max(model(image)[0], 0)[1].item()
 
         # Only append the image, its true label and its index to the output if the model predicts the label correctly
-        if y_pred == y:
-            images.append(x)
-            true_labels.append(y)
+        if predicted_label == true_label:
+            images.append(image)
+            true_labels.append(true_label)
             image_indices.append(image_index)
 
     return images, true_labels, image_indices, model
+
+
+# This function processes the properties dataframe first, leaving only the properties which were correctly verified, and
+# then returns the lists of images, true labels, test labels and epsilons which correspond to these properties only
+
+def load_properties_data(properties_filename, images, true_labels, image_indices):
+    # Load the properties DataFrame, leave only verified properties
+    properties_filepath = '../cifar_exp/' + properties_filename
+    properties_dataframe = pd.read_pickle(properties_filepath)
+    properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
+                                                (properties_dataframe['BSAT_KW'] == 'False') |
+                                                (properties_dataframe['BSAT_gnnkwT'] == 'False') |
+                                                (properties_dataframe['GSAT'] == 'False') |
+                                                (properties_dataframe['BSAT_gnnkwTO'] == 'False')]
+
+    # Remove the single property which has the same index as one of the other properties but a different prop value
+    # (applies to base_easy.pkl only)
+    if properties_filename == 'base_easy.pkl':
+        properties_dataframe = properties_dataframe.drop(properties_dataframe[(properties_dataframe['Idx'] == 6100) &
+                                                                              (properties_dataframe[
+                                                                                   'prop'] == 9)].index)
+
+    # Sort the properties DataFrame by the Idx column for the purpose of easier debugging
+    properties_dataframe = properties_dataframe.sort_values(by=['Idx'], ascending=True)
+
+    # Drop all the elements of the images, true_labels and image_indices which do not appear in the properties file
+    properties_image_indices = list(properties_dataframe['Idx'])
+    array_length = len(image_indices)
+    for i in range(array_length - 1, -1, -1):  # counter starts at the end due to the nature of the pop() function
+        if image_indices[i] not in properties_image_indices:
+            images.pop(i)
+            true_labels.pop(i)
+            image_indices.pop(i)
+
+    # Create the list of classes the properties were verified against and the list of epsilons
+    test_labels = []
+    epsilons = []
+    for i in range(len(images)):
+        test_labels.append(properties_dataframe[properties_dataframe['Idx'] == image_indices[i]].iloc[0]['prop'])
+        epsilons.append(properties_dataframe[properties_dataframe['Idx'] == image_indices[i]].iloc[0]['Eps'])
+
+    return images, true_labels, test_labels, epsilons
