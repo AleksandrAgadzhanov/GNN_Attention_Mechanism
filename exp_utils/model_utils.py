@@ -54,7 +54,7 @@ def cifar_model_deep():
 
 def add_single_prop(layers, gt, cls):
     """
-    gt: ground truth lable
+    gt: ground truth label
     cls: class we want to verify against
     """
     additional_lin_layer = nn.Linear(10, 1, bias=True)
@@ -124,6 +124,10 @@ def load_cifar_1to1_exp(model, idx, test=None, cifar_test=None):
 
 
 def load_cifar_data(model, cifar_test=None):
+    """
+    This function returns the lists of CIFAR images, true labels and image indices as well as the model corresponding to
+    the images which are correctly classified by the model
+    """
     if model == 'cifar_base_kw':
         model_name = '../models/cifar_base_kw.pth'
         model = cifar_model_m2()
@@ -166,10 +170,12 @@ def load_cifar_data(model, cifar_test=None):
     return images, true_labels, image_indices, model
 
 
-# This function processes the properties dataframe first, leaving only the properties which were correctly verified, and
-# then returns the lists of images, true labels, test labels and epsilons which correspond to these properties only
-
 def load_properties_data(properties_filename, images, true_labels, image_indices):
+    """
+    This function processes the properties dataframe first, leaving only the properties which were correctly verified,
+    and then returns the lists of images, true labels, test labels and epsilons which correspond to these properties
+    only
+    """
     # Load the properties DataFrame, leave only verified properties
     properties_filepath = '../cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)

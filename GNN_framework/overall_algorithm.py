@@ -1,13 +1,14 @@
-from exp_utils.model_utils import load_cifar_data, load_properties_data
+from exp_utils.model_utils import load_cifar_data, load_properties_data, add_single_prop
 from matplotlib import pyplot as plt
 import torch
 
 
-# This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
-# for the function which attacks each property in turn by calling this function for each property.
-
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_epochs,
-                              num_trials, subset=None):
+                              num_iterations, subset=None):
+    """
+    This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
+    for the function which attacks each property in turn by calling this function for each property.
+    """
     # Load all the required data for the images which were correctly verified by the model
     images, true_labels, image_indices, model = load_cifar_data(model_name)
 
@@ -25,8 +26,11 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
     # Now attack each property in turn by calling the appropriate function
     num_properties_still_verified = 0  # counter of properties which are still verified after the PGD attack
     for i in range(len(images)):
+        # First, simplify the network by adding the final layer and merging the last two layers into one
+        model = simplify_model(model, true_labels[i], test_labels[i])
+
         successful_attack_flag = pgd_gnn_attack_property(model, images[i], true_labels[i], test_labels[i], epsilons[i],
-                                                         epsilon_factor, pgd_learning_rate, num_epochs, num_trials)
+                                                         epsilon_factor, pgd_learning_rate, num_epochs, num_iterations)
 
         # If the attack was unsuccessful, increase the counter
         if not successful_attack_flag:
@@ -38,9 +42,11 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
     return verification_accuracy
 
 
-# This function updates the lists of images, true labels, test labels and epsilons based on the given subset of indices
-
 def match_with_subset(subset, images, true_labels, test_labels, epsilons):
+    """
+    This function updates the lists of images, true labels, test labels and epsilons based on the given subset of
+    indices
+    """
     original_length = len(images)
     for i in range(original_length - 1, -1, -1):
         if i not in subset:
@@ -51,11 +57,24 @@ def match_with_subset(subset, images, true_labels, test_labels, epsilons):
     return images, true_labels, test_labels, epsilons
 
 
-# This function performs the PGD attack on the specified property characterised by its image, true label, test label and
-# epsilon value
+def simplify_model(model, true_label, test_label):
+    print(list(model.children()))
+    # First, get the list of all layers with the final one included. The output of the network is now the difference
+    # between the logits of the true and test class
+    all_layers = add_single_prop(list(model.children()), true_label, test_label)
+
+    # Construct the simplified model from the list of layers
+    simplified_model = torch.nn.ModuleList(all_layers)
+    print(list(simplified_model.children()))
+    return simplified_model
+
 
 def pgd_gnn_attack_property(model, image, true_label, test_label, epsilon, epsilon_factor, pgd_learning_rate,
-                            num_epochs, num_trials):
+                            num_epochs, num_iterations):
+    """
+    This function performs the PGD attack on the specified property characterised by its image, true label, test label and
+    epsilon value
+    """
     # First, perturb the image randomly within the allowed bounds and perform a PGD attack
     lower_bound = torch.add(-epsilon * epsilon_factor, image)
     upper_bound = torch.add(epsilon * epsilon_factor, image)
@@ -63,32 +82,35 @@ def pgd_gnn_attack_property(model, image, true_label, test_label, epsilon, epsil
                              2 * epsilon * epsilon_factor * torch.rand(image.size()))
     perturbed_image = torch.add(image, perturbation).clone().detach().requires_grad_(True)
     successful_attack_flag, heuristics_dict = gradient_ascent(model, perturbed_image, lower_bound, upper_bound,
-                                                              true_label, test_label, pgd_learning_rate, num_epochs)
+                                                              true_label, test_label, pgd_learning_rate, num_iterations)
 
     # If the attack was successful, the procedure can be terminated and True can be returned
     if successful_attack_flag:
         return True
 
-    return  # TODO
+    # Otherwise, the GNN framework approach must be followed. First, initialise the GNN for the given network
+    return
 
-
-# This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't lead
-# to positive loss, outputs the information about gradients
 
 def gradient_ascent(model, perturbed_image, lower_bound, upper_bound, true_label, test_label, pgd_learning_rate,
-                    num_epochs):
+                    num_iterations):
+    """
+    This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
+    lead to positive loss, outputs the information about gradients
+    """
     # Initialise the relevant optimiser and the list to store the gradients to be later used for heuristics generation
     optimizer = torch.optim.Adam([perturbed_image], lr=pgd_learning_rate)
     gradients = []
 
     # Perform Gradient Ascent for a specified number of epochs
-    for epoch in range(num_epochs):
-        logits = model(perturbed_image)[0]
-        loss = -logit_difference_loss(logits, test_label, true_label)  # '-' sign since gradient ascent is performed
+    for iteration in range(num_iterations):
+        # The output of the network is the difference between the logits of the correct and the test class which is
+        # the same as -loss, but since Gradient Ascent is performed, this difference must be minimised
+        loss = model(perturbed_image)
 
         # If the difference between the logit of the test class and the logit of the true class is positive,
         # then the PGD attack was successful and gradient ascent can be stopped
-        if -loss > 0:
+        if loss < 0:
             return True, None
 
         optimizer.zero_grad()
@@ -104,8 +126,8 @@ def gradient_ascent(model, perturbed_image, lower_bound, upper_bound, true_label
             perturbed_image[:] = torch.max(torch.min(perturbed_image, upper_bound), lower_bound)
 
     # If the flag has not been set yet but the perturbation resulted in the model predicting the test class instead of
-    # the true one during the last epoch, return the True successful attack flag
-    if torch.max(model(perturbed_image)[0], 0)[1].item() == test_label:
+    # the true one during the last iteration, return the True successful attack flag
+    if model(perturbed_image) < 0:
         return True, None
 
     # If the Gradient Ascent didn't lead to the changed prediction, then generate the dictionary containing information
@@ -115,17 +137,10 @@ def gradient_ascent(model, perturbed_image, lower_bound, upper_bound, true_label
     return False, gradient_info_dict
 
 
-# This function calculates the loss based on the difference between the logits of the test and true classes
-
-def logit_difference_loss(logits, test_class, true_class):
-    true_class_logit = logits[true_class]
-    test_class_logit = logits[test_class]
-    return test_class_logit - true_class_logit
-
-
-# This function generates the dictionary of containing information about gradients during the PGD attack
-
 def generate_gradient_info_dict(gradients):
+    """
+    This function generates the dictionary of containing information about gradients during the PGD attack
+    """
     # First take the absolute value since it is the magnitudes of gradients that matter since loss is always moving in
     # the same direction (increasing) and the pixel values may decrease or increase
     gradient_magnitudes = [torch.abs(gradient) for gradient in gradients]
@@ -167,10 +182,11 @@ def generate_gradient_info_dict(gradients):
     return gradient_info_dict
 
 
-# This function transforms the list of gradient magnitudes where each list element is the tensor represents the gradient
-# at a particular epoch to the list where each element is the tensor representing the gradient of a particular pixel
-
 def grouped_by_epoch_to_grouped_by_pixel(gradients):
+    """
+    This function transforms the list of gradient magnitudes where each list element is the tensor represents the gradient
+    at a particular epoch to the list where each element is the tensor representing the gradient of a particular pixel
+    """
     gradients_grouped_by_pixels = []
     for matrix_idx in range(len(gradients[0][0])):
         for row_idx in range(len(gradients[0][0][0])):
@@ -181,4 +197,4 @@ def grouped_by_epoch_to_grouped_by_pixel(gradients):
     return gradients_grouped_by_pixels
 
 
-pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 0, [0])
+pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 1, 10, subset=[0])
