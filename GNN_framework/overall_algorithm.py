@@ -26,11 +26,12 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
     # Now attack each property in turn by calling the appropriate function
     num_properties_still_verified = 0  # counter of properties which are still verified after the PGD attack
     for i in range(len(images)):
-        # First, simplify the network by adding the final layer and merging the last two layers into one
-        model = simplify_model(model, true_labels[i], test_labels[i])
+        # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating'
+        # the information about the true and test classes into the network
+        simplified_model = simplify_model(model, true_labels[i], test_labels[i])
 
-        successful_attack_flag = pgd_gnn_attack_property(model, images[i], true_labels[i], test_labels[i], epsilons[i],
-                                                         epsilon_factor, pgd_learning_rate, num_epochs, num_iterations)
+        successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
+                                                         pgd_learning_rate, num_epochs, num_iterations)
 
         # If the attack was unsuccessful, increase the counter
         if not successful_attack_flag:
@@ -58,22 +59,26 @@ def match_with_subset(subset, images, true_labels, test_labels, epsilons):
 
 
 def simplify_model(model, true_label, test_label):
-    print(list(model.children()))
+    """
+    This function takes the model and the true and test labels for a particular property and simplifies the model by
+    merging the last two linear layers into one so that the output of the network is a single node whose value is the
+    difference between logits of the true and test classes
+    """
     # First, get the list of all layers with the final one included. The output of the network is now the difference
     # between the logits of the true and test class
     all_layers = add_single_prop(list(model.children()), true_label, test_label)
 
     # Construct the simplified model from the list of layers
-    simplified_model = torch.nn.ModuleList(all_layers)
-    print(list(simplified_model.children()))
+    simplified_model = torch.nn.Sequential(*all_layers)
+
     return simplified_model
 
 
-def pgd_gnn_attack_property(model, image, true_label, test_label, epsilon, epsilon_factor, pgd_learning_rate,
-                            num_epochs, num_iterations):
+def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_epochs,
+                            num_iterations):
     """
-    This function performs the PGD attack on the specified property characterised by its image, true label, test label and
-    epsilon value
+    This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
+    model and epsilon value
     """
     # First, perturb the image randomly within the allowed bounds and perform a PGD attack
     lower_bound = torch.add(-epsilon * epsilon_factor, image)
@@ -81,19 +86,18 @@ def pgd_gnn_attack_property(model, image, true_label, test_label, epsilon, epsil
     perturbation = torch.add(-epsilon * epsilon_factor,
                              2 * epsilon * epsilon_factor * torch.rand(image.size()))
     perturbed_image = torch.add(image, perturbation).clone().detach().requires_grad_(True)
-    successful_attack_flag, heuristics_dict = gradient_ascent(model, perturbed_image, lower_bound, upper_bound,
-                                                              true_label, test_label, pgd_learning_rate, num_iterations)
+    successful_attack_flag, heuristics_dict = gradient_ascent(simplified_model, perturbed_image, lower_bound,
+                                                              upper_bound, pgd_learning_rate, num_iterations)
 
     # If the attack was successful, the procedure can be terminated and True can be returned
     if successful_attack_flag:
         return True
 
     # Otherwise, the GNN framework approach must be followed. First, initialise the GNN for the given network
-    return
+    return  # TODO
 
 
-def gradient_ascent(model, perturbed_image, lower_bound, upper_bound, true_label, test_label, pgd_learning_rate,
-                    num_iterations):
+def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations):
     """
     This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
     lead to positive loss, outputs the information about gradients
@@ -106,7 +110,7 @@ def gradient_ascent(model, perturbed_image, lower_bound, upper_bound, true_label
     for iteration in range(num_iterations):
         # The output of the network is the difference between the logits of the correct and the test class which is
         # the same as -loss, but since Gradient Ascent is performed, this difference must be minimised
-        loss = model(perturbed_image)
+        loss = simplified_model(perturbed_image)
 
         # If the difference between the logit of the test class and the logit of the true class is positive,
         # then the PGD attack was successful and gradient ascent can be stopped
@@ -127,7 +131,7 @@ def gradient_ascent(model, perturbed_image, lower_bound, upper_bound, true_label
 
     # If the flag has not been set yet but the perturbation resulted in the model predicting the test class instead of
     # the true one during the last iteration, return the True successful attack flag
-    if model(perturbed_image) < 0:
+    if simplified_model(perturbed_image) < 0:
         return True, None
 
     # If the Gradient Ascent didn't lead to the changed prediction, then generate the dictionary containing information
@@ -184,8 +188,9 @@ def generate_gradient_info_dict(gradients):
 
 def grouped_by_epoch_to_grouped_by_pixel(gradients):
     """
-    This function transforms the list of gradient magnitudes where each list element is the tensor represents the gradient
-    at a particular epoch to the list where each element is the tensor representing the gradient of a particular pixel
+    This function transforms the list of gradient magnitudes where each list element is the tensor represents the
+    gradient at a particular epoch to the list where each element is the tensor representing the gradient of a
+    particular pixel
     """
     gradients_grouped_by_pixels = []
     for matrix_idx in range(len(gradients[0][0])):
