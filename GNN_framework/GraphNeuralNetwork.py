@@ -13,7 +13,10 @@ class GraphNeuralNetwork:
     # In addition, all the auxiliary neural networks are initialised including the ones which perform the forward and
     # backward update operations and the one which computes the scores of update methods of all input nodes
     def __init__(self, neural_network, input_size, embedding_vector_size, input_feature_size, hidden_feature_size,
-                 output_feature_size, auxiliary_hidden_size):
+                 output_feature_size, auxiliary_hidden_size, num_update_methods):
+        # Store the underlying neural network as a field of the GNN
+        self.neural_network = neural_network
+
         # Initialise an input embedding vector at each position in the input size
         self.inputs_embeddings = torch.zeros(torch.Size([*input_size, embedding_vector_size]))
 
@@ -44,7 +47,32 @@ class GraphNeuralNetwork:
                                                             embedding_vector_size)
         self.forward_hidden_update_nn = ForwardHiddenUpdateNN(hidden_feature_size, auxiliary_hidden_size,
                                                               embedding_vector_size)
-        # TODO
+        self.forward_output_update_nn = ForwardOutputUpdateNN(output_feature_size, auxiliary_hidden_size,
+                                                              embedding_vector_size)
+        self.backward_hidden_update_nn = BackwardHiddenUpdateNN(hidden_feature_size, auxiliary_hidden_size,
+                                                                embedding_vector_size)
+        self.backward_input_update_nn = BackwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
+                                                              embedding_vector_size)
+        self.score_computation_nn = ScoreComputationNN(embedding_vector_size, auxiliary_hidden_size,
+                                                       num_update_methods)
+
+    def reset_input_embedding_vectors(self):
+        self.inputs_embeddings = torch.zeros(self.inputs_embeddings.size())
+
+    # TODO
+    def update_embedding_vectors(self):
+        """
+        This function performs a series of forward and backward updates on all the embedding vectors until convergence
+        is reached
+        """
+        pass
+
+    # TODO
+    def compute_scores(self):
+        """
+        This function computes the scores for all the input nodes
+        """
+        pass
 
 
 class ForwardInputUpdateNN(nn.Module):
@@ -68,30 +96,142 @@ class ForwardHiddenUpdateNN(nn.Module):
         super(ForwardHiddenUpdateNN, self).__init__()
 
         # Initialise the layers for obtaining information from the local features
-        self.linear_1_local = nn.Linear(feature_vector_size, hidden_layer_size)
-        self.linear_2_local = nn.Linear(hidden_layer_size, hidden_layer_size)
+        self.linear_local_1 = nn.Linear(feature_vector_size, hidden_layer_size)
+        self.linear_local_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
 
         # Initialise the layers for obtaining information from the previous neighbour embedding vectors
-        self.linear_1_neighbour = nn.Linear(2 * embedding_vector_size, hidden_layer_size)
-        self.linear_2_neighbour = nn.Linear(hidden_layer_size, hidden_layer_size)
+        self.linear_neighbour_1 = nn.Linear(2 * embedding_vector_size, hidden_layer_size)
+        self.linear_neighbour_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
 
         # Finally, initialise the layers for combining information from the local features and the previous neighbour
         # embedding vectors
-        self.linear_1_combine = nn.Linear(2 * hidden_layer_size, hidden_layer_size)
-        self.linear_2_combine = nn.Linear(hidden_layer_size, embedding_vector_size)
+        self.linear_combine_1 = nn.Linear(2 * hidden_layer_size, hidden_layer_size)
+        self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
 
     def forward(self, local_feature_vector, transformed_previous_neighbour_embeddings):
-        # First, get information from the local feature vector
-        local_features_info = self.linear_2_local(f.relu(self.linear_1_local(local_feature_vector)))
+        # First, get information from the local feature vector. If the hidden layer node currently considered is
+        # unambiguous, set the information vector to the zero vector. Otherwise, pass it through the corresponding
+        # network layers
+        # TODO
+        local_features_info = self.linear_local_2(f.relu(self.linear_local_1(local_feature_vector)))
 
         # Second, get information from the transformed previous neighbour embedding vectors
-        previous_neighbour_embeddings_info = self.linear_2_neighbour(f.relu(
-            self.linear_1_neighbour(transformed_previous_neighbour_embeddings)))
+        previous_neighbour_embeddings_info = self.linear_neighbour_2(f.relu(
+            self.linear_neighbour_1(transformed_previous_neighbour_embeddings)))
 
         # Finally, combine the information from the local features and the transformed previous neighbour embedding
         # vectors
-        return self.linear_2_combine(f.relu(self.linear_1_combine(torch.cat([local_features_info,
-                                                                             previous_neighbour_embeddings_info]))))
+        combined_info = torch.cat([local_features_info, previous_neighbour_embeddings_info])
+        return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
+
+
+class ForwardOutputUpdateNN(nn.Module):
+    """
+    This class represents the neural network which performs the forward update on the output node
+    """
+    def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
+        super(ForwardOutputUpdateNN, self).__init__()
+
+        # Initialise the layer for obtaining information from the local features
+        self.linear_local = nn.Linear(feature_vector_size, hidden_layer_size)
+
+        # Initialise the layers for combining information from the local features and the last hidden layer embeddings
+        self.linear_combine_1 = nn.Linear(hidden_layer_size + embedding_vector_size, hidden_layer_size)
+        self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
+
+    def forward(self, local_feature_vector, transformed_last_hidden_layer_embeddings):
+        # First, get information from the local feature vector
+        local_features_info = f.relu(self.linear_local(local_feature_vector))
+
+        # Combine the information from the local features and the transformed last hidden layer embeddings
+        combined_info = torch.cat([local_features_info, transformed_last_hidden_layer_embeddings])
+        return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
+
+
+class BackwardHiddenUpdateNN(nn.Module):
+    """
+    This class represents the neural network which performs the backward update on the hidden layer nodes
+    """
+    def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
+        super(BackwardHiddenUpdateNN, self).__init__()
+
+        # Initialise the layers for obtaining information from the local features
+        self.linear_local_1_1 = nn.Linear(feature_vector_size, hidden_layer_size)
+        self.linear_local_1_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
+        self.linear_local_1_3 = nn.Linear(hidden_layer_size, hidden_layer_size)
+        self.linear_local_2_1 = nn.Linear(3 * hidden_layer_size, hidden_layer_size)
+        self.linear_local_2_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
+
+        # Initialise the layers for obtaining information from the next neighbour embedding vectors
+        self.linear_neighbour_1 = nn.Linear(2 * embedding_vector_size, hidden_layer_size)
+        self.linear_neighbour_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
+
+        # Finally, initialise the layers for combining information from the local features and the next neighbour
+        # embedding vectors
+        self.linear_combine_1 = nn.Linear(2 * hidden_layer_size, hidden_layer_size)
+        self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
+
+    def forward(self, local_feature_vector, transformed_next_layer_embeddings):
+        # First, implement the 1st stage of getting information about the local feature vector. If the hidden layer node
+        # currently considered is unambiguous, set the output from the first stage to the zero vector. Otherwise, pass
+        # it through the layers of the 1st stage network
+        # TODO
+        local_features_info_temp = self.linear_local_1_3(f.relu(self.linear_local_1_2(f.relu(
+            self.linear_local_1_1(local_feature_vector)))))
+
+        # Now implement the 2nd stage of getting information about the local feature vector. If the output from the
+        # 1st stage is zero, then set the information vector to the zero vector. Otherwise, pass it through the layers
+        # of the 2nd stage network
+        # TODO
+        local_features_info = self.linear_local_2_2(f.relu(self.linear_local_2_1(local_features_info_temp)))
+
+        # Second, get information from the transformed next neighbour embedding vectors
+        next_neighbour_embeddings_info = self.linear_neighbour_2(f.relu(
+            self.linear_neighbour_1(transformed_next_layer_embeddings)))
+
+        # Finally, combine the information from the local features and the transformed next neighbour embedding
+        # vectors
+        combined_info = torch.cat([local_features_info, next_neighbour_embeddings_info])
+        return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
+
+
+class BackwardInputUpdateNN(nn.Module):
+    """
+    This class represents the neural network which performs the backward update on the input nodes
+    """
+    def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
+        super(BackwardInputUpdateNN, self).__init__()
+
+        # Initialise the layers for obtaining information from the local features
+        self.linear_local_1 = nn.Linear(feature_vector_size, hidden_layer_size)
+        self.linear_local_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
+
+        # Initialise the layers for combining information from the local features and the first hidden layer embeddings
+        self.linear_combine_1 = nn.Linear(hidden_layer_size + embedding_vector_size, hidden_layer_size)
+        self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
+
+    def forward(self, local_feature_vector, transformed_last_hidden_layer_embeddings):
+        # First, get information from the local feature vector
+        local_features_info = self.linear_local_2(f.relu(self.linear_local_1(local_feature_vector)))
+
+        # Combine the information from the local features and the transformed first hidden layer embeddings
+        combined_info = torch.cat([local_features_info, transformed_last_hidden_layer_embeddings])
+        return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
+
+
+class ScoreComputationNN(nn.Module):
+    """
+    This class represents the neural network which computes the scores for all possible input domain update methods
+    """
+    def __init__(self, embedding_vector_size, hidden_layer_size, number_of_update_methods):
+        super(ScoreComputationNN, self).__init__()
+
+        # Assuming this network is a 2-layer fully-connected network, initialise the two required layers
+        self.linear_1 = nn.Linear(embedding_vector_size, hidden_layer_size)
+        self.linear_2 = nn.Linear(hidden_layer_size, number_of_update_methods)
+
+    def forward(self, input_embedding_vector):
+        return self.linear_2(f.relu(self.linear_1(input_embedding_vector)))
 
 
 model = nn.Sequential(
@@ -104,5 +244,3 @@ model = nn.Sequential(
     nn.ReLU(),
     nn.Linear(100, 1)
 )
-
-

@@ -1,5 +1,5 @@
 from exp_utils.model_utils import load_cifar_data, load_properties_data, add_single_prop
-from matplotlib import pyplot as plt
+from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 import torch
 
 
@@ -83,9 +83,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     # First, perturb the image randomly within the allowed bounds and perform a PGD attack
     lower_bound = torch.add(-epsilon * epsilon_factor, image)
     upper_bound = torch.add(epsilon * epsilon_factor, image)
-    perturbation = torch.add(-epsilon * epsilon_factor,
-                             2 * epsilon * epsilon_factor * torch.rand(image.size()))
-    perturbed_image = torch.add(image, perturbation).clone().detach().requires_grad_(True)
+    perturbed_image = perturb_image(lower_bound, upper_bound)
     successful_attack_flag, heuristics_dict = gradient_ascent(simplified_model, perturbed_image, lower_bound,
                                                               upper_bound, pgd_learning_rate, num_iterations)
 
@@ -93,8 +91,46 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     if successful_attack_flag:
         return True
 
-    # Otherwise, the GNN framework approach must be followed. First, initialise the GNN for the given network
-    return  # TODO
+    # Otherwise, the GNN framework approach must be followed. First, initialise the GNN for the given network (which
+    # also initialises all the required auxiliary neural networks)
+    gnn = GraphNeuralNetwork(simplified_model, image.size(), 10, 10, 10, 10, 10, 10)  # TODO
+
+    # Follow the GNN framework approach for a specified number of epochs
+    for i in range(num_epochs):
+        # When the epoch is not the first one, reset the input embedding vectors since the forward input update function
+        # only activates when the input embedding vectors are zero
+        if i != 0:
+            gnn.reset_input_embedding_vectors()
+
+        # Perform a series of forward and backward updates of all the embedding vectors within the GNN
+        gnn.update_embedding_vectors()  # TODO
+
+        # Compute the scores for each image pixel
+        pixel_scores = gnn.compute_scores()  # TODO
+
+        # Update the domain bounds for each pixel based on the pixel scores above
+        lower_bound, upper_bound = update_domain_bounds(lower_bound, upper_bound, pixel_scores)  # TODO
+
+        # Perturb each pixel within the updated domain bounds
+        perturbed_image = perturb_image(lower_bound, upper_bound)
+
+        # Perform a PGD attack given the new bounds and perturbation
+        successful_attack_flag, heuristics_dict = gradient_ascent(simplified_model, perturbed_image, lower_bound,
+                                                                  upper_bound, pgd_learning_rate, num_iterations)
+
+        # If the attack was successful, the procedure can be terminated and True can be returned, otherwise continue
+        if successful_attack_flag:
+            return True
+
+    # If the limit on the number of epochs was reached and no PGD attack was successful, return False
+    return False
+
+
+def perturb_image(lower_bound, upper_bound):
+    difference = torch.add(upper_bound, -lower_bound)
+    perturbation = torch.mul(difference, torch.rand(difference.size()))
+    perturbed_image = torch.add(lower_bound, perturbation)
+    return perturbed_image
 
 
 def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations):
@@ -202,4 +238,13 @@ def grouped_by_epoch_to_grouped_by_pixel(gradients):
     return gradients_grouped_by_pixels
 
 
-pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 1, 10, subset=[0])
+# TODO
+def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
+    """
+    This function updates the domain bounds based on the scores. For each input node, it chooses the update method
+    corresponding to the maximum score among all scores for that node
+    """
+    return 0, 0
+
+
+# pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 1, 10, subset=[0])

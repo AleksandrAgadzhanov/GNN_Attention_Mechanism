@@ -10,7 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;started the GNN class and added a network simplification function&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;started implementation of GNN class&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_framework/overall_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/overall_algorithm.py" afterDir="false" />
@@ -39,7 +39,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
   </component>
-  <component name="RunManager" selected="Python.GraphNeuralNetwork">
+  <component name="RunManager" selected="Python.overall_algorithm">
     <configuration name="GraphNeuralNetwork" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -105,8 +105,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.GraphNeuralNetwork" />
         <item itemvalue="Python.overall_algorithm" />
+        <item itemvalue="Python.GraphNeuralNetwork" />
         <item itemvalue="Python.pgd_attacks" />
       </list>
     </recent_temporary>
@@ -141,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608752851365</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="&quot;started implementation of GNN class&quot;">
+      <created>1608849055491</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1608849055491</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -160,49 +167,50 @@
     <MESSAGE value="&quot;started own implementation of the GNN framework&quot;" />
     <MESSAGE value="&quot;added a feature extraction function to Gradient Ascent&quot;" />
     <MESSAGE value="&quot;started the GNN class and added a network simplification function&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;started the GNN class and added a network simplification function&quot;" />
+    <MESSAGE value="&quot;started implementation of GNN class&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;started implementation of GNN class&quot;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser" timestamp="1608820985392">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1608820985392" />
-    <state width="1882" height="282" key="GridCell.Tab.0.bottom" timestamp="1608829182881">
+    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1608919649199">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1882" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608829182881" />
-    <state width="1882" height="282" key="GridCell.Tab.0.center" timestamp="1608829182881">
+    <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608919649199" />
+    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1608919649199">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1882" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608829182881" />
-    <state width="1882" height="282" key="GridCell.Tab.0.left" timestamp="1608829182881">
+    <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608919649199" />
+    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1608919649199">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1882" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608829182881" />
-    <state width="1882" height="282" key="GridCell.Tab.0.right" timestamp="1608829182881">
+    <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608919649199" />
+    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1608919649199">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1882" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608829182881" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1608667662734">
+    <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608919649199" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1608919626399">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608667662734" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1608667662733">
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608919626399" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1608919626398">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608667662733" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1608667662733">
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608919626398" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1608919626398">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608667662733" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1608667662733">
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608919626398" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1608919626399">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608667662733" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1608752858454">
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608919626399" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1608849062587">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1608752858454" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1608849062587" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
