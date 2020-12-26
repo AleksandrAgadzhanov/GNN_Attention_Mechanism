@@ -9,10 +9,10 @@ class GraphNeuralNetwork:
     This class represents the overall Graph Neural Network and its functionality
     """
     # When the GNN is initialised, a graph is created which has the same structure as the input neural network but each
-    # proper node (where ReLU is applied) now containing the corresponding embedding vector filled with zeros.
+    # proper node (in[ut, ReLU and output) now containing the corresponding embedding vector filled with zeros.
     # In addition, all the auxiliary neural networks are initialised including the ones which perform the forward and
     # backward update operations and the one which computes the scores of update methods of all input nodes
-    def __init__(self, neural_network, input_size, embedding_vector_size, input_feature_size, hidden_feature_size,
+    def __init__(self, neural_network, input_size, embedding_vector_size, input_feature_size, relu_feature_size,
                  output_feature_size, auxiliary_hidden_size, num_update_methods):
         # Store the underlying neural network as a field of the GNN
         self.neural_network = neural_network
@@ -21,7 +21,7 @@ class GraphNeuralNetwork:
         self.inputs_embeddings = torch.zeros(torch.Size([*input_size, embedding_vector_size]))
 
         # Initialise the list of embeddings of each ReLU hidden layer
-        self.hidden_embeddings = []
+        self.relu_embeddings = []
 
         # Initialise the test input to the network for the purpose of determining the sizes at the output of each layer
         test_image = torch.zeros(input_size)
@@ -37,7 +37,7 @@ class GraphNeuralNetwork:
 
             # Only add the embeddings to the list if the current layer of interest is the ReLU layer
             if type(layer) == torch.nn.ReLU:
-                self.hidden_embeddings.append(torch.zeros(torch.Size([*test_image.size(), embedding_vector_size])))
+                self.relu_embeddings.append(torch.zeros(torch.Size([*test_image.size(), embedding_vector_size])))
 
         # Finally, initialise the output embedding vector of the only output node
         self.output_embedding = torch.zeros(embedding_vector_size)
@@ -45,12 +45,12 @@ class GraphNeuralNetwork:
         # Now, initialise all the auxiliary neural networks
         self.forward_input_update_nn = ForwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
                                                             embedding_vector_size)
-        self.forward_hidden_update_nn = ForwardHiddenUpdateNN(hidden_feature_size, auxiliary_hidden_size,
-                                                              embedding_vector_size)
+        self.forward_hidden_update_nn = ForwardReluUpdateNN(relu_feature_size, auxiliary_hidden_size,
+                                                            embedding_vector_size)
         self.forward_output_update_nn = ForwardOutputUpdateNN(output_feature_size, auxiliary_hidden_size,
                                                               embedding_vector_size)
-        self.backward_hidden_update_nn = BackwardHiddenUpdateNN(hidden_feature_size, auxiliary_hidden_size,
-                                                                embedding_vector_size)
+        self.backward_hidden_update_nn = BackwardReluUpdateNN(relu_feature_size, auxiliary_hidden_size,
+                                                              embedding_vector_size)
         self.backward_input_update_nn = BackwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
                                                               embedding_vector_size)
         self.score_computation_nn = ScoreComputationNN(embedding_vector_size, auxiliary_hidden_size,
@@ -60,12 +60,27 @@ class GraphNeuralNetwork:
         self.inputs_embeddings = torch.zeros(self.inputs_embeddings.size())
 
     # TODO
-    def update_embedding_vectors(self):
+    def update_embedding_vectors(self, input_feature_vectors, relu_feature_vectors, output_feature_vectors,
+                                 num_updates):
         """
         This function performs a series of forward and backward updates on all the embedding vectors until convergence
         is reached
         """
-        pass
+        # Perform one complete forward and backward update a number of times specified
+        for i in range(num_updates):
+
+            # First, perform the forward update of the input embedding vectors if they are still all zero (only happens
+            # during the first update)
+            if torch.eq(self.inputs_embeddings, torch.zeros(self.inputs_embeddings.size())).all().item():
+
+                # Reshape the input embeddings so that each element of a row tensor is an embedding vector
+                self.inputs_embeddings = self.inputs_embeddings.view(-1, self.inputs_embeddings.size()[-1])
+
+                # Now perform the forward update on each input embedding vector in turn
+                for input_idx in range(self.inputs_embeddings.size()[0]):
+                    self.inputs_embeddings[input_idx] = self.forward_input_update_nn(input_feature_vectors[input_idx])
+
+            # Now, perform the forward update of the ReLU layer embedding vectors of each layer
 
     # TODO
     def compute_scores(self):
@@ -88,12 +103,12 @@ class ForwardInputUpdateNN(nn.Module):
         return self.linear_2(f.relu(self.linear_1(input_feature_vector)))
 
 
-class ForwardHiddenUpdateNN(nn.Module):
+class ForwardReluUpdateNN(nn.Module):
     """
-    This class represents the neural network which performs the forward update on the hidden layer nodes
+    This class represents the neural network which performs the forward update on the ReLU hidden layer nodes
     """
     def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
-        super(ForwardHiddenUpdateNN, self).__init__()
+        super(ForwardReluUpdateNN, self).__init__()
 
         # Initialise the layers for obtaining information from the local features
         self.linear_local_1 = nn.Linear(feature_vector_size, hidden_layer_size)
@@ -148,12 +163,12 @@ class ForwardOutputUpdateNN(nn.Module):
         return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
 
 
-class BackwardHiddenUpdateNN(nn.Module):
+class BackwardReluUpdateNN(nn.Module):
     """
     This class represents the neural network which performs the backward update on the hidden layer nodes
     """
     def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
-        super(BackwardHiddenUpdateNN, self).__init__()
+        super(BackwardReluUpdateNN, self).__init__()
 
         # Initialise the layers for obtaining information from the local features
         self.linear_local_1_1 = nn.Linear(feature_vector_size, hidden_layer_size)
@@ -244,3 +259,7 @@ model = nn.Sequential(
     nn.ReLU(),
     nn.Linear(100, 1)
 )
+
+x = torch.zeros([1, 3, 32, 32])
+x[0][0][0][0] = torch.tensor(1)
+print(torch.eq(x, torch.zeros(x.size())).all().item())
