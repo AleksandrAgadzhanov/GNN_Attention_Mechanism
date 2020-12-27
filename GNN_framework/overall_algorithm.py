@@ -3,9 +3,9 @@ from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 import torch
 
 
-def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_epochs,
-                              num_iterations, num_updates, embedding_vector_size, auxiliary_hidden_size,
-                              num_update_methods, subset=None):
+def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
+                              num_epochs, num_updates, embedding_vector_size, auxiliary_hidden_size, num_update_methods,
+                              subset=None):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -32,7 +32,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
 
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
-                                                         pgd_learning_rate, num_epochs, num_iterations, num_updates,
+                                                         pgd_learning_rate, num_iterations, num_epochs, num_updates,
                                                          embedding_vector_size, auxiliary_hidden_size,
                                                          num_update_methods)
 
@@ -77,8 +77,8 @@ def simplify_model(model, true_label, test_label):
     return simplified_model
 
 
-def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_epochs,
-                            num_iterations, num_updates, embedding_vector_size, auxiliary_hidden_size,
+def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
+                            num_epochs, num_updates, embedding_vector_size, auxiliary_hidden_size,
                             num_update_methods):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
@@ -113,17 +113,16 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
             gnn.reset_input_embedding_vectors()
 
         # Perform a series of forward and backward updates of all the embedding vectors within the GNN
-        gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors, output_feature_vectors,
-                                     num_updates)
+        gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors, output_feature_vectors, num_updates)
 
         # Compute the scores for each image pixel
-        pixel_scores = gnn.compute_scores()  # TODO
+        pixel_scores = gnn.compute_scores()
 
-        # Update the domain bounds for each pixel based on the pixel scores above TODO
+        # Update the domain bounds for each pixel based on the pixel scores above
         lower_bound, upper_bound = update_domain_bounds(lower_bound, upper_bound, pixel_scores)
 
         # Perturb each pixel within the updated domain bounds
-        perturbed_image = perturb_image(lower_bound, upper_bound)
+        perturbed_image = perturb_image(lower_bound, upper_bound).requires_grad_(True)
 
         # Perform a PGD attack given the new bounds and perturbation
         successful_attack_flag, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image, lower_bound,
@@ -200,7 +199,7 @@ def generate_gradient_info_dict(gradients):
     gradient_info_dict = {'last gradient': gradient_magnitudes[-1]}
 
     # Transform the list of consequent gradients into the list of pixel gradients
-    gradient_magnitudes_pixels = grouped_by_epoch_to_grouped_by_pixel(gradient_magnitudes)
+    gradient_magnitudes_pixels = grouped_by_iteration_to_grouped_by_pixel(gradient_magnitudes)
 
     # Compute pixel-wise mean, median, maximum and minimum gradients as well as the standard deviation and store them
     mean_gradient_magnitudes_pixels = []
@@ -233,7 +232,7 @@ def generate_gradient_info_dict(gradients):
     return gradient_info_dict
 
 
-def grouped_by_epoch_to_grouped_by_pixel(gradients):
+def grouped_by_iteration_to_grouped_by_pixel(gradients):
     """
     This function transforms the list of gradient magnitudes where each list element is the tensor represents the
     gradient at a particular epoch to the list where each element is the tensor representing the gradient of a
@@ -262,8 +261,8 @@ def generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image, gr
     gradient_info_tensors = list(gradient_info_dict.values())
     gradient_info_row_tensors = [gradient_info_tensor.view(-1) for gradient_info_tensor in gradient_info_tensors]
 
-    # Initialise the variable to store the resulting input feature vectors in
-    input_feature_vectors = []
+    # Initialise the tensor variable to store the input feature vectors in (size hasn't been computed yet)
+    input_feature_vectors = torch.tensor([0])
 
     # For each input node, generate the corresponding feature vector
     for input_idx in range(gradient_info_row_tensors[0].size()[0]):
@@ -278,8 +277,14 @@ def generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image, gr
         for i in range(len(gradient_info_row_tensors)):
             pixel_gradient_info.append(torch.tensor([gradient_info_row_tensors[i][input_idx]]))
 
-        # Finally, combine the two lists of information into a feature vector (tensor) and add it to the storage
-        input_feature_vectors.append(torch.cat(pixel_info + pixel_gradient_info))
+        # During the first loop, resize the tensor containing input feature vectors to the correct size
+        if input_idx == 0:
+            input_feature_vectors = torch.zeros(torch.Size([*lower_bound.size(),
+                                                            len(pixel_info + pixel_gradient_info)]))
+            input_feature_vectors = input_feature_vectors.reshape(-1, input_feature_vectors.size()[-1])
+
+        # Finally, add the generated feature vector in the required place
+        input_feature_vectors[input_idx] = torch.cat(pixel_info + pixel_gradient_info)
 
     return input_feature_vectors
 
@@ -294,7 +299,6 @@ def generate_relu_output_feature_vectors():
     return [[torch.tensor([0])]], [torch.tensor([0])]
 
 
-# TODO
 def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
     """
     This function updates the domain bounds based on the scores. For each input node, it chooses the update method
@@ -335,4 +339,4 @@ def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
     return new_lower_bound, new_upper_bound
 
 
-# pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 1, 10, 5, 3, 10, 0, subset=[0])
+pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 5, 5, 3, 10, 5, subset=[0])

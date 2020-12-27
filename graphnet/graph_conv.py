@@ -1,15 +1,7 @@
-#! /usr/bin/env python
-import pickle
-import os
-import glob
-import shutil
-import argparse
 import torch as th
-import numpy as np
 from torch import nn
-from torch.nn import functional as F
+from torch.nn import functional as f
 from plnn.modules import Flatten
-import random
 
 '''
 Training test file for the deep model transferability studies
@@ -41,20 +33,15 @@ class EmbedLayerUpdate(nn.Module):
         self.inp_b_1 = nn.Linear(p, p)
         self.inp_b2 = nn.Linear(2 * p, p)
         self.inp_b2_2 = nn.Linear(p, p)
-        # self.inp_b = nn.Linear(p, p)
 
         # for bound features of the node
         self.fc1 = nn.Linear(7, p)
         self.fc1_1 = nn.Linear(p, p)
-        # self.fc1_2 = nn.Linear(p, p)
-        # self.fc2 = nn.Linear(3*p, p)
-        # self.fc2_1 = nn.Linear(p, p)
 
         # for sum of neighbour embeddings vectors
         self.fc3 = nn.Linear(2 * p, p)
         self.fc3_2 = nn.Linear(p, p)
-        # for weights of edges connecting to the node.
-        # edge updates
+        # for weights of edges connecting to the node. edge updates
         self.fc4 = nn.Linear(2 * p, p)
         self.fc4_2 = nn.Linear(p, p)
 
@@ -84,40 +71,31 @@ class EmbedLayerUpdate(nn.Module):
         for i in range(self.T):
             # FORWARD PASS
             # for the forward pass the first layer is not updated
-            # print(th.cat([lower_bounds_all[0].unsqueeze(-1),upper_bounds_all[0].unsqueeze(-1)],1))
 
             # first, deal with the input layer
             if i == 0:
                 inp = th.cat([lower_bounds_all[0].view(-1).unsqueeze(-1),
                               primal_inputs.view(-1).unsqueeze(-1),
                               upper_bounds_all[0].view(-1).unsqueeze(-1)], 1)
-                temp = self.inp_f_1(F.relu(self.inp_f(inp)))
+                temp = self.inp_f_1(f.relu(self.inp_f(inp)))
                 mu[0] = temp.reshape(mu[0].size())
 
             relu_count_idx = 0
 
-            # if type(layers[0]) is nn.Linear:
-            #    out_features = [mu[0].size()[1], mu[0].size()[0]]
-            # elif type(layers[0]) nn.Conv2d:
-            #    pic_len = int((mu[0].size()[0])**0.5)
-            #    out_features = [mu[0].size()[1], 1, pic_len, pic_len]
             out_features = [-1] + th.tensor(lower_bounds_all[0][0].size()).tolist()
 
             idx = 0
             for layer_idx, layer in enumerate(layers['fixed_layers']):
-                # print('count_idx: ', count_idx)
-                # print('layer_idx: ', layer_idx)
                 if type(layer) is nn.Conv2d:
                     # reshape
                     mu_inp = th.cat([i for i in mu[relu_count_idx]], 1)
                     mu_inp = th.t(mu_inp).reshape(out_features)
-                    nb_embeddings_pre = F.conv2d(mu_inp, layer.weight, bias=None,
+                    nb_embeddings_pre = f.conv2d(mu_inp, layer.weight, bias=None,
                                                  stride=layer.stride, padding=layer.padding, dilation=layer.dilation,
                                                  groups=layer.groups)
                     # record and transfer back
                     out_features = th.tensor(nb_embeddings_pre.size()).tolist()
                     nb_embeddings_temp = nb_embeddings_pre.reshape(out_features[0], -1)
-                    # import pdb; pdb.set_trace()
                     nb_embeddings_temp = th.cat([nb_embeddings_temp[i * p:(1 + i) * p] for i in range(batch_size)], 1)
                     nb_embeddings_temp = th.t(nb_embeddings_temp)
                     pre_layer_bias = layer.bias.unsqueeze(1).expand(out_features[1], out_features[2] * out_features[3])
@@ -126,7 +104,6 @@ class EmbedLayerUpdate(nn.Module):
                     layer_lower_pre = lower_bounds_all[idx + 1].view(-1)
                     layer_upper_pre = upper_bounds_all[idx + 1].view(-1)
                     idx += 1
-                    # import pdb; pdb.set_trace()
 
                 elif type(layer) is nn.Linear:
                     nb_embeddings_temp = layer.weight @ mu[relu_count_idx]
@@ -139,16 +116,7 @@ class EmbedLayerUpdate(nn.Module):
 
                 elif type(layer) is nn.ReLU:
                     # node features
-                    # layer_lower = lower_bounds_all[idx+1].view(-1)
-                    # layer_upper = upper_bounds_all[idx+1].view(-1)
-                    # if (idx == len(lower_bounds_all)-1):
-                    #    layer_lower_pre = layer_lower
-                    #    layer_upper_pre = layer_upper
-                    # else:
-                    # layer_lower_pre = lower_bounds_all[idx].view(-1)
-                    # layer_upper_pre = upper_bounds_all[idx].view(-1)
                     ratio_0, ratio_1, beta, ambi_mask = compute_ratio(layer_lower_pre, layer_upper_pre)
-                    # import pdb; pdb.set_trace()
 
                     # measure relaxation
                     layer_n_bounds = th.cat([beta.unsqueeze(-1),
@@ -159,27 +127,20 @@ class EmbedLayerUpdate(nn.Module):
                                              primals[layer_idx - 1].unsqueeze(-1),
                                              primals[layer_idx].unsqueeze(-1),
                                              pre_layer_bias.unsqueeze(-1)], 1)
-                    layer_relax_s1 = self.fc1_1(F.relu(self.fc1(layer_n_bounds)))
+                    layer_relax_s1 = self.fc1_1(f.relu(self.fc1(layer_n_bounds)))
                     layer_relax = layer_relax_s1 * ambi_mask.unsqueeze(-1)
-
-                    # import pdb; pdb.set_trace()
-                    # print('layer relax forward: ', th.max(abs(layer_relax)))
 
                     # embedding vector updates
 
                     nb_embeddings_input = th.cat(
                         [nb_embeddings_temp * ratio_0.unsqueeze(-1), nb_embeddings_temp * ratio_1.unsqueeze(-1)], 1)
-                    layer_nb_embeddings = self.fc3_2(F.relu(self.fc3(nb_embeddings_input)))
-                    # import pdb; pdb.set_trace()
-
-                    # print('layer_nb_embeddings: ', th.max(abs(layer_nb_embeddings)))
+                    layer_nb_embeddings = self.fc3_2(f.relu(self.fc3(nb_embeddings_input)))
 
                     # update all nodes in a layer
                     layer_input = th.cat([layer_relax, layer_nb_embeddings], dim=1)
-                    layer_mu_new = self.fc4_2(F.relu(self.fc4(layer_input)))
+                    layer_mu_new = self.fc4_2(f.relu(self.fc4(layer_input)))
                     layer_mu_new = layer_mu_new * (ratio_0 != 0).float().unsqueeze(-1)
                     relu_count_idx += 1
-                    # import pdb; pdb.set_trace()
                     mu[relu_count_idx] = layer_mu_new.reshape(mu[relu_count_idx].size())
 
                     if th.sum(th.isnan(layer_mu_new)) != 0:
@@ -205,9 +166,9 @@ class EmbedLayerUpdate(nn.Module):
                                      layer_upper_pre.unsqueeze(-1),
                                      primals[-1].unsqueeze(-1),
                                      pre_layer_bias.unsqueeze(-1)], 1)
-            layer_relax_output = F.relu(self.out1(layer_n_bounds))
+            layer_relax_output = f.relu(self.out1(layer_n_bounds))
             layer_input = th.cat([layer_relax_output, nb_embeddings_temp], dim=1)
-            layer_mu_new = self.out3(F.relu(self.out2(layer_input)))
+            layer_mu_new = self.out3(f.relu(self.out2(layer_input)))
             relu_count_idx += 1
             mu[relu_count_idx] = layer_mu_new.reshape(mu[relu_count_idx].size())
 
@@ -218,35 +179,26 @@ class EmbedLayerUpdate(nn.Module):
             ratio = th.stack(ratio, 0)
             nor_weight = [layers['prop_layers'][i].weight for i in range(batch_size)]
             next_layer = 'prop'
-            # import pdb; pdb.set_trace()
 
             for layer_idx, layer in reversed(list(enumerate(layers['fixed_layers']))):
                 # for node features
-                # print('count_idx: ', count_idx)
-                # print('layer_idx: ', layer_idx)
 
                 if type(layer) is nn.Conv2d:
-                    ratio = F.conv_transpose2d(ratio, layer.weight, stride=layer.stride, padding=layer.padding)
+                    ratio = f.conv_transpose2d(ratio, layer.weight, stride=layer.stride, padding=layer.padding)
 
                     # Embedding vectors
-                    weight_size = layer.weight.size()
-                    # norm = th.norm(layer.weight.reshape(weight_size[0], weight_size[1], -1), dim=2).unsqueeze(
-                    # -1).unsqueeze(-1)
 
                     nor_weight = layer.weight
-                    # nor_weight = layer.weight/norm
-                    # temp_weight = layer.weight
 
                     next_layer = layer
                     idx -= 1
 
                 elif type(layer) is nn.Linear:
                     w_temp = layer.weight
-                    ratio = F.linear(ratio, th.t(w_temp))
+                    ratio = f.linear(ratio, th.t(w_temp))
 
                     nor_weight = layer.weight
-                    # nor_weight = layer.weight/th.norm(layer.weight, dim=1).unsqueeze(-1)
-                    # temp_weight = layer.weight
+
                     next_layer = 'Linear'
                     idx -= 1
 
@@ -254,8 +206,6 @@ class EmbedLayerUpdate(nn.Module):
 
                     layer_lower_pre = lower_bounds_all[idx]
                     layer_upper_pre = upper_bounds_all[idx]
-                    # layer_lower = lower_bounds_all[layer_idx+1].view(-1)
-                    # layer_upper = upper_bounds_all[layer_idx+1].view(-1)
                     layer_lower_pre = layer_lower_pre.view(-1)
                     layer_upper_pre = layer_upper_pre.view(-1)
                     ratio_0, ratio_1, beta, ambi_mask = compute_ratio(layer_lower_pre, layer_upper_pre)
@@ -275,43 +225,36 @@ class EmbedLayerUpdate(nn.Module):
                                              layer_upper_pre.unsqueeze(-1),
                                              beta.view(-1).unsqueeze(-1),
                                              -dual_vars[relu_count_idx - 2][:, 2].unsqueeze(-1) + dual_vars[
-                                                                                                      relu_count_idx - 2][
+                                                                                                    relu_count_idx - 2][
                                                                                                   :, 1].unsqueeze(-1),
                                              primals[layer_idx].unsqueeze(-1),
                                              primals[layer_idx - 1].unsqueeze(-1),
                                              pre_layer_bias.unsqueeze(-1)], dim=1)
 
-                    # intercept_candidate.unsqueeze(-1),
-                    # bias_candidate_1,
-                    # bias_candidate_2,
-
-                    layer_relax_s1 = self.bc1_2(F.relu(self.bc1_1(F.relu(self.bc1(layer_n_bounds)))))
-                    # layer_relax_s1 = self.bc1_1(F.relu(self.bc1(layer_n_bounds)))
+                    layer_relax_s1 = self.bc1_2(f.relu(self.bc1_1(f.relu(self.bc1(layer_n_bounds)))))
                     layer_relax_s2_input = th.cat([layer_relax_s1,
                                                    layer_relax_s1 * (
                                                        -dual_vars[relu_count_idx - 2][:, 2].unsqueeze(-1)),
                                                    layer_relax_s1 * (dual_vars[relu_count_idx - 2][:, 1].unsqueeze(-1))
                                                    ], dim=1)
-                    layer_relax = self.bc2_1(F.relu(self.bc2(layer_relax_s2_input)))
+                    layer_relax = self.bc2_1(f.relu(self.bc2(layer_relax_s2_input)))
 
-                    layer_relax = layer_relax * (ambi_mask).unsqueeze(-1)
-
-                    # print('layer relax backward: ', th.max(abs(layer_relax)))
+                    layer_relax = layer_relax * ambi_mask.unsqueeze(-1)
 
                     # embedding vector updates
                     if type(next_layer) is nn.Conv2d:
-                        ## reshape embedding vectors
+                        # reshape embedding vectors
                         out_features = [-1] + th.tensor(lower_bounds_all[idx + 1].size()).tolist()[1:]
                         mu_inp = th.cat([i for i in mu[relu_count_idx]], 1)
                         mu_inp = th.t(mu_inp).reshape(out_features)
-                        nb_embeddings_pre = F.conv_transpose2d(mu_inp, nor_weight, bias=None,
+                        nb_embeddings_pre = f.conv_transpose2d(mu_inp, nor_weight, bias=None,
                                                                stride=next_layer.stride, padding=next_layer.padding,
                                                                dilation=next_layer.dilation, groups=next_layer.groups)
                         _, _, w_inp, h_inp = mu_inp.size()
                         _, _, w_wgt, h_wgt = nor_weight.size()
                         freq_inp = th.ones([1, 1, w_inp, h_inp]).cuda()
                         freq_weight = th.ones([1, 1, w_wgt, h_wgt]).cuda()
-                        freq = F.conv_transpose2d(freq_inp, freq_weight, bias=None,
+                        freq = f.conv_transpose2d(freq_inp, freq_weight, bias=None,
                                                   stride=next_layer.stride, padding=next_layer.padding,
                                                   dilation=next_layer.dilation, groups=next_layer.groups)
                         nb_embeddings_pre = nb_embeddings_pre / freq
@@ -336,24 +279,20 @@ class EmbedLayerUpdate(nn.Module):
                     nb_embeddings_1 = nb_embeddings * ratio_1.unsqueeze(-1)
 
                     layer_embeddings_input = th.cat([nb_embeddings_0, nb_embeddings_1], dim=1)
-                    layer_nb_embeddings = self.bc3_1(F.relu(self.bc3(layer_embeddings_input)))
+                    layer_nb_embeddings = self.bc3_1(f.relu(self.bc3(layer_embeddings_input)))
 
                     if th.sum(th.isnan(layer_nb_embeddings)) != 0:
-                        print('layer_nb_embedding contains nan')
                         pdb.set_trace()
 
                     # update all nodes in a layer
                     layer_input = th.cat([layer_relax, layer_nb_embeddings], dim=1)
-                    layer_mu_new = self.bc4_1(F.relu(self.bc4(layer_input)))
+                    layer_mu_new = self.bc4_1(f.relu(self.bc4(layer_input)))
 
                     layer_mu_new = layer_mu_new * ((ratio_0 != 0).view(-1)).float().unsqueeze(-1)
 
                     mu[relu_count_idx - 1] = layer_mu_new.reshape(mu[relu_count_idx - 1].size())
                     relu_count_idx -= 1
-                    # print('relu_count_idx: ', relu_count_idx)
-                    # mu = layer_mu_new
-                    # print('layer_mu_new: ', th.max(abs(layer_mu_new)))
-                    # pdb.set_trace()
+
                 elif type(layer) is Flatten:
                     ratio = ratio.reshape(lower_bounds_all[idx].size())
                 else:
@@ -365,7 +304,7 @@ class EmbedLayerUpdate(nn.Module):
                         out_features = [-1] + th.tensor(lower_bounds_all[idx + 1].size()).tolist()[1:]
                         mu_inp = th.cat([i for i in mu[relu_count_idx]], 1)
                         mu_inp = th.t(mu_inp).reshape(out_features)
-                        nb_embeddings_pre = F.conv_transpose2d(mu_inp, nor_weight, bias=None,
+                        nb_embeddings_pre = f.conv_transpose2d(mu_inp, nor_weight, bias=None,
                                                                stride=next_layer.stride, padding=next_layer.padding,
                                                                dilation=next_layer.dilation, groups=next_layer.groups)
                         # record and transfer back
@@ -382,11 +321,10 @@ class EmbedLayerUpdate(nn.Module):
 
                     inp = th.cat([lower_bounds_all[0].view(-1).unsqueeze(-1),
                                   upper_bounds_all[0].view(-1).unsqueeze(-1)], 1)
-                    inp_relax = self.inp_b_1(F.relu(self.inp_b(inp)))
+                    inp_relax = self.inp_b_1(f.relu(self.inp_b(inp)))
                     domain_input = th.cat([inp_relax, nb_embeddings], dim=1)
-                    domain_mu_new = self.inp_b2_2(F.relu(self.inp_b2(domain_input)))
+                    domain_mu_new = self.inp_b2_2(f.relu(self.inp_b2(domain_input)))
                     mu[relu_count_idx - 1] = domain_mu_new.reshape(mu[relu_count_idx - 1].size())
-                    # print('last layer', relu_count_idx-1)
 
         return mu
 
@@ -404,13 +342,9 @@ class EmbedUpdates(nn.Module):
         super(EmbedUpdates, self).__init__()
         self.T = T
         self.p = p
-        # self.p_list = p_list
-        # assert len(p_list)==T+1
-        # self.updates = [EmbedLayerUpdate(p_list[i], p_list[i+1]) for i in range(0,T)]
         self.update = EmbedLayerUpdate(p, T)
 
     def forward(self, lower_bounds_all, upper_bounds_all, dual_vars, primals, primal_inputs, layers):
-        # mu = lower_bounds_all[0].new_full((len(lower_bounds_all[0]), self.p), fill_value=0.0)
         mu = init_mu(lower_bounds_all, self.p)
         mu = self.update(lower_bounds_all, upper_bounds_all, dual_vars, primals, primal_inputs, layers, mu)
         return mu
@@ -425,7 +359,6 @@ class ComputeFinalScore(nn.Module):
     def __init__(self, p):
         super(ComputeFinalScore, self).__init__()
         self.p = p
-        # self.fnode = nn.Linear(p,1)
         self.fnode = nn.Linear(p, p)
         self.fscore = nn.Linear(p, 1)
 
@@ -437,33 +370,14 @@ class ComputeFinalScore(nn.Module):
         return scores
 
     def forward(self, mu, masks):
-        # scores = self.utils(mu)
         scores = []
         for batch_idx in range(len(mu[0])):
             mu_temp = th.cat([i[batch_idx] for i in mu[1:-1]], dim=0)
             mu_temp = mu_temp[masks[batch_idx].nonzero().view(-1)]
             temp = self.fnode(mu_temp)
-            score = self.fscore(F.relu(temp))
+            score = self.fscore(f.relu(temp))
             scores.append(score.view(-1))
-        # scores = nn.utils.rnn.pad_sequence(scores, batch_first=True)
 
-        # for layer_idx in range(1, len(mu)-1):
-        #    temp = self.fnode(mu[layer_idx])
-        #    layer_score = self.fscore(F.relu(temp))
-        #    scores[layer_idx-1] = layer_score
-
-        # import db; pdb.set_trace()
-        # scores = [i.squeeze(1) for i in scores]
-        # reshape into 1 dimension
-        # scores = th.cat([i for i in scores],0)
-        # remove all invalid options
-        # scores = scores[mask.nonzero()].view(-1)
-
-        # scores = th.cat([i for i in scores],0)
-        # scores = scores[mask.nonzero().view(-1)]
-        # scores = scores/max(scores)
-        # scores = self.fscore_3(F.relu(self.fscore_2(scores)))
-        # transform into relative number
         return scores
 
 
@@ -492,18 +406,11 @@ def init_mu(lower_bounds_all, p):
 
 
 def compute_ratio(lower_bound, upper_bound):
-    lower_temp = lower_bound - F.relu(lower_bound)
-    upper_temp = F.relu(upper_bound)
+    lower_temp = lower_bound - f.relu(lower_bound)
+    upper_temp = f.relu(upper_bound)
     slope_ratio0 = upper_temp / (upper_temp - lower_temp)
     intercept = -1 * lower_temp * slope_ratio0
     ambi_mask = (intercept > 0).float()
     slope_ratio1 = (1 - 2 * (slope_ratio0 * ambi_mask)) * ambi_mask + slope_ratio0
-    # if (lower >= 0):
-    #    decision = [1,0]
-    # elif (upper <=0):
-    #    decision = [0, 0]
-    # else:
-    #    temp = upper/(upper - lower)
-    #    decision = [temp, -temp*lower]
-    # return decision
+
     return slope_ratio0, slope_ratio1, intercept, ambi_mask

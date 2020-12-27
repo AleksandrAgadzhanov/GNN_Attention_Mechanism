@@ -17,8 +17,9 @@ class GraphNeuralNetwork:
         # Store the underlying neural network as a field of the GNN
         self.neural_network = neural_network
 
-        # Initialise an input embedding vector at each position in the input size
-        self.inputs_embeddings = torch.zeros(torch.Size([*input_size, embedding_vector_size]))
+        # Initialise a row tensor of tensors each corresponding to a particular pixel
+        self.input_embeddings = torch.zeros(torch.Size([*input_size, embedding_vector_size]))
+        self.input_embeddings = self.input_embeddings.reshape(-1, embedding_vector_size)
 
         # Initialise the list of embeddings of each ReLU hidden layer
         self.relu_embeddings = []
@@ -37,10 +38,12 @@ class GraphNeuralNetwork:
 
             # Only add the embeddings to the list if the current layer of interest is the ReLU layer
             if type(layer) == torch.nn.ReLU:
-                self.relu_embeddings.append(torch.zeros(torch.Size([*test_image.size(), embedding_vector_size])))
+                relu_embeddings = torch.zeros(torch.Size([*test_image.size(), embedding_vector_size]))
+                self.relu_embeddings.append(relu_embeddings.reshape(-1, embedding_vector_size))
 
-        # Finally, initialise the output embedding vector of the only output node
-        self.output_embedding = torch.zeros(embedding_vector_size)
+        # Finally, initialise the output embedding vectors for the output nodes using the test output from the network
+        self.output_embeddings = torch.zeros(torch.Size([*test_image.size(), embedding_vector_size]))
+        self.output_embeddings = self.output_embeddings.reshape(-1, embedding_vector_size)
 
         # Now, initialise all the auxiliary neural networks
         self.forward_input_update_nn = ForwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
@@ -53,11 +56,10 @@ class GraphNeuralNetwork:
                                                               embedding_vector_size)
         self.backward_input_update_nn = BackwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
                                                               embedding_vector_size)
-        self.score_computation_nn = ScoreComputationNN(embedding_vector_size, auxiliary_hidden_size,
-                                                       num_update_methods)
+        self.score_computation_nn = ScoreComputationNN(embedding_vector_size, auxiliary_hidden_size, num_update_methods)
 
     def reset_input_embedding_vectors(self):
-        self.inputs_embeddings = torch.zeros(self.inputs_embeddings.size())
+        self.input_embeddings = torch.zeros(self.input_embeddings.size())
 
     # TODO
     def update_embedding_vectors(self, input_feature_vectors, relu_feature_vectors, output_feature_vectors,
@@ -71,23 +73,38 @@ class GraphNeuralNetwork:
 
             # First, perform the forward update of the input embedding vectors if they are still all zero (only happens
             # during the first update)
-            if torch.eq(self.inputs_embeddings, torch.zeros(self.inputs_embeddings.size())).all().item():
+            if torch.eq(self.input_embeddings, torch.zeros(self.input_embeddings.size())).all().item():
 
-                # Reshape the input embeddings so that each element of a row tensor is an embedding vector
-                self.inputs_embeddings = self.inputs_embeddings.view(-1, self.inputs_embeddings.size()[-1])
+                # Perform the forward update on each input embedding vector in turn
+                for input_idx in range(self.input_embeddings.size()[0]):
+                    self.input_embeddings[input_idx] = self.forward_input_update_nn(input_feature_vectors[input_idx])
 
-                # Now perform the forward update on each input embedding vector in turn
-                for input_idx in range(self.inputs_embeddings.size()[0]):
-                    self.inputs_embeddings[input_idx] = self.forward_input_update_nn(input_feature_vectors[input_idx])
+            # Now, perform the forward update of the ReLU layer embedding vectors of each layer. Initialise the variable
+            # which will be counting the number of ReLUs, thus matching the appropriate embedding vectors to ReLUs
+            relu_layer_idx = 0
+            for layer_idx, layer in enumerate(self.neural_network.children()):
+                pass
+                # TODO
 
-            # Now, perform the forward update of the ReLU layer embedding vectors of each layer
-
-    # TODO
     def compute_scores(self):
         """
         This function computes the scores for all the input nodes
         """
-        pass
+        # Initialise the row tensor of tensors of scores where each tensor corresponds to the scores associated with a
+        # particular pixel (size hasn't been computed yet)
+        scores = torch.tensor([0])
+
+        # For each input node, pass the corresponding embedding vector through the Score Computation NN
+        for input_idx in range(self.input_embeddings.size()[0]):
+            pixel_scores = self.score_computation_nn(self.input_embeddings[input_idx])
+
+            # During the first loop, resize the tensor containing scores to the correct size
+            if input_idx == 0:
+                scores = torch.zeros(torch.Size([self.input_embeddings.size()[0], pixel_scores.size()[0]]))
+
+            scores[input_idx] = pixel_scores
+
+        return scores
 
 
 class ForwardInputUpdateNN(nn.Module):
@@ -259,7 +276,3 @@ model = nn.Sequential(
     nn.ReLU(),
     nn.Linear(100, 1)
 )
-
-x = torch.zeros([1, 3, 32, 32])
-x[0][0][0][0] = torch.tensor(1)
-print(torch.eq(x, torch.zeros(x.size())).all().item())
