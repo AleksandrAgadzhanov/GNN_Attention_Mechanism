@@ -2,7 +2,7 @@ import gurobipy as grb
 import torch
 from plnn.dual_network_linear_approximation import LooseDualNetworkApproximation
 from plnn.modules import View, Flatten
-from torch.nn import functional as F
+from torch.nn import functional as f
 from torch import nn
 
 
@@ -51,20 +51,20 @@ def build_the_model(layers, input_domain, x, ball_eps, bounded):
             pos_weight = torch.clamp(layer.weight, 0, None)
             neg_weight = torch.clamp(layer.weight, None, 0)
 
-            out_lbs = (F.conv2d(pre_lb, pos_weight, layer.bias,
+            out_lbs = (f.conv2d(pre_lb, pos_weight, layer.bias,
                                 layer.stride, layer.padding, layer.dilation, layer.groups)
-                       + F.conv2d(pre_ub, neg_weight, None,
+                       + f.conv2d(pre_ub, neg_weight, None,
                                   layer.stride, layer.padding, layer.dilation, layer.groups))
-            out_ubs = (F.conv2d(pre_ub, pos_weight, layer.bias,
+            out_ubs = (f.conv2d(pre_ub, pos_weight, layer.bias,
                                 layer.stride, layer.padding, layer.dilation, layer.groups)
-                       + F.conv2d(pre_lb, neg_weight, None,
+                       + f.conv2d(pre_lb, neg_weight, None,
                                   layer.stride, layer.padding, layer.dilation, layer.groups))
 
             new_layer_lb = (torch.max(kw_lb[layer_idx], out_lbs)).squeeze(0)
             new_layer_ub = (torch.min(kw_ub[layer_idx], out_ubs)).squeeze(0)
         elif type(layer) == nn.ReLU:
-            new_layer_lb = F.relu(lower_bounds[-1])
-            new_layer_ub = F.relu(upper_bounds[-1])
+            new_layer_lb = f.relu(lower_bounds[-1])
+            new_layer_ub = f.relu(upper_bounds[-1])
 
         elif type(layer) == View:
             continue
@@ -293,3 +293,24 @@ def check_optimization_success(model, introduced_constrs=None):
         print('\n')
         print(f'model.status: {model.status}\n')
         raise NotImplementedError
+
+
+model = nn.Sequential(
+    nn.Conv2d(3, 8, 4, stride=2, padding=1),
+    nn.ReLU(),
+    nn.Conv2d(8, 16, 4, stride=2, padding=1),
+    nn.ReLU(),
+    Flatten(),
+    nn.Linear(16 * 8 * 8, 100),
+    nn.ReLU(),
+    nn.Linear(100, 1)
+)
+
+layers = list(model.children())
+lower_bounds = torch.zeros(3072)
+upper_bounds = torch.ones(3072)
+input_domain = torch.zeros([lower_bounds.size()[0], 2])
+input_domain[:, 0] = lower_bounds
+input_domain[:, 1] = upper_bounds
+
+print(build_the_model(layers, input_domain, 1, 0.1, False))

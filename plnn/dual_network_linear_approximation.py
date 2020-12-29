@@ -561,7 +561,7 @@ class LooseDualNetworkApproximation(LinearizedNetwork):
 
         return dual
 
-    def build_approximation(self, domains):
+    def build_approximation(self, domains, mask):
         # Okay, this is a disgusting, disgusting hack. This DEFINITELY should
         # be replaced by something more proper in practice but I'm doing this
         # for a quick experiment.
