@@ -264,15 +264,3 @@ class ScoreComputationNN(nn.Module):
 
     def forward(self, input_embedding_vector):
         return self.linear_2(f.relu(self.linear_1(input_embedding_vector)))
-
-
-model = nn.Sequential(
-    nn.Conv2d(3, 8, 4, stride=2, padding=1),
-    nn.ReLU(),
-    nn.Conv2d(8, 16, 4, stride=2, padding=1),
-    nn.ReLU(),
-    Flatten(),
-    nn.Linear(16 * 8 * 8, 100),
-    nn.ReLU(),
-    nn.Linear(100, 1)
-)

@@ -12,6 +12,8 @@
   <component name="ChangeListManager">
     <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;completed score computation and downloaded bounds computation functions&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/overall_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/overall_algorithm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plnn/conv_kwinter_kw.py" beforeDir="false" afterPath="$PROJECT_DIR$/plnn/conv_kwinter_kw.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plnn/dual_network_linear_approximation.py" beforeDir="false" afterPath="$PROJECT_DIR$/plnn/dual_network_linear_approximation.py" afterDir="false" />
     </list>
@@ -40,7 +42,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.conv_kwinter_kw">
+  <component name="RunManager" selected="Python.overall_algorithm">
     <configuration name="GraphNeuralNetwork" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -127,9 +129,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.overall_algorithm" />
         <item itemvalue="Python.conv_kwinter_kw" />
         <item itemvalue="Python.GraphNeuralNetwork" />
-        <item itemvalue="Python.overall_algorithm" />
         <item itemvalue="Python.pgd_attacks" />
       </list>
     </recent_temporary>
@@ -192,7 +194,14 @@
       <option name="project" value="LOCAL" />
       <updated>1609102754838</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="&quot;completed score computation and downloaded bounds computation functions&quot;">
+      <created>1609203278632</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1609203278632</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -222,46 +231,46 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1608820985392" />
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1609179201071">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1609611314997">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609179201071" />
-    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1609179201071">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609611314997" />
+    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1609611314995">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609179201071" />
-    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1609179201070">
+    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609611314995" />
+    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1609611314995">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609179201070" />
-    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1609179201071">
+    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609611314995" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1609611314996">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609179201071" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1609102783328">
+    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609611314996" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1609611295862">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609102783328" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1609102783328">
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609611295862" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1609611295861">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609102783328" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1609102783328">
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609611295861" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1609611295861">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609102783328" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1609102783328">
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609611295861" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1609611295862">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609102783328" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609611295862" />
     <state x="461" y="165" key="SettingsEditor" timestamp="1609178226660">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1609178226660" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1609102769752">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1609203296110">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1609102769752" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1609203296110" />
     <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1608985995804">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

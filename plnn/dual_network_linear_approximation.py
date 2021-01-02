@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from torch.nn import functional as F
+from torch.nn import functional as f
 from convex_adversarial.dual_network import DualNetwork
 from convex_adversarial.dual_layers import DualLinear, DualReLU, DualConv2d, DualReshape
 from convex_adversarial.dual_inputs import InfBallBounded, InfBall
@@ -62,8 +62,8 @@ class LooseDualNetworkApproximation(LinearizedNetwork):
 
                 lower_bounds[-1] = layer.zl.squeeze()
                 upper_bounds[-1] = layer.zu.squeeze()
-                lower_bounds.append(F.relu(lower_bounds[-1]))
-                upper_bounds.append(F.relu(upper_bounds[-1]))
+                lower_bounds.append(f.relu(lower_bounds[-1]))
+                upper_bounds.append(f.relu(upper_bounds[-1]))
 
             elif Flatten:
                 lower_bounds.append(lower_bounds[-1].view(-1))
@@ -156,8 +156,8 @@ class LooseDualNetworkApproximation(LinearizedNetwork):
                     # to the output of the ReLU from before.
                     lower_bounds[-1] = layer.zl.squeeze()
                     upper_bounds[-1] = layer.zu.squeeze()
-                    lower_bounds.append(F.relu(lower_bounds[-1]))
-                    upper_bounds.append(F.relu(upper_bounds[-1]))
+                    lower_bounds.append(f.relu(lower_bounds[-1]))
+                    upper_bounds.append(f.relu(upper_bounds[-1]))
 
                 elif Flatten:
                     lower_bounds.append(lower_bounds[-1].view(-1))
@@ -266,8 +266,8 @@ class LooseDualNetworkApproximation(LinearizedNetwork):
                     # to the output of the ReLU from before.
                     lower_bounds[-1] = layer.zl.squeeze()
                     upper_bounds[-1] = layer.zu.squeeze()
-                    lower_bounds.append(F.relu(lower_bounds[-1]))
-                    upper_bounds.append(F.relu(upper_bounds[-1]))
+                    lower_bounds.append(f.relu(lower_bounds[-1]))
+                    upper_bounds.append(f.relu(upper_bounds[-1]))
 
                 elif Flatten:
                     lower_bounds.append(lower_bounds[-1].view(-1))
@@ -413,8 +413,8 @@ class LooseDualNetworkApproximation(LinearizedNetwork):
             new_dual_net.append(new_dual_layer)
 
         # import pdb; pdb.set_trace()
-        lower_bounds.append(F.relu(lower_bounds[-1]))
-        upper_bounds.append(F.relu(upper_bounds[-1]))
+        lower_bounds.append(f.relu(lower_bounds[-1]))
+        upper_bounds.append(f.relu(upper_bounds[-1]))
         # extract all new_updated_bounds
         for layer in new_dual_net[change_idx + 2:]:
             if type(layer) is DualReLU:
@@ -424,8 +424,8 @@ class LooseDualNetworkApproximation(LinearizedNetwork):
                 # to the output of the ReLU from before.
                 lower_bounds[-1] = layer.zl.squeeze()
                 upper_bounds[-1] = layer.zu.squeeze()
-                lower_bounds.append(F.relu(lower_bounds[-1]))
-                upper_bounds.append(F.relu(upper_bounds[-1]))
+                lower_bounds.append(f.relu(lower_bounds[-1]))
+                upper_bounds.append(f.relu(upper_bounds[-1]))
 
             elif type(layer) is DualReshape:
                 lower_bounds.append(lower_bounds[-1].view(-1))

@@ -1,4 +1,5 @@
 from exp_utils.model_utils import load_cifar_data, load_properties_data, add_single_prop
+from plnn.conv_kwinter_kw import KWConvNetwork
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 import torch
 
@@ -98,7 +99,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     # Otherwise, the GNN framework approach must be followed. First, generate the feature vectors for all layers
     input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
                                                            gradient_info_dict)
-    relu_feature_vectors, output_feature_vectors = generate_relu_output_feature_vectors()  # TODO
+    relu_feature_vectors, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model, lower_bound, upper_bound, image, perturbed_image, epsilon * epsilon_factor)
 
     # Initialise the GNN for the given network (which also initialises all the required auxiliary neural networks)
     gnn = GraphNeuralNetwork(simplified_model, image.size(), embedding_vector_size, input_feature_vectors[0].size()[0],
@@ -290,13 +291,52 @@ def generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image, gr
 
 
 # TODO
-def generate_relu_output_feature_vectors():
+def generate_relu_output_feature_vectors(neural_network, input_lower_bound, input_upper_bound, image, perturbed_image,
+                                         epsilon, image_is_bounded=False):
     """
     This function generates the feature vectors for each hidden layer and output node. Intermediate lower and upper
     bounds for each node are computed by applying the triangular approximation for each ReLU node and solving the
     resulting constrained optimisation problem
     """
-    return [[torch.tensor([0])]], [torch.tensor([0])]
+    # First, create an instance of the KWConvNetwork class so that the function computing the bounds can be used
+    kw_conv_network = KWConvNetwork(list(neural_network.children()))
+
+    # Reshape the lower and upper bounds of the inputs for the function to be used properly
+    input_lower_bound = input_lower_bound.squeeze(0)
+    input_upper_bound = input_upper_bound.squeeze(0)
+    input_domain = torch.zeros([3, 32, 32, 2])
+    input_domain[:, :, :, 0] = input_lower_bound
+    input_domain[:, :, :, 1] = input_upper_bound
+
+    # Now call the build_the_model function which returns the lower and upper bounds for all layers (including the input
+    # one) as lists of tensors which are shaped as, for example, [3, 32, 32] instead of the usual [1, 3, 32, 32], and
+    # the list of indices of layers located just before the ReLU layers
+    lower_bounds_all, upper_bounds_all, pre_relu_indices = kw_conv_network.build_the_model(input_domain, image,
+                                                                                           epsilon,
+                                                                                           image_is_bounded)
+
+    # Initialise the list for storing the feature vectors of each ReLU layer and the tensor for storing the output
+    # feature vectors (size hasn't been computed yet)
+    relu_feature_vectors_list = []
+    output_feature_vectors = torch.tensor([0])
+
+    # Now iterate through the neural network layers and extract the information for the relevant feature vectors
+    for layer_idx, layer in enumerate(list(neural_network.children())):
+        overall_layer_idx = layer_idx + 1  # input layer is considered in pre_relu_indices, but not in neural_network
+        perturbed_image = layer(perturbed_image)
+
+        # If the current overall layer index is the same as the index before the ReLU layer, construct the tensor of
+        # feature vectors
+        if overall_layer_idx in pre_relu_indices:
+            lower_bounds_before_relu = lower_bounds_all[overall_layer_idx].squeeze(0)
+            relu_upper_bounds_before_relu = upper_bounds_all[overall_layer_idx].squeeze(0)
+            node_values_before_relu = perturbed_image
+            layer_bias_before_relu = layer.bias
+
+            # If the ratio between the lower and upper bound is +ve, then the intercept of the relaxation triangle is
+            # zero, otherwise it is easily obtained mathematically
+
+    return None, None
 
 
 def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
