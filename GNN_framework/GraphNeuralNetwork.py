@@ -8,8 +8,9 @@ class GraphNeuralNetwork:
     """
     This class represents the overall Graph Neural Network and its functionality
     """
+
     # When the GNN is initialised, a graph is created which has the same structure as the input neural network but each
-    # proper node (in[ut, ReLU and output) now containing the corresponding embedding vector filled with zeros.
+    # proper node (input, ReLU and output) now containing the corresponding embedding vector filled with zeros.
     # In addition, all the auxiliary neural networks are initialised including the ones which perform the forward and
     # backward update operations and the one which computes the scores of update methods of all input nodes
     def __init__(self, neural_network, input_size, embedding_vector_size, input_feature_size, relu_feature_size,
@@ -62,7 +63,7 @@ class GraphNeuralNetwork:
         self.input_embeddings = torch.zeros(self.input_embeddings.size())
 
     # TODO
-    def update_embedding_vectors(self, input_feature_vectors, relu_feature_vectors, output_feature_vectors,
+    def update_embedding_vectors(self, input_feature_vectors, relu_feature_vectors_list, output_feature_vectors,
                                  num_updates):
         """
         This function performs a series of forward and backward updates on all the embedding vectors until convergence
@@ -111,6 +112,7 @@ class ForwardInputUpdateNN(nn.Module):
     """
     This class represents the neural network which performs the forward update on the input nodes
     """
+
     def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
         super(ForwardInputUpdateNN, self).__init__()
         self.linear_1 = nn.Linear(feature_vector_size, hidden_layer_size)
@@ -124,6 +126,7 @@ class ForwardReluUpdateNN(nn.Module):
     """
     This class represents the neural network which performs the forward update on the ReLU hidden layer nodes
     """
+
     def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
         super(ForwardReluUpdateNN, self).__init__()
 
@@ -161,6 +164,7 @@ class ForwardOutputUpdateNN(nn.Module):
     """
     This class represents the neural network which performs the forward update on the output node
     """
+
     def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
         super(ForwardOutputUpdateNN, self).__init__()
 
@@ -184,6 +188,7 @@ class BackwardReluUpdateNN(nn.Module):
     """
     This class represents the neural network which performs the backward update on the hidden layer nodes
     """
+
     def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
         super(BackwardReluUpdateNN, self).__init__()
 
@@ -231,6 +236,7 @@ class BackwardInputUpdateNN(nn.Module):
     """
     This class represents the neural network which performs the backward update on the input nodes
     """
+
     def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
         super(BackwardInputUpdateNN, self).__init__()
 
@@ -255,6 +261,7 @@ class ScoreComputationNN(nn.Module):
     """
     This class represents the neural network which computes the scores for all possible input domain update methods
     """
+
     def __init__(self, embedding_vector_size, hidden_layer_size, number_of_update_methods):
         super(ScoreComputationNN, self).__init__()
 
@@ -264,3 +271,18 @@ class ScoreComputationNN(nn.Module):
 
     def forward(self, input_embedding_vector):
         return self.linear_2(f.relu(self.linear_1(input_embedding_vector)))
+
+
+# model = nn.Sequential(
+#     nn.Conv2d(3, 8, 4, stride=2, padding=1),
+# )
+#
+# image = torch.ones([1, 3, 2, 2])
+# print(model(image).size())
+# print("\n")
+# image_2 = torch.ones([1, 3, 2, 2]) * 2
+# print(model(image_2).size())
+# print("\n")
+# image_combo = torch.ones([2, 3, 2, 2])
+# image_combo[1, :, :, :] = 2
+# print(model(image_combo).size())

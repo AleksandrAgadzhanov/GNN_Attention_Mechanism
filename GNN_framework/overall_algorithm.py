@@ -99,11 +99,15 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     # Otherwise, the GNN framework approach must be followed. First, generate the feature vectors for all layers
     input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
                                                            gradient_info_dict)
-    relu_feature_vectors, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model, lower_bound, upper_bound, image, perturbed_image, epsilon * epsilon_factor)
+    relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
+                                                                                             lower_bound,
+                                                                                             upper_bound, image,
+                                                                                             perturbed_image,
+                                                                                             epsilon * epsilon_factor)
 
     # Initialise the GNN for the given network (which also initialises all the required auxiliary neural networks)
     gnn = GraphNeuralNetwork(simplified_model, image.size(), embedding_vector_size, input_feature_vectors[0].size()[0],
-                             relu_feature_vectors[0][0].size()[0], output_feature_vectors[0].size()[0],
+                             relu_feature_vectors_list[0][0].size()[0], output_feature_vectors[0].size()[0],
                              auxiliary_hidden_size, num_update_methods)
 
     # Follow the GNN framework approach for a specified number of epochs
@@ -114,7 +118,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
             gnn.reset_input_embedding_vectors()
 
         # Perform a series of forward and backward updates of all the embedding vectors within the GNN
-        gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors, output_feature_vectors, num_updates)
+        gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors_list, output_feature_vectors,
+                                     num_updates)
 
         # Compute the scores for each image pixel
         pixel_scores = gnn.compute_scores()
@@ -132,6 +137,16 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
         # If the attack was successful, the procedure can be terminated and True can be returned, otherwise continue
         if successful_attack_flag:
             return True
+
+        # Otherwise, update all the feature vectors using new information
+        input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
+                                                               gradient_info_dict)
+        relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
+                                                                                                 lower_bound,
+                                                                                                 upper_bound, image,
+                                                                                                 perturbed_image,
+                                                                                                 epsilon *
+                                                                                                 epsilon_factor)
 
     # If the limit on the number of epochs was reached and no PGD attack was successful, return False
     return False
@@ -290,7 +305,6 @@ def generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image, gr
     return input_feature_vectors
 
 
-# TODO
 def generate_relu_output_feature_vectors(neural_network, input_lower_bound, input_upper_bound, image, perturbed_image,
                                          epsilon, image_is_bounded=False):
     """
@@ -326,17 +340,55 @@ def generate_relu_output_feature_vectors(neural_network, input_lower_bound, inpu
         perturbed_image = layer(perturbed_image)
 
         # If the current overall layer index is the same as the index before the ReLU layer, construct the tensor of
-        # feature vectors
+        # feature vectors and append it to the output list
         if overall_layer_idx in pre_relu_indices:
-            lower_bounds_before_relu = lower_bounds_all[overall_layer_idx].squeeze(0)
-            relu_upper_bounds_before_relu = upper_bounds_all[overall_layer_idx].squeeze(0)
-            node_values_before_relu = perturbed_image
-            layer_bias_before_relu = layer.bias
+            # First extract all the relevant features and reshape them to be row tensors
+            lower_bounds_before_relu = lower_bounds_all[overall_layer_idx].view(-1)
+            upper_bounds_before_relu = upper_bounds_all[overall_layer_idx].view(-1)
+            node_values_before_relu = perturbed_image.view(-1)
+
+            # Layer bias has to be extracted with care since if the layer is convolutional, there is 1 bias value per
+            # channel and has to be repeated to match the number of nodes
+            layer_bias_before_relu = torch.zeros(node_values_before_relu.size()).view(-1)
+            if type(layer) == torch.nn.Conv2d:
+                constant_portion_size = int(node_values_before_relu.size()[0] / layer.bias.size()[0])
+                for bias_idx in range(layer.bias.size()[0]):
+                    for num_repeat in range(constant_portion_size):
+                        layer_bias_before_relu[bias_idx * constant_portion_size + num_repeat] = layer.bias[bias_idx]
+            else:
+                layer_bias_before_relu = layer.bias.view(-1)
+
+            # Relaxation triangle intercept is a condition dependent feature so will be computed separately below
+            relaxation_triangle_intercepts = torch.zeros(node_values_before_relu.size())
 
             # If the ratio between the lower and upper bound is +ve, then the intercept of the relaxation triangle is
-            # zero, otherwise it is easily obtained mathematically
+            # zero, otherwise it is easily obtained as -ub * lb / (ub - lb) (ub and lb - upper and lower bounds)
+            for i in range(lower_bounds_before_relu.size()[0]):
+                if lower_bounds_before_relu[i] * upper_bounds_before_relu[i] > 0:
+                    relaxation_triangle_intercepts[i] = 0
+                else:
+                    relaxation_triangle_intercepts[i] = - upper_bounds_before_relu[i] * lower_bounds_before_relu[i] /\
+                                                       (upper_bounds_before_relu[i] - lower_bounds_before_relu[i])
 
-    return None, None
+            relu_feature_vectors_list.append(torch.transpose(torch.stack([lower_bounds_before_relu,
+                                                                          upper_bounds_before_relu,
+                                                                          node_values_before_relu,
+                                                                          layer_bias_before_relu,
+                                                                          relaxation_triangle_intercepts]), 1, 0))
+
+        # Finally, the last layer is the output one, so construct the corresponding feature vectors
+        if layer_idx == len(list(neural_network.children())) - 1:
+            output_lower_bounds = lower_bounds_all[-1].view(-1)
+            output_upper_bounds = upper_bounds_all[-1].view(-1)
+            output_node_values = perturbed_image.view(-1)
+            output_bias = layer.bias.view(-1)
+
+            output_feature_vectors = torch.transpose(torch.stack([output_lower_bounds,
+                                                                  output_upper_bounds,
+                                                                  output_node_values,
+                                                                  output_bias]), 1, 0)
+
+    return relu_feature_vectors_list, output_feature_vectors
 
 
 def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
@@ -379,4 +431,4 @@ def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
     return new_lower_bound, new_upper_bound
 
 
-pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 5, 5, 3, 10, 5, subset=[0])
+pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 10, 10, 4, 10, 3, subset=[0])
