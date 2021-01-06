@@ -1,7 +1,10 @@
 import torch
 import torch.nn as nn
-from torch.nn import functional as f
+import copy
 from plnn.modules import Flatten
+from GNN_framework.helper_functions import transform_embedding_vectors, get_numbers_of_connecting_nodes
+from GNN_framework.auxiliary_neural_networks import ForwardInputUpdateNN, ForwardReluUpdateNN, ForwardOutputUpdateNN, \
+    BackwardReluUpdateNN, BackwardInputUpdateNN, ScoreComputationNN
 
 
 class GraphNeuralNetwork:
@@ -22,7 +25,7 @@ class GraphNeuralNetwork:
         self.input_embeddings = torch.zeros([embedding_vector_size, *input_size[1:]])
 
         # Initialise the list of embeddings of each ReLU hidden layer
-        self.relu_embeddings = []
+        self.relu_embeddings_list = []
 
         # Initialise the test input to the network for the purpose of determining the sizes at the output of each layer
         test_image = torch.zeros(input_size)
@@ -38,7 +41,7 @@ class GraphNeuralNetwork:
 
             # Only add the embeddings to the list if the current layer of interest is the ReLU layer
             if type(layer) == torch.nn.ReLU:
-                self.relu_embeddings.append(torch.zeros([embedding_vector_size, *test_image.size()[1:]]))
+                self.relu_embeddings_list.append(torch.zeros([embedding_vector_size, *test_image.size()[1:]]))
 
         # Finally, initialise the output embedding vectors for the output nodes using the test output from the network
         self.output_embeddings = torch.zeros([embedding_vector_size, *test_image.size()[1:]])
@@ -62,7 +65,6 @@ class GraphNeuralNetwork:
         """
         self.input_embeddings = torch.zeros(self.input_embeddings.size())
 
-    # TODO
     def update_embedding_vectors(self, input_feature_vectors, relu_feature_vectors_list, output_feature_vectors,
                                  num_updates):
         """
@@ -79,14 +81,17 @@ class GraphNeuralNetwork:
 
             # Now, perform the forward update of the ReLU layers and output layer embedding vectors using a dedicated
             # function
-            self.forward_update_relu_output_embeddings(relu_feature_vectors_list, output_feature_vectors)
+            size_before_flattening = self.forward_update_relu_output_embeddings(relu_feature_vectors_list,
+                                                                                output_feature_vectors)
+
+            self.backward_update_relu_input_embeddings(relu_feature_vectors_list, size_before_flattening)
 
     def forward_update_input_embeddings(self, input_feature_vectors):
         """
         This function performs the forward update on the input layer embedding vectors.
         """
         # Reshape the input embedding vectors for the time of update to be the tensor which has the shape
-        # [embedding_size, image_dimensions_product], storing the original size to reshape them after the update
+        # [embedding_size, image_dimensions_product], storing the original size to reshape them back after the update
         original_size = self.input_embeddings.size()
         self.input_embeddings = self.input_embeddings.reshape(self.input_embeddings.size()[0], -1)
 
@@ -107,11 +112,22 @@ class GraphNeuralNetwork:
         relu_layer_idx = 0
         embedding_vectors = self.input_embeddings
 
-        # Now go over each layer in turn, taking care to distinguish between the different types of layers
-        for layer_idx, layer in enumerate(self.neural_network.children()):
+        # Initialise an extra variable which will be needed during the backward update - the size before flattening
+        size_before_flattening = torch.Size([0])
 
-            # If the layer is linear, convolutional or of type Flatten, simply pass the embedding vectors through it
-            if type(layer) == nn.Linear or type(layer) == nn.Conv2d or type(layer) == Flatten:
+        # Now go over each layer in turn, taking care to distinguish between the different types of layers
+        for layer in self.neural_network.children():
+
+            # If the layer is linear or convolutional, pass the embedding vectors through it, without applying the bias
+            if type(layer) == nn.Linear or type(layer) == nn.Conv2d:
+                layer_without_bias = copy.deepcopy(layer)
+                layer_without_bias.bias.data.fill_(0)
+                embedding_vectors = layer_without_bias(embedding_vectors)
+
+            # If the layer is of type Flatten, simply pass the embedding vectors through it, storing the shape before
+            # flattening in an extra variable
+            elif type(layer) == Flatten:
+                size_before_flattening = torch.Size(embedding_vectors.size())
                 embedding_vectors = layer(embedding_vectors)
 
             # If the layer is a ReLU layer, then update the embedding vectors accordingly
@@ -120,13 +136,12 @@ class GraphNeuralNetwork:
                 relu_feature_vectors = relu_feature_vectors_list[relu_layer_idx]
 
                 # Reshape the embedding vectors to be of size [embedding_size, product_of_other_dimensions] during the
-                # update, storing its original size
+                # update, storing its original size to reshape it back after the update
                 original_size = embedding_vectors.size()
                 embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
 
                 # Transform all the embedding vectors so that they can enter the appropriate neural network
-                transformed_embedding_vectors = forward_transform_embedding_vectors(embedding_vectors,
-                                                                                    relu_feature_vectors)
+                transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors)
 
                 # Update each embedding vector in turn
                 for node_idx in range(embedding_vectors.size()[-1]):
@@ -138,8 +153,88 @@ class GraphNeuralNetwork:
 
                 # Set the corresponding element of the storage to the updated embedding vectors tensor and increment the
                 # ReLU layer counter
-                self.relu_embeddings[relu_layer_idx] = embedding_vectors
+                self.relu_embeddings_list[relu_layer_idx] = embedding_vectors
                 relu_layer_idx += 1
+
+            # Otherwise, the layer type hasn't been considered yet
+            else:
+                raise NotImplementedError
+
+        # At this point the output layer is reached, so it is left to update its embedding vectors based on the final
+        # form of the propagated embeddings using the same procedure as for the ReLU layers
+        original_size = embedding_vectors.size()
+        embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
+        for node_idx in range(embedding_vectors.size()[-1]):
+            embedding_vectors[:, node_idx] = self.forward_output_update_nn(output_feature_vectors[:, node_idx],
+                                                                           embedding_vectors[:, node_idx])
+        embedding_vectors = embedding_vectors.reshape(original_size)
+        self.output_embeddings = embedding_vectors
+
+        return size_before_flattening
+
+    # TODO
+    def backward_update_relu_input_embeddings(self, relu_feature_vectors_list, size_before_flattening):
+        """
+        This function performs the backward updates of all the ReLU layers embedding vectors based on the techniques
+        outlined in the "NN Branching for NN Verification" paper.
+        """
+        # Initialise the variable which will be keeping track of ReLUs, thus matching the appropriate features and
+        # embedding vectors to corresponding ReLUs, and the variable which will keep track of the output of each layer
+        # (now initialised at the output since this is a backward update)
+        relu_layer_idx = len(self.relu_embeddings_list) - 1
+        embedding_vectors = self.output_embeddings
+
+        # Initialise the variable which will store the size of the input to the convolutional layer when required
+        conv_input_size = torch.Size([0])
+
+        # Now go backward over each layer in turn, taking care to distinguish between the different types of layers
+        for layer_idx, layer in enumerate(reversed(list(self.neural_network.children()))):
+
+            # If the layer is linear, construct the layer with the same weights and zero biases, but passing in the
+            # opposite direction by swapping the inputs and outputs
+            if type(layer) == nn.Linear:
+                backwards_linear_layer = nn.Linear(layer.out_features, layer.in_features)
+                backwards_linear_layer.weight.data = torch.transpose(layer.weight.data, 1, 0)
+                backwards_linear_layer.bias.data.fill_(0)
+                embedding_vectors = backwards_linear_layer(embedding_vectors)
+
+            # If the layer is convolutional, construct the layer in the similar way to above, but this time specifying
+            # the full set of parameters
+            elif type(layer) == nn.Conv2d:
+                # If the next layer exists and is a ReLU layer, store the size of the input to the convolutional layer
+                if layer_idx <= len((list(self.neural_network.children()))) - 2 and \
+                        type(list(enumerate(reversed(list(self.neural_network.children()))))[layer_idx + 1]) == nn.ReLU:
+                    conv_input_size = embedding_vectors.size()
+
+                backwards_conv_layer = nn.Conv2d(layer.out_channels, layer.in_channels, kernel_size=layer.kernel_size,
+                                                 stride=layer.stride, padding=layer.padding, dilation=layer.dilation,
+                                                 groups=layer.groups)
+                backwards_conv_layer.weight.data = torch.transpose(layer.weight.data, 1, 0)
+                backwards_conv_layer.bias.data.fill_(0)
+                embedding_vectors = backwards_conv_layer(embedding_vectors)
+
+            # If the layer is of type Flatten, then expansion to the size present before the tensor was flattened during
+            # the forward update should be performed instead of flattening
+            elif type(layer) == Flatten:
+                embedding_vectors = embedding_vectors.reshape(size_before_flattening)
+
+            # If the layer is a ReLU layer, then update the embedding vectors accordingly
+            elif type(layer) == nn.ReLU:
+                # First, extract the appropriate feature vectors tensor from the list
+                relu_feature_vectors = relu_feature_vectors_list[relu_layer_idx]
+
+                # If the previous layer was convolutional, special care should be taken to scale the embedding vectors
+                # (no IndexOutOfBoundsError since ReLU cannot be the last layer in the original network)
+                previous_layer = list(enumerate(reversed(list(self.neural_network.children()))))[layer_idx - 1]
+                if type(previous_layer) == nn.Conv2d:
+                    # Find the number of connecting nodes in the convolutional layer for each ReLU layer node by calling
+                    # the appropriate function
+                    numbers_of_connecting_nodes = get_numbers_of_connecting_nodes(previous_layer, conv_input_size)
+
+                # Reshape the embedding vectors to be of size [embedding_size, product_of_other_dimensions] during the
+                # update, storing its original size to reshape it back after the update
+                original_size = embedding_vectors.size()
+                embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
 
             # Otherwise, the layer type hasn't been considered yet
             else:
@@ -153,230 +248,25 @@ class GraphNeuralNetwork:
         # particular pixel (size hasn't been computed yet)
         scores = torch.tensor([0])
 
+        # Reshape the input embeddings to the size which is easy to iterate over, storing the original size
+        original_size = self.input_embeddings.size()
+        self.input_embeddings = self.input_embeddings.reshape(self.input_embeddings.size()[0], -1)
+
         # For each input node, pass the corresponding embedding vector through the Score Computation NN
-        for input_idx in range(self.input_embeddings.size()[0]):
-            pixel_scores = self.score_computation_nn(self.input_embeddings[input_idx])
+        for input_idx in range(self.input_embeddings.size()[-1]):
+            pixel_scores = self.score_computation_nn(self.input_embeddings[:, input_idx])
 
             # During the first loop, resize the tensor containing scores to the correct size
             if input_idx == 0:
-                scores = torch.zeros(torch.Size([self.input_embeddings.size()[0], pixel_scores.size()[0]]))
+                scores = torch.zeros(torch.Size([pixel_scores.size()[0], self.input_embeddings.size()[-1]]))
 
-            scores[input_idx] = pixel_scores
+            scores[:, input_idx] = pixel_scores
+
+        # Reshape the input embeddings to the original size
+        self.input_embeddings = self.input_embeddings.reshape(original_size)
 
         return scores
 
 
-class ForwardInputUpdateNN(nn.Module):
-    """
-    This class represents the neural network which performs the forward update on the input nodes
-    """
-
-    def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
-        super(ForwardInputUpdateNN, self).__init__()
-        self.linear_1 = nn.Linear(feature_vector_size, hidden_layer_size)
-        self.linear_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
-
-    def forward(self, input_feature_vector):
-        return self.linear_2(f.relu(self.linear_1(input_feature_vector)))
-
-
-class ForwardReluUpdateNN(nn.Module):
-    """
-    This class represents the neural network which performs the forward update on the ReLU hidden layer nodes
-    """
-
-    def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
-        super(ForwardReluUpdateNN, self).__init__()
-
-        # Initialise the layers for obtaining information from the local features
-        self.linear_local_1 = nn.Linear(feature_vector_size, hidden_layer_size)
-        self.linear_local_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
-
-        # Initialise the layers for obtaining information from the previous neighbour embedding vectors
-        self.linear_neighbour_1 = nn.Linear(2 * embedding_vector_size, hidden_layer_size)
-        self.linear_neighbour_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
-
-        # Finally, initialise the layers for combining information from the local features and the previous neighbour
-        # embedding vectors
-        self.linear_combine_1 = nn.Linear(2 * hidden_layer_size, hidden_layer_size)
-        self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
-
-    def forward(self, local_feature_vector, transformed_embedding_vector):
-        # First, get information from the local feature vector. If the hidden layer node currently considered is
-        # unambiguous (its relaxation triangle intercept which is the last feature is zero), set the information vector
-        # to the zero vector
-        if local_feature_vector[-1].item() == 0.0:
-            local_features_info = torch.zeros(self.linear_local_2.out_features)
-        # Otherwise, pass it through the corresponding network layers
-        else:
-            local_features_info = self.linear_local_2(f.relu(self.linear_local_1(local_feature_vector)))
-
-        # Second, get information from the transformed previous neighbour embedding vectors
-        previous_neighbour_embeddings_info = self.linear_neighbour_2(f.relu(
-            self.linear_neighbour_1(transformed_embedding_vector)))
-
-        # Finally, combine the information from the local features and the transformed previous neighbour embedding
-        # vectors
-        combined_info = torch.cat([local_features_info, previous_neighbour_embeddings_info])
-        return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
-
-
-class ForwardOutputUpdateNN(nn.Module):
-    """
-    This class represents the neural network which performs the forward update on the output node
-    """
-
-    def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
-        super(ForwardOutputUpdateNN, self).__init__()
-
-        # Initialise the layer for obtaining information from the local features
-        self.linear_local = nn.Linear(feature_vector_size, hidden_layer_size)
-
-        # Initialise the layers for combining information from the local features and the last hidden layer embeddings
-        self.linear_combine_1 = nn.Linear(hidden_layer_size + embedding_vector_size, hidden_layer_size)
-        self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
-
-    def forward(self, local_feature_vector, transformed_last_hidden_layer_embeddings):
-        # First, get information from the local feature vector
-        local_features_info = f.relu(self.linear_local(local_feature_vector))
-
-        # Combine the information from the local features and the transformed last hidden layer embeddings
-        combined_info = torch.cat([local_features_info, transformed_last_hidden_layer_embeddings])
-        return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
-
-
-class BackwardReluUpdateNN(nn.Module):
-    """
-    This class represents the neural network which performs the backward update on the hidden layer nodes
-    """
-
-    def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
-        super(BackwardReluUpdateNN, self).__init__()
-
-        # Initialise the layers for obtaining information from the local features
-        self.linear_local_1_1 = nn.Linear(feature_vector_size, hidden_layer_size)
-        self.linear_local_1_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
-        self.linear_local_1_3 = nn.Linear(hidden_layer_size, hidden_layer_size)
-        self.linear_local_2_1 = nn.Linear(3 * hidden_layer_size, hidden_layer_size)
-        self.linear_local_2_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
-
-        # Initialise the layers for obtaining information from the next neighbour embedding vectors
-        self.linear_neighbour_1 = nn.Linear(2 * embedding_vector_size, hidden_layer_size)
-        self.linear_neighbour_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
-
-        # Finally, initialise the layers for combining information from the local features and the next neighbour
-        # embedding vectors
-        self.linear_combine_1 = nn.Linear(2 * hidden_layer_size, hidden_layer_size)
-        self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
-
-    def forward(self, local_feature_vector, transformed_next_layer_embeddings):
-        # First, implement the 1st stage of getting information about the local feature vector. If the hidden layer node
-        # currently considered is unambiguous (its relaxation triangle intercept which is the last feature is zero), set
-        # the output from the first stage to zero the vector
-        if local_feature_vector[-1].item() == 0.0:
-            local_features_info_temp = torch.zeros(self.linear_local_1_3.out_features)
-        # Otherwise, pass it through the layers of the 1st stage network
-        else:
-            local_features_info_temp = self.linear_local_1_3(f.relu(self.linear_local_1_2(f.relu(
-                self.linear_local_1_1(local_feature_vector)))))
-
-        # Now implement the 2nd stage of getting information about the local feature vector. If the output from the
-        # 1st stage is zero, then set the information vector to the zero vector
-        if torch.eq(local_features_info_temp, torch.zeros(local_features_info_temp.size())).all().item():
-            local_features_info = torch.zeros(self.linear_local_2_2)
-        # Otherwise, pass it through the layers of the 2nd stage network
-        else:
-            local_features_info = self.linear_local_2_2(f.relu(self.linear_local_2_1(local_features_info_temp)))
-
-        # Second, get information from the transformed next neighbour embedding vectors
-        next_neighbour_embeddings_info = self.linear_neighbour_2(f.relu(
-            self.linear_neighbour_1(transformed_next_layer_embeddings)))
-
-        # Finally, combine the information from the local features and the transformed next neighbour embedding
-        # vectors
-        combined_info = torch.cat([local_features_info, next_neighbour_embeddings_info])
-        return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
-
-
-class BackwardInputUpdateNN(nn.Module):
-    """
-    This class represents the neural network which performs the backward update on the input nodes
-    """
-
-    def __init__(self, feature_vector_size, hidden_layer_size, embedding_vector_size):
-        super(BackwardInputUpdateNN, self).__init__()
-
-        # Initialise the layers for obtaining information from the local features
-        self.linear_local_1 = nn.Linear(feature_vector_size, hidden_layer_size)
-        self.linear_local_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
-
-        # Initialise the layers for combining information from the local features and the first hidden layer embeddings
-        self.linear_combine_1 = nn.Linear(hidden_layer_size + embedding_vector_size, hidden_layer_size)
-        self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
-
-    def forward(self, local_feature_vector, transformed_last_hidden_layer_embeddings):
-        # First, get information from the local feature vector
-        local_features_info = self.linear_local_2(f.relu(self.linear_local_1(local_feature_vector)))
-
-        # Combine the information from the local features and the transformed first hidden layer embeddings
-        combined_info = torch.cat([local_features_info, transformed_last_hidden_layer_embeddings])
-        return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
-
-
-class ScoreComputationNN(nn.Module):
-    """
-    This class represents the neural network which computes the scores for all possible input domain update methods
-    """
-
-    def __init__(self, embedding_vector_size, hidden_layer_size, number_of_update_methods):
-        super(ScoreComputationNN, self).__init__()
-
-        # Assuming this network is a 2-layer fully-connected network, initialise the two required layers
-        self.linear_1 = nn.Linear(embedding_vector_size, hidden_layer_size)
-        self.linear_2 = nn.Linear(hidden_layer_size, number_of_update_methods)
-
-    def forward(self, input_embedding_vector):
-        return self.linear_2(f.relu(self.linear_1(input_embedding_vector)))
-
-
-def forward_transform_embedding_vectors(embedding_vectors, local_feature_vectors):
-    """
-    This function transforms the embedding vectors which were propagated to the ReLU according to the technique
-    outlined in the "NN Branching for NN Verification" paper.
-    """
-    # First, extract the lower and upper bounds from the local_feature_vectors tensor (located at rows 0 and 1
-    # respectively of the local feature vectors matrix)
-    lower_bounds = local_feature_vectors[0, :]
-    upper_bounds = local_feature_vectors[1, :]
-
-    # Initialise the required ratios
-    alphas = torch.zeros(lower_bounds.size())
-    alphas_dashed = torch.zeros(lower_bounds.size())
-
-    # Now compute both ratios' elements in turn using the lower and upper bounds information
-    for i in range(lower_bounds.size()[-1]):
-        lower_bound = lower_bounds[i]
-        upper_bound = upper_bounds[i]
-
-        # If the lower bound is positive (upper bound is then automatically positive), then alpha = alpha_dashed = 1
-        if lower_bound > 0:
-            alphas[i] = 1
-            alphas_dashed[i] = 1
-
-        # If the upper is negative (lower bound is then automatically negative), then alpha = alpha_dashed = 0
-        elif upper_bound < 0:
-            alphas[i] = 0
-            alphas_dashed[i] = 0
-
-        # Otherwise, the lower bound is negative and upper bound is positive, hence the node is ambiguous. In this case,
-        # alpha = ub / (ub - lb) (where ub and lb - lower and upper bounds) and alpha_dashed = 1 - alpha
-        else:
-            alphas[i] = upper_bound / (upper_bound - lower_bound)
-            alphas_dashed[i] = 1 - alphas[i]
-
-    # Finally, the transformed embedding vectors are defined in the following way
-    transformed_embedding_vectors = torch.cat([torch.mul(embedding_vectors, alphas),
-                                               torch.mul(embedding_vectors, alphas_dashed)])
-
-    return transformed_embedding_vectors
-
+model = nn.Conv2d(8, 16, 4, stride=2, padding=1)
+print(model.weight.data.size())

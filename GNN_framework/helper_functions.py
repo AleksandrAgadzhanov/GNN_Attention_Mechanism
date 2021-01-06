@@ -1,0 +1,235 @@
+import torch
+from exp_utils.model_utils import add_single_prop
+
+
+def match_with_subset(subset, images, true_labels, test_labels, epsilons):
+    """
+    This function updates the lists of images, true labels, test labels and epsilons based on the given subset of
+    indices
+    """
+    original_length = len(images)
+    for i in range(original_length - 1, -1, -1):
+        if i not in subset:
+            images.pop(i)
+            true_labels.pop(i)
+            test_labels.pop(i)
+            epsilons.pop(i)
+    return images, true_labels, test_labels, epsilons
+
+
+def simplify_model(model, true_label, test_label):
+    """
+    This function takes the model and the true and test labels for a particular property and simplifies the model by
+    merging the last two linear layers into one so that the output of the network is a single node whose value is the
+    difference between logits of the true and test classes
+    """
+    # First, get the list of all layers with the final one included. The output of the network is now the difference
+    # between the logits of the true and test class
+    all_layers = add_single_prop(list(model.children()), true_label, test_label)
+
+    # Construct the simplified model from the list of layers
+    simplified_model = torch.nn.Sequential(*all_layers)
+
+    return simplified_model
+
+
+def perturb_image(lower_bound, upper_bound):
+    difference = torch.add(upper_bound, -lower_bound)
+    perturbation = torch.mul(difference, torch.rand(difference.size()))
+    perturbed_image = torch.add(lower_bound, perturbation)
+    return perturbed_image
+
+
+def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations):
+    """
+    This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
+    lead to positive loss, outputs the information about gradients
+    """
+    # Initialise the relevant optimiser and the list to store the gradients to be later used for gradient information
+    optimizer = torch.optim.Adam([perturbed_image], lr=pgd_learning_rate)
+    gradients = []
+
+    # Perform Gradient Ascent for a specified number of epochs
+    for iteration in range(num_iterations):
+        # The output of the network is the difference between the logits of the correct and the test class which is
+        # the same as -loss, but since Gradient Ascent is performed, this difference must be minimised
+        loss = simplified_model(perturbed_image)
+
+        # If the difference between the logit of the test class and the logit of the true class is positive,
+        # then the PGD attack was successful and gradient ascent can be stopped
+        if loss < 0:
+            return True, None
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        # Store the current gradient in the list
+        gradients.append(perturbed_image.grad.clone())
+
+        # Clip the values of the perturbed image so that they are within the allowed perturbation magnitude
+        # This operation isn't related to optimisation, hence it is wrapped with torch.no_grad()
+        with torch.no_grad():
+            perturbed_image[:] = torch.max(torch.min(perturbed_image, upper_bound), lower_bound)
+
+    # If the flag has not been set yet but the perturbation resulted in the model predicting the test class instead of
+    # the true one during the last iteration, return the True successful attack flag
+    if simplified_model(perturbed_image) < 0:
+        return True, None
+
+    # If the Gradient Ascent didn't lead to the changed prediction, then generate the dictionary containing information
+    # about gradients and output it as well
+    gradient_info_dict = generate_gradient_info_dict(gradients)
+
+    return False, gradient_info_dict
+
+
+def generate_gradient_info_dict(gradients):
+    """
+    This function generates the dictionary of containing information about gradients during the PGD attack
+    """
+    # First take the absolute value since it is the magnitudes of gradients that matter since loss is always moving in
+    # the same direction (increasing) and the pixel values may decrease or increase
+    gradient_magnitudes = [torch.abs(gradient) for gradient in gradients]
+
+    # Initialise the output dictionary and add the last gradient magnitude to the dictionary straight away
+    gradient_info_dict = {'last gradient': gradient_magnitudes[-1]}
+
+    # Transform the list of consequent gradients into the list of pixel gradients
+    gradient_magnitudes_pixels = grouped_by_iteration_to_grouped_by_pixel(gradient_magnitudes)
+
+    # Compute pixel-wise mean, median, maximum and minimum gradients as well as the standard deviation and store them
+    mean_gradient_magnitudes_pixels = []
+    median_gradient_magnitudes_pixels = []
+    max_gradient_magnitudes_pixels = []
+    min_gradient_magnitudes_pixels = []
+    std_gradient_magnitudes_pixels = []
+
+    for i in range(len(gradient_magnitudes_pixels)):
+        mean_gradient_magnitudes_pixels.append(torch.mean(gradient_magnitudes_pixels[i]))
+        median_gradient_magnitudes_pixels.append(torch.median(gradient_magnitudes_pixels[i]))
+        max_gradient_magnitudes_pixels.append(torch.max(gradient_magnitudes_pixels[i]))
+        min_gradient_magnitudes_pixels.append(torch.min(gradient_magnitudes_pixels[i]))
+        std_gradient_magnitudes_pixels.append(torch.std(gradient_magnitudes_pixels[i]))
+
+    # Reshape the lists of pixel statistics so that image shape is preserved
+    mean_gradient_magnitude = torch.reshape(torch.tensor(mean_gradient_magnitudes_pixels), gradients[0].size())
+    median_gradient_magnitude = torch.reshape(torch.tensor(median_gradient_magnitudes_pixels), gradients[0].size())
+    max_gradient_magnitude = torch.reshape(torch.tensor(max_gradient_magnitudes_pixels), gradients[0].size())
+    min_gradient_magnitude = torch.reshape(torch.tensor(min_gradient_magnitudes_pixels), gradients[0].size())
+    std_gradient_magnitude = torch.reshape(torch.tensor(std_gradient_magnitudes_pixels), gradients[0].size())
+
+    # Add the above statistics to the gradient information dictionary
+    gradient_info_dict['mean gradient'] = mean_gradient_magnitude
+    gradient_info_dict['median gradient'] = median_gradient_magnitude
+    gradient_info_dict['maximum gradient'] = max_gradient_magnitude
+    gradient_info_dict['minimum gradient'] = min_gradient_magnitude
+    gradient_info_dict['gradient std'] = std_gradient_magnitude
+
+    return gradient_info_dict
+
+
+def grouped_by_iteration_to_grouped_by_pixel(gradients):
+    """
+    This function transforms the list of gradient magnitudes where each list element is the tensor represents the
+    gradient at a particular epoch to the list where each element is the tensor representing the gradient of a
+    particular pixel
+    """
+    # Reshape each gradient so that it becomes a row vector
+    row_gradients = [gradient.view(-1) for gradient in gradients]
+
+    # Since elements at the same indices now correspond to particular pixels, group them together
+    row_gradients_grouped_by_pixel = []
+    for pixel_idx in range(len(row_gradients[0])):
+        pixel_gradients_list = []
+        for gradient_idx in range(len(row_gradients)):
+            pixel_gradients_list.append(row_gradients[gradient_idx][pixel_idx])
+        row_gradients_grouped_by_pixel.append(torch.tensor(pixel_gradients_list))
+
+    return row_gradients_grouped_by_pixel
+
+
+def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
+    """
+    This function updates the domain bounds based on the scores. For each input node, it chooses the update method
+    corresponding to the maximum score among all scores for that node
+    """
+    # First, reshape the old lower and upper bounds to be row tensors
+    old_lower_bound_row = old_lower_bound.view(-1)
+    old_upper_bound_row = old_upper_bound.view(-1)
+
+    # Initialise the new lower and upper bound tensors
+    new_lower_bound_row = torch.zeros(old_lower_bound_row.size())
+    new_upper_bound_row = torch.zeros(old_upper_bound_row.size())
+
+    # The size of each score tensor represents the number of update methods chosen before. It is an odd number since one
+    # update method is always for a node to retain the old bounds and all the other update methods (of which there is an
+    # even number) symmetrically divide the original domain bounds with one division boundary being at the centre of the
+    # old domain. Each score tensor  Make the decision for each input node
+    for i in range(old_lower_bound_row.size()[0]):
+        # Find the maximum score index in the corresponding score tensor
+        max_score_index = torch.argmax(scores[:, i]).item()
+
+        # If the maximum score index is the middle index, then retain the bounds as they are
+        if max_score_index == 0:
+            new_lower_bound_row[i] = old_lower_bound_row[i]
+            new_upper_bound_row[i] = old_upper_bound_row[i]
+
+        # Otherwise update the bounds according to the approach outlined above
+        else:
+            new_lower_bound_row[i] = old_lower_bound_row[i] + (max_score_index - 1) \
+                                     * (old_upper_bound_row[i] - old_lower_bound_row[i]) / (scores[0].size()[0] - 1)
+            new_upper_bound_row[i] = old_lower_bound_row[i] + max_score_index * (
+                    old_upper_bound_row[i] - old_lower_bound_row[i]) / (scores[0].size()[0] - 1)
+
+    # Finally, reshape the new lower and upper bounds so that they have the image shape
+    new_lower_bound = new_lower_bound_row.reshape(old_lower_bound.size())
+    new_upper_bound = new_upper_bound_row.reshape(old_upper_bound.size())
+
+    return new_lower_bound, new_upper_bound
+
+
+def transform_embedding_vectors(embedding_vectors, local_feature_vectors):
+    """
+    This function transforms the embedding vectors which were propagated to the ReLU according to the technique
+    outlined in the "NN Branching for NN Verification" paper.
+    """
+    # First, extract the lower and upper bounds from the local_feature_vectors tensor (located at rows 0 and 1
+    # respectively of the local feature vectors matrix)
+    lower_bounds = local_feature_vectors[0, :]
+    upper_bounds = local_feature_vectors[1, :]
+
+    # Initialise the required ratios
+    alphas = torch.zeros(lower_bounds.size())
+    alphas_dashed = torch.zeros(lower_bounds.size())
+
+    # Now compute both ratios' elements in turn using the lower and upper bounds information
+    for i in range(lower_bounds.size()[-1]):
+        lower_bound = lower_bounds[i]
+        upper_bound = upper_bounds[i]
+
+        # If the lower bound is positive (upper bound is then automatically positive), then alpha = alpha_dashed = 1
+        if lower_bound > 0:
+            alphas[i] = 1
+            alphas_dashed[i] = 1
+
+        # If the upper is negative (lower bound is then automatically negative), then alpha = alpha_dashed = 0
+        elif upper_bound < 0:
+            alphas[i] = 0
+            alphas_dashed[i] = 0
+
+        # Otherwise, the lower bound is negative and upper bound is positive, hence the node is ambiguous. In this case,
+        # alpha = ub / (ub - lb) (where ub and lb - lower and upper bounds) and alpha_dashed = 1 - alpha
+        else:
+            alphas[i] = upper_bound / (upper_bound - lower_bound)
+            alphas_dashed[i] = 1 - alphas[i]
+
+    # Finally, the transformed embedding vectors are defined in the following way
+    transformed_embedding_vectors = torch.cat([torch.mul(embedding_vectors, alphas),
+                                               torch.mul(embedding_vectors, alphas_dashed)])
+
+    return transformed_embedding_vectors
+
+
+def get_numbers_of_connecting_nodes(convolutional_layer, input_size):
+    pass  # TODO
