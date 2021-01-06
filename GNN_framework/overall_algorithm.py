@@ -28,7 +28,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
     # Now attack each property in turn by calling the appropriate function
     num_properties_still_verified = 0  # counter of properties which are still verified after the PGD attack
     for i in range(len(images)):
-        # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating'
+        # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating
         # the information about the true and test classes into the network
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
 
@@ -106,8 +106,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                                                                                              epsilon * epsilon_factor)
 
     # Initialise the GNN for the given network (which also initialises all the required auxiliary neural networks)
-    gnn = GraphNeuralNetwork(simplified_model, image.size(), embedding_vector_size, input_feature_vectors[0].size()[0],
-                             relu_feature_vectors_list[0][0].size()[0], output_feature_vectors[0].size()[0],
+    gnn = GraphNeuralNetwork(simplified_model, image.size(), embedding_vector_size, input_feature_vectors.size()[0],
+                             relu_feature_vectors_list[0].size()[0], output_feature_vectors.size()[0],
                              auxiliary_hidden_size, num_update_methods)
 
     # Follow the GNN framework approach for a specified number of epochs
@@ -270,7 +270,7 @@ def grouped_by_iteration_to_grouped_by_pixel(gradients):
 
 def generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image, gradient_info_dict):
     """
-    This function generates the feature vectors for each input node from all the inputs provided
+    This function generates the feature vectors for each input node from all the inputs provided.
     """
     # Transform the gradient information dictionary into rows of gradient information tensors where each row has the
     # same size as the image and contains a piece of information about gradients for all pixels
@@ -295,12 +295,12 @@ def generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image, gr
 
         # During the first loop, resize the tensor containing input feature vectors to the correct size
         if input_idx == 0:
-            input_feature_vectors = torch.zeros(torch.Size([*lower_bound.size(),
-                                                            len(pixel_info + pixel_gradient_info)]))
-            input_feature_vectors = input_feature_vectors.reshape(-1, input_feature_vectors.size()[-1])
+            input_feature_vectors = torch.zeros(torch.Size([len(pixel_info + pixel_gradient_info),
+                                                            *lower_bound.size()]))
+            input_feature_vectors = input_feature_vectors.reshape(input_feature_vectors.size()[0], -1)
 
         # Finally, add the generated feature vector in the required place
-        input_feature_vectors[input_idx] = torch.cat(pixel_info + pixel_gradient_info)
+        input_feature_vectors[:, input_idx] = torch.cat(pixel_info + pixel_gradient_info)
 
     return input_feature_vectors
 
@@ -337,7 +337,7 @@ def generate_relu_output_feature_vectors(neural_network, input_lower_bound, inpu
     # Now iterate through the neural network layers and extract the information for the relevant feature vectors
     for layer_idx, layer in enumerate(list(neural_network.children())):
         overall_layer_idx = layer_idx + 1  # input layer is considered in pre_relu_indices, but not in neural_network
-        perturbed_image = layer(perturbed_image)
+        perturbed_image = layer(perturbed_image)  # variable to keep track of layer outputs
 
         # If the current overall layer index is the same as the index before the ReLU layer, construct the tensor of
         # feature vectors and append it to the output list
@@ -349,32 +349,18 @@ def generate_relu_output_feature_vectors(neural_network, input_lower_bound, inpu
 
             # Layer bias has to be extracted with care since if the layer is convolutional, there is 1 bias value per
             # channel and has to be repeated to match the number of nodes
-            layer_bias_before_relu = torch.zeros(node_values_before_relu.size()).view(-1)
-            if type(layer) == torch.nn.Conv2d:
-                constant_portion_size = int(node_values_before_relu.size()[0] / layer.bias.size()[0])
-                for bias_idx in range(layer.bias.size()[0]):
-                    for num_repeat in range(constant_portion_size):
-                        layer_bias_before_relu[bias_idx * constant_portion_size + num_repeat] = layer.bias[bias_idx]
-            else:
-                layer_bias_before_relu = layer.bias.view(-1)
+            layer_bias_before_relu = get_layer_bias_before_relu(layer, node_values_before_relu.size())
 
-            # Relaxation triangle intercept is a condition dependent feature so will be computed separately below
-            relaxation_triangle_intercepts = torch.zeros(node_values_before_relu.size())
+            # Relaxation triangle intercept is a condition dependent feature so will be computed separately using a
+            # function defined below
+            relaxation_triangle_intercepts = get_relaxation_triangle_intercepts(lower_bounds_before_relu,
+                                                                                upper_bounds_before_relu)
 
-            # If the ratio between the lower and upper bound is +ve, then the intercept of the relaxation triangle is
-            # zero, otherwise it is easily obtained as -ub * lb / (ub - lb) (ub and lb - upper and lower bounds)
-            for i in range(lower_bounds_before_relu.size()[0]):
-                if lower_bounds_before_relu[i] * upper_bounds_before_relu[i] > 0:
-                    relaxation_triangle_intercepts[i] = 0
-                else:
-                    relaxation_triangle_intercepts[i] = - upper_bounds_before_relu[i] * lower_bounds_before_relu[i] /\
-                                                       (upper_bounds_before_relu[i] - lower_bounds_before_relu[i])
-
-            relu_feature_vectors_list.append(torch.transpose(torch.stack([lower_bounds_before_relu,
-                                                                          upper_bounds_before_relu,
-                                                                          node_values_before_relu,
-                                                                          layer_bias_before_relu,
-                                                                          relaxation_triangle_intercepts]), 1, 0))
+            relu_feature_vectors_list.append(torch.stack([lower_bounds_before_relu,
+                                                          upper_bounds_before_relu,
+                                                          node_values_before_relu,
+                                                          layer_bias_before_relu,
+                                                          relaxation_triangle_intercepts]))
 
         # Finally, the last layer is the output one, so construct the corresponding feature vectors
         if layer_idx == len(list(neural_network.children())) - 1:
@@ -383,12 +369,55 @@ def generate_relu_output_feature_vectors(neural_network, input_lower_bound, inpu
             output_node_values = perturbed_image.view(-1)
             output_bias = layer.bias.view(-1)
 
-            output_feature_vectors = torch.transpose(torch.stack([output_lower_bounds,
-                                                                  output_upper_bounds,
-                                                                  output_node_values,
-                                                                  output_bias]), 1, 0)
+            output_feature_vectors = torch.stack([output_lower_bounds,
+                                                  output_upper_bounds,
+                                                  output_node_values,
+                                                  output_bias])
 
     return relu_feature_vectors_list, output_feature_vectors
+
+
+def get_layer_bias_before_relu(layer_before_relu, layer_before_relu_size):
+    """
+    This function generates the row tensor of biases present at the layer located just before the ReLU layer. It
+    distinguishes between the case when this layer is convolutional, in which case there is 1 bias per channel which has
+    to be repeated to match the number of nodes, and any other case.
+    """
+    # Initialise the output row tensor of appropriate size
+    layer_bias_before_relu = torch.zeros(layer_before_relu_size).view(-1)
+
+    # If the layer just before the ReLU layer is convolutional, follow the procedure described above
+    if type(layer_before_relu) == torch.nn.Conv2d:
+        constant_portion_size = int(layer_before_relu_size[0] / layer_before_relu.bias.size()[0])
+        for bias_idx in range(layer_before_relu.bias.size()[0]):
+            for num_repeat in range(constant_portion_size):
+                layer_bias_before_relu[bias_idx * constant_portion_size + num_repeat] = layer_before_relu.bias[bias_idx]
+    # Otherwise, simply set the output tensor
+    else:
+        layer_bias_before_relu = layer_before_relu.bias.view(-1)
+
+    return layer_bias_before_relu
+
+
+def get_relaxation_triangle_intercepts(lower_bounds_before_relu, upper_bounds_before_relu):
+    """
+    This function computes the intercepts of the relaxation triangles for all the ReLU layer nodes based on the lower
+    and upper bounds of the layer just before the ReLU layer. The intercepts themselves act as features capturing the
+    extent of convex relaxation that is introduced at each ReLU node.
+    """
+    # Initialise the output row tensor of appropriate size
+    relaxation_triangle_intercepts = torch.zeros(lower_bounds_before_relu.size())
+
+    # If the ratio between the lower and upper bound is +ve, then the intercept of the relaxation triangle is
+    # zero, otherwise it is easily obtained as -ub * lb / (ub - lb) (ub and lb - upper and lower bounds)
+    for i in range(lower_bounds_before_relu.size()[0]):
+        if lower_bounds_before_relu[i] * upper_bounds_before_relu[i] > 0:
+            relaxation_triangle_intercepts[i] = 0
+        else:
+            relaxation_triangle_intercepts[i] = - upper_bounds_before_relu[i] * lower_bounds_before_relu[i] / \
+                                                (upper_bounds_before_relu[i] - lower_bounds_before_relu[i])
+
+    return relaxation_triangle_intercepts
 
 
 def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
