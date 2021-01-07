@@ -21,7 +21,7 @@ class GraphNeuralNetwork:
         # Store the underlying neural network as a field of the GNN
         self.neural_network = neural_network
 
-        # Initialise a tensor of tensors each corresponding to a particular pixel which has the image shape
+        # Initialise a row tensor of tensors each corresponding to a particular pixel
         self.input_embeddings = torch.zeros([embedding_vector_size, *input_size[1:]])
 
         # Initialise the list of embeddings of each ReLU hidden layer
@@ -84,7 +84,8 @@ class GraphNeuralNetwork:
             size_before_flattening = self.forward_update_relu_output_embeddings(relu_feature_vectors_list,
                                                                                 output_feature_vectors)
 
-            self.backward_update_relu_input_embeddings(relu_feature_vectors_list, size_before_flattening)
+            self.backward_update_relu_input_embeddings(input_feature_vectors, relu_feature_vectors_list,
+                                                       size_before_flattening)
 
     def forward_update_input_embeddings(self, input_feature_vectors):
         """
@@ -172,8 +173,8 @@ class GraphNeuralNetwork:
 
         return size_before_flattening
 
-    # TODO
-    def backward_update_relu_input_embeddings(self, relu_feature_vectors_list, size_before_flattening):
+    def backward_update_relu_input_embeddings(self, input_feature_vectors, relu_feature_vectors_list,
+                                              size_before_flattening):
         """
         This function performs the backward updates of all the ReLU layers embedding vectors based on the techniques
         outlined in the "NN Branching for NN Verification" paper.
@@ -183,9 +184,6 @@ class GraphNeuralNetwork:
         # (now initialised at the output since this is a backward update)
         relu_layer_idx = len(self.relu_embeddings_list) - 1
         embedding_vectors = self.output_embeddings
-
-        # Initialise the variable which will store the size of the input to the convolutional layer when required
-        conv_input_size = torch.Size([0])
 
         # Now go backward over each layer in turn, taking care to distinguish between the different types of layers
         for layer_idx, layer in enumerate(reversed(list(self.neural_network.children()))):
@@ -198,20 +196,29 @@ class GraphNeuralNetwork:
                 backwards_linear_layer.bias.data.fill_(0)
                 embedding_vectors = backwards_linear_layer(embedding_vectors)
 
-            # If the layer is convolutional, construct the layer in the similar way to above, but this time specifying
-            # the full set of parameters
+            # If the layer is convolutional, construct the layer in the similar way to above (effectively performing
+            # deconvolution), but this time specifying the full set of parameters
             elif type(layer) == nn.Conv2d:
-                # If the next layer exists and is a ReLU layer, store the size of the input to the convolutional layer
-                if layer_idx <= len((list(self.neural_network.children()))) - 2 and \
-                        type(list(enumerate(reversed(list(self.neural_network.children()))))[layer_idx + 1]) == nn.ReLU:
-                    conv_input_size = embedding_vectors.size()
-
-                backwards_conv_layer = nn.Conv2d(layer.out_channels, layer.in_channels, kernel_size=layer.kernel_size,
-                                                 stride=layer.stride, padding=layer.padding, dilation=layer.dilation,
-                                                 groups=layer.groups)
-                backwards_conv_layer.weight.data = torch.transpose(layer.weight.data, 1, 0)
+                backwards_conv_layer = nn.ConvTranspose2d(layer.out_channels, layer.in_channels,
+                                                          kernel_size=layer.kernel_size, stride=layer.stride,
+                                                          padding=layer.padding, dilation=layer.dilation,
+                                                          groups=layer.groups)
+                backwards_conv_layer.weight.data = layer.weight.data
                 backwards_conv_layer.bias.data.fill_(0)
-                embedding_vectors = backwards_conv_layer(embedding_vectors)
+
+                # If the next layer exists and is a ReLU layer or if this is the last layer (before the input one),
+                # find the number of connecting nodes in the convolutional layer for each ReLU layer node by calling the
+                # appropriate function, then divide the embedding vectors tensor by them
+                if (layer_idx <= len((list(self.neural_network.children()))) - 2 and
+                    type(list(reversed(list(self.neural_network.children())))[layer_idx + 1]) == nn.ReLU) or \
+                        layer_idx == len((list(self.neural_network.children()))) - 1:
+                    numbers_of_connecting_nodes = get_numbers_of_connecting_nodes(backwards_conv_layer,
+                                                                                  embedding_vectors.size())
+                    embedding_vectors = backwards_conv_layer(embedding_vectors)
+                    embedding_vectors = embedding_vectors / numbers_of_connecting_nodes
+                # Otherwise, simply pass the embedding vectors through without scaling
+                else:
+                    embedding_vectors = backwards_conv_layer(embedding_vectors)
 
             # If the layer is of type Flatten, then expansion to the size present before the tensor was flattened during
             # the forward update should be performed instead of flattening
@@ -223,22 +230,40 @@ class GraphNeuralNetwork:
                 # First, extract the appropriate feature vectors tensor from the list
                 relu_feature_vectors = relu_feature_vectors_list[relu_layer_idx]
 
-                # If the previous layer was convolutional, special care should be taken to scale the embedding vectors
-                # (no IndexOutOfBoundsError since ReLU cannot be the last layer in the original network)
-                previous_layer = list(enumerate(reversed(list(self.neural_network.children()))))[layer_idx - 1]
-                if type(previous_layer) == nn.Conv2d:
-                    # Find the number of connecting nodes in the convolutional layer for each ReLU layer node by calling
-                    # the appropriate function
-                    numbers_of_connecting_nodes = get_numbers_of_connecting_nodes(previous_layer, conv_input_size)
-
                 # Reshape the embedding vectors to be of size [embedding_size, product_of_other_dimensions] during the
                 # update, storing its original size to reshape it back after the update
                 original_size = embedding_vectors.size()
                 embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
 
+                # Transform all the embedding vectors so that they can enter the appropriate neural network
+                transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors)
+
+                # Update each embedding vector in turn
+                for node_idx in range(embedding_vectors.size()[-1]):
+                    embedding_vectors[:, node_idx] = self.backward_relu_update_nn(
+                        relu_feature_vectors[:, node_idx], transformed_embedding_vectors[:, node_idx])
+
+                # Reshape the embedding vectors tensor to have the original size
+                embedding_vectors = embedding_vectors.reshape(original_size)
+
+                # Set the corresponding element of the storage to the updated embedding vectors tensor and decrement the
+                # ReLU layer counter
+                self.relu_embeddings_list[relu_layer_idx] = embedding_vectors
+                relu_layer_idx -= 1
+
             # Otherwise, the layer type hasn't been considered yet
             else:
                 raise NotImplementedError
+
+        # At this point the input layer is reached, so it is left to update its embedding vectors based on the final
+        # form of the propagated embeddings using the same procedure as for the ReLU layers
+        original_size = embedding_vectors.size()
+        embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
+        for node_idx in range(embedding_vectors.size()[-1]):
+            embedding_vectors[:, node_idx] = self.backward_input_update_nn(input_feature_vectors[:, node_idx],
+                                                                           embedding_vectors[:, node_idx])
+        embedding_vectors = embedding_vectors.reshape(original_size)
+        self.input_embeddings = embedding_vectors
 
     def compute_scores(self):
         """
@@ -260,13 +285,9 @@ class GraphNeuralNetwork:
             if input_idx == 0:
                 scores = torch.zeros(torch.Size([pixel_scores.size()[0], self.input_embeddings.size()[-1]]))
 
-            scores[:, input_idx] = pixel_scores
+            scores[:, input_idx] = self.score_computation_nn(self.input_embeddings[:, input_idx])
 
         # Reshape the input embeddings to the original size
         self.input_embeddings = self.input_embeddings.reshape(original_size)
 
         return scores
-
-
-model = nn.Conv2d(8, 16, 4, stride=2, padding=1)
-print(model.weight.data.size())

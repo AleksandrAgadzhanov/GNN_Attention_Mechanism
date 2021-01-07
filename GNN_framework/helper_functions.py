@@ -92,8 +92,8 @@ def generate_gradient_info_dict(gradients):
     # the same direction (increasing) and the pixel values may decrease or increase
     gradient_magnitudes = [torch.abs(gradient) for gradient in gradients]
 
-    # Initialise the output dictionary and add the last gradient magnitude to the dictionary straight away
-    gradient_info_dict = {'last gradient': gradient_magnitudes[-1]}
+    # Initialise the output dictionary and add the row last gradient magnitude to the dictionary straight away
+    gradient_info_dict = {'last gradient': gradient_magnitudes[-1].view(-1)}
 
     # Transform the list of consequent gradients into the list of pixel gradients
     gradient_magnitudes_pixels = grouped_by_iteration_to_grouped_by_pixel(gradient_magnitudes)
@@ -105,26 +105,19 @@ def generate_gradient_info_dict(gradients):
     min_gradient_magnitudes_pixels = []
     std_gradient_magnitudes_pixels = []
 
-    for i in range(len(gradient_magnitudes_pixels)):
-        mean_gradient_magnitudes_pixels.append(torch.mean(gradient_magnitudes_pixels[i]))
-        median_gradient_magnitudes_pixels.append(torch.median(gradient_magnitudes_pixels[i]))
-        max_gradient_magnitudes_pixels.append(torch.max(gradient_magnitudes_pixels[i]))
-        min_gradient_magnitudes_pixels.append(torch.min(gradient_magnitudes_pixels[i]))
-        std_gradient_magnitudes_pixels.append(torch.std(gradient_magnitudes_pixels[i]))
-
-    # Reshape the lists of pixel statistics so that image shape is preserved
-    mean_gradient_magnitude = torch.reshape(torch.tensor(mean_gradient_magnitudes_pixels), gradients[0].size())
-    median_gradient_magnitude = torch.reshape(torch.tensor(median_gradient_magnitudes_pixels), gradients[0].size())
-    max_gradient_magnitude = torch.reshape(torch.tensor(max_gradient_magnitudes_pixels), gradients[0].size())
-    min_gradient_magnitude = torch.reshape(torch.tensor(min_gradient_magnitudes_pixels), gradients[0].size())
-    std_gradient_magnitude = torch.reshape(torch.tensor(std_gradient_magnitudes_pixels), gradients[0].size())
+    for pixel_idx in range(len(gradient_magnitudes_pixels)):
+        mean_gradient_magnitudes_pixels.append(torch.mean(gradient_magnitudes_pixels[pixel_idx]))
+        median_gradient_magnitudes_pixels.append(torch.median(gradient_magnitudes_pixels[pixel_idx]))
+        max_gradient_magnitudes_pixels.append(torch.max(gradient_magnitudes_pixels[pixel_idx]))
+        min_gradient_magnitudes_pixels.append(torch.min(gradient_magnitudes_pixels[pixel_idx]))
+        std_gradient_magnitudes_pixels.append(torch.std(gradient_magnitudes_pixels[pixel_idx]))
 
     # Add the above statistics to the gradient information dictionary
-    gradient_info_dict['mean gradient'] = mean_gradient_magnitude
-    gradient_info_dict['median gradient'] = median_gradient_magnitude
-    gradient_info_dict['maximum gradient'] = max_gradient_magnitude
-    gradient_info_dict['minimum gradient'] = min_gradient_magnitude
-    gradient_info_dict['gradient std'] = std_gradient_magnitude
+    gradient_info_dict['mean gradient'] = mean_gradient_magnitudes_pixels
+    gradient_info_dict['median gradient'] = median_gradient_magnitudes_pixels
+    gradient_info_dict['maximum gradient'] = max_gradient_magnitudes_pixels
+    gradient_info_dict['minimum gradient'] = min_gradient_magnitudes_pixels
+    gradient_info_dict['gradient std'] = std_gradient_magnitudes_pixels
 
     return gradient_info_dict
 
@@ -231,5 +224,26 @@ def transform_embedding_vectors(embedding_vectors, local_feature_vectors):
     return transformed_embedding_vectors
 
 
-def get_numbers_of_connecting_nodes(convolutional_layer, input_size):
-    pass  # TODO
+def get_numbers_of_connecting_nodes(backwards_conv_layer, input_size):
+    """
+    This function computes the number of connecting nodes for each output node of a convolutional layer
+    """
+    # Initialise the test input of ones so that inputs are effectively counted for each output node in this way
+    test_input = torch.ones([*[1 for _ in range(len(list(input_size[:-2])))], *input_size[-2:]])
+
+    # Construct a copy of the passed convolutional layer but with 1 input and 1 output channel. Also set all weights of
+    # the layer to ones and biases to zeros so that the numbers of connecting nodes appear in the output for each output
+    # node
+    modified_layer = torch.nn.ConvTranspose2d(1, 1, kernel_size=backwards_conv_layer.kernel_size,
+                                              stride=backwards_conv_layer.stride, padding=backwards_conv_layer.padding,
+                                              dilation=backwards_conv_layer.dilation,
+                                              groups=backwards_conv_layer.groups)
+    modified_layer.weight.data.fill_(1)
+    modified_layer.bias.data.fill_(0)
+
+    # Now pass the test input through the modified layer to obtain, for example, a tensor of size [1, 1, _, _]. It was
+    # checked that when a tensor of larger size, e.g. [4, 16, _, _] is divided by it, each of the [_, _] matrices
+    # is processed separately, which is exactly what is required
+    numbers_of_connecting_nodes = modified_layer(test_input)
+
+    return numbers_of_connecting_nodes

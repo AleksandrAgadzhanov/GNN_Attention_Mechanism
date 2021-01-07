@@ -8,8 +8,7 @@ def generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image, gr
     """
     # Transform the gradient information dictionary into rows of gradient information tensors where each row has the
     # same size as the image and contains a piece of information about gradients for all pixels
-    gradient_info_tensors = list(gradient_info_dict.values())
-    gradient_info_row_tensors = [gradient_info_tensor.view(-1) for gradient_info_tensor in gradient_info_tensors]
+    gradient_info_row_tensors = list(gradient_info_dict.values())
 
     # Initialise the tensor variable to store the input feature vectors in (size hasn't been computed yet)
     input_feature_vectors = torch.tensor([0])
@@ -146,7 +145,7 @@ def get_relaxation_triangle_intercepts(lower_bounds_before_relu, upper_bounds_be
     # zero, otherwise it is easily obtained as -ub * lb / (ub - lb) (ub and lb - upper and lower bounds)
     for i in range(lower_bounds_before_relu.size()[0]):
         if lower_bounds_before_relu[i] * upper_bounds_before_relu[i] > 0:
-            relaxation_triangle_intercepts[i] = 0
+            relaxation_triangle_intercepts[i] = 0.0
         else:
             relaxation_triangle_intercepts[i] = - upper_bounds_before_relu[i] * lower_bounds_before_relu[i] / \
                                                 (upper_bounds_before_relu[i] - lower_bounds_before_relu[i])

@@ -123,4 +123,4 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     return False
 
 
-pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 1, 1, 4, 10, 3, subset=[0])
+print(pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 2, 2, 4, 10, 3, subset=[0]))

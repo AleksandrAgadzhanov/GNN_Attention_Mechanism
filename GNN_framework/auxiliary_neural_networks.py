@@ -90,8 +90,6 @@ class BackwardReluUpdateNN(nn.Module):
         self.linear_local_1_1 = nn.Linear(feature_vector_size, hidden_layer_size)
         self.linear_local_1_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
         self.linear_local_1_3 = nn.Linear(hidden_layer_size, hidden_layer_size)
-        self.linear_local_2_1 = nn.Linear(3 * hidden_layer_size, hidden_layer_size)
-        self.linear_local_2_2 = nn.Linear(hidden_layer_size, hidden_layer_size)
 
         # Initialise the layers for obtaining information from the next neighbour embedding vectors
         self.linear_neighbour_1 = nn.Linear(2 * embedding_vector_size, hidden_layer_size)
@@ -107,19 +105,11 @@ class BackwardReluUpdateNN(nn.Module):
         # currently considered is unambiguous (its relaxation triangle intercept which is the last feature is zero), set
         # the output from the first stage to zero the vector
         if local_feature_vector[-1].item() == 0.0:
-            local_features_info_temp = torch.zeros(self.linear_local_1_3.out_features)
+            local_features_info = torch.zeros(self.linear_local_1_3.out_features)
         # Otherwise, pass it through the layers of the 1st stage network
         else:
-            local_features_info_temp = self.linear_local_1_3(f.relu(self.linear_local_1_2(f.relu(
+            local_features_info = self.linear_local_1_3(f.relu(self.linear_local_1_2(f.relu(
                 self.linear_local_1_1(local_feature_vector)))))
-
-        # Now implement the 2nd stage of getting information about the local feature vector. If the output from the
-        # 1st stage is zero, then set the information vector to the zero vector
-        if torch.eq(local_features_info_temp, torch.zeros(local_features_info_temp.size())).all().item():
-            local_features_info = torch.zeros(self.linear_local_2_2.out_features)
-        # Otherwise, pass it through the layers of the 2nd stage network TODO
-        else:
-            local_features_info = self.linear_local_2_2(f.relu(self.linear_local_2_1(local_features_info_temp)))
 
         # Second, get information from the transformed next neighbour embedding vectors
         next_neighbour_embeddings_info = self.linear_neighbour_2(f.relu(
@@ -146,12 +136,12 @@ class BackwardInputUpdateNN(nn.Module):
         self.linear_combine_1 = nn.Linear(hidden_layer_size + embedding_vector_size, hidden_layer_size)
         self.linear_combine_2 = nn.Linear(hidden_layer_size, embedding_vector_size)
 
-    def forward(self, local_feature_vector, transformed_last_hidden_layer_embeddings):
+    def forward(self, local_feature_vector, propagated_first_hidden_layer_embeddings):
         # First, get information from the local feature vector
         local_features_info = self.linear_local_2(f.relu(self.linear_local_1(local_feature_vector)))
 
         # Combine the information from the local features and the transformed first hidden layer embeddings
-        combined_info = torch.cat([local_features_info, transformed_last_hidden_layer_embeddings])
+        combined_info = torch.cat([local_features_info, propagated_first_hidden_layer_embeddings])
         return self.linear_combine_2(f.relu(self.linear_combine_1(combined_info)))
 
 
