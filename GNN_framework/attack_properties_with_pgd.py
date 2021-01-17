@@ -1,25 +1,25 @@
-from exp_utils.model_utils import load_cifar_data, load_properties_data
+from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
-from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent,\
+from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent, \
     update_domain_bounds
 from GNN_framework.features_generation import generate_input_feature_vectors, generate_relu_output_feature_vectors
 import torch
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_epochs, num_updates, embedding_vector_size, auxiliary_hidden_size, num_update_methods,
-                              subset=None):
+                              num_epochs, num_updates, embedding_vector_size, auxiliary_hidden_size,
+                              num_update_methods=3, subset=None):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
     """
     # Load all the required data for the images which were correctly verified by the model
-    images, true_labels, image_indices, model = load_cifar_data(model_name)
+    verified_images, verified_true_labels, verified_image_indices, model = load_verified_data(model_name)
 
-    # Update the images and true_labels lists and load the lists of the test labels and epsilons such that they
-    # correspond to the properties appearing in the properties dataframe which were correctly verified
-    images, true_labels, test_labels, epsilons = load_properties_data(properties_filename, images, true_labels,
-                                                                      image_indices)
+    # Load the lists of images, true and test labels and epsilons for images which appear in both the properties dataset
+    # as verified and in the previously loaded images list
+    images, true_labels, test_labels, epsilons = match_with_properties(properties_filename, verified_images,
+                                                                       verified_true_labels, verified_image_indices)
 
     # If the subset of indices was specified for the purpose of reducing the time complexity, drop the elements of
     # images, true_labels, test_labels and epsilons not indicated in the subset indices
@@ -123,4 +123,9 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     return False
 
 
-print(pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 2, 2, 4, 10, 3, subset=[0]))
+def main():
+    print(pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 2, 2, 4, 10, 3, subset=[0]))
+
+
+if __name__ == '__main__':
+    main()

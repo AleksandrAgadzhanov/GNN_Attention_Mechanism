@@ -10,13 +10,16 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;started implementing backward update function for all layers&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;completed the first version of the GNN implementation&quot;">
+      <change afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cifar_exp/train_props.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cifar_exp/val_props.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/auxiliary_neural_networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/auxiliary_neural_networks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/features_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/features_generation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/helper_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/overall_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/overall_algorithm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/overall_algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exp_utils/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/exp_utils/model_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphnet/graph_conv.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphnet/graph_score.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +46,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.overall_algorithm">
+  <component name="RunManager" selected="Python.training_dataset_generation">
     <configuration name="GraphNeuralNetwork" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -65,28 +68,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="conv_kwinter_kw" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="GNN_Attention_Mechanism" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/plnn" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/plnn/conv_kwinter_kw.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="helper_functions" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="attack_properties_with_pgd" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -98,7 +80,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GNN_framework/helper_functions.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\GNN_framework\attack_properties_with_pgd.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -107,7 +89,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="overall_algorithm" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="simp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -115,11 +97,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GNN_framework" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/cifar_exp" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GNN_framework/overall_algorithm.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cifar_exp/simp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -128,7 +110,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pgd_attacks" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="temp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -136,11 +118,32 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project_motivation" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/cifar_exp" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project_motivation/pgd_attacks.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cifar_exp/temp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="training_dataset_generation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNN_Attention_Mechanism" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GNN_training" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -151,11 +154,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.overall_algorithm" />
+        <item itemvalue="Python.training_dataset_generation" />
+        <item itemvalue="Python.attack_properties_with_pgd" />
+        <item itemvalue="Python.simp" />
+        <item itemvalue="Python.temp" />
         <item itemvalue="Python.GraphNeuralNetwork" />
-        <item itemvalue="Python.helper_functions" />
-        <item itemvalue="Python.conv_kwinter_kw" />
-        <item itemvalue="Python.pgd_attacks" />
       </list>
     </recent_temporary>
   </component>
@@ -252,7 +255,14 @@
       <option name="project" value="LOCAL" />
       <updated>1609973751507</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="&quot;completed the first version of the GNN implementation&quot;">
+      <created>1610045771791</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1610045771791</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -279,7 +289,8 @@
     <MESSAGE value="&quot;completed the function for generating hidden and output features&quot;" />
     <MESSAGE value="&quot;implemented the forward update function for the hidden layers&quot;" />
     <MESSAGE value="&quot;started implementing backward update function for all layers&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;started implementing backward update function for all layers&quot;" />
+    <MESSAGE value="&quot;completed the first version of the GNN implementation&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;completed the first version of the GNN implementation&quot;" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser" timestamp="1608820985392">
@@ -294,46 +305,46 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="262" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1609700919562" />
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1610045654387">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1610815577856">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1610045654387" />
-    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1610045654387">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1610815577856" />
+    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1610815577855">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1610045654387" />
-    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1610045654387">
+    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1610815577855" />
+    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1610815577855">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1610045654387" />
-    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1610045654387">
+    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1610815577855" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1610815577856">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1610045654387" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1610045477561">
+    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1610815577856" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1610815577856">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1610045477561" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1610045477561">
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1610815577856" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1610815577856">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1610045477561" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1610045477561">
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1610815577856" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1610815577856">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1610045477561" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1610045477561">
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1610815577856" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1610815577856">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1610045477561" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1610815577856" />
     <state x="461" y="165" key="SettingsEditor" timestamp="1609178226660">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1609178226660" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1609973759092">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1610045777712">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1609973759092" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1610045777712" />
     <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1610043561640">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -76,70 +76,23 @@ def add_single_prop(layers, gt, cls):
     return verif_layers
 
 
-def load_cifar_1to1_exp(model, idx, test=None, cifar_test=None):
-    if model == 'cifar_base_kw':
-        model_name = './models/cifar_base_kw.pth'
-        model = cifar_model_m2()
-        model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
-    elif model == 'cifar_wide_kw':
-        model_name = './models/cifar_wide_kw.pth'
-        model = cifar_model()
-        model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
-    elif model == 'cifar_deep_kw':
-        model_name = './models/cifar_deep_kw.pth'
-        model = cifar_model_deep()
-        model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
-    else:
-        raise NotImplementedError
-
-    if cifar_test is None:
-        import torchvision.datasets as datasets
-        import torchvision.transforms as transforms
-        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                         std=[0.225, 0.225, 0.225])
-        cifar_test = datasets.CIFAR10('./cifardata/', train=False, download=True,
-                                      transform=transforms.Compose([transforms.ToTensor(), normalize]))
-
-    x, y = cifar_test[idx]
-    x = x.unsqueeze(0)
-    # first check the model is correct at the input
-    y_pred = torch.max(model(x)[0], 0)[1].item()
-    print('predicted label ', y_pred, ' correct label ', y)
-    if y_pred != y:
-        print('model prediction is incorrect for the given model')
-        return None, None, None
-    else:
-        if test is None:
-            choices = list(range(10))
-            choices.remove(y_pred)
-            test = random.choice(choices)
-
-        print('tested against ', test)
-        for p in model.parameters():
-            p.requires_grad = False
-
-        layers = list(model.children())
-        added_prop_layers = add_single_prop(layers, y_pred, test)
-        return x, added_prop_layers, test
-
-
-def load_cifar_data(model, cifar_test=None):
+def load_verified_data(model_name, cifar_test=None):
     """
     This function returns the lists of CIFAR images, true labels and image indices as well as the model corresponding to
     the images which are correctly classified by the model
     """
-    if model == 'cifar_base_kw':
-        model_name = '../models/cifar_base_kw.pth'
-        model = cifar_model_m2()
-        model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
-    elif model == 'cifar_wide_kw':
-        model_name = '../models/cifar_wide_kw.pth'
-        model = cifar_model()
-        model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
-    elif model == 'cifar_deep_kw':
-        model_name = '../models/cifar_deep_kw.pth'
-        model = cifar_model_deep()
-        model.load_state_dict(torch.load(model_name, map_location="cpu")['state_dict'][0])
+    if model_name == 'cifar_base_kw':
+        model_path = '../models/cifar_base_kw.pth'
+        model_name = cifar_model_m2()
+        model_name.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
+    elif model_name == 'cifar_wide_kw':
+        model_path = '../models/cifar_wide_kw.pth'
+        model_name = cifar_model()
+        model_name.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
+    elif model_name == 'cifar_deep_kw':
+        model_path = '../models/cifar_deep_kw.pth'
+        model_name = cifar_model_deep()
+        model_name.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
     else:
         raise NotImplementedError
 
@@ -152,63 +105,79 @@ def load_cifar_data(model, cifar_test=None):
                                       transform=transforms.Compose([transforms.ToTensor(), normalize]))
 
     # Containers of correctly verified images, their true labels and their indices in the CIFAR dataset
-    images = []
-    true_labels = []
-    image_indices = []
+    verified_images = []
+    verified_true_labels = []
+    verified_image_indices = []
 
     for image_index in range(len(cifar_test)):
         image, true_label = cifar_test[image_index]
         image = image.unsqueeze(0)
-        predicted_label = torch.max(model(image)[0], 0)[1].item()
+        predicted_label = torch.max(model_name(image)[0], 0)[1].item()
 
         # Only append the image, its true label and its index to the output if the model predicts the label correctly
         if predicted_label == true_label:
-            images.append(image)
-            true_labels.append(true_label)
-            image_indices.append(image_index)
+            verified_images.append(image)
+            verified_true_labels.append(true_label)
+            verified_image_indices.append(image_index)
 
-    return images, true_labels, image_indices, model
+    return verified_images, verified_true_labels, verified_image_indices, model_name
 
 
-def load_properties_data(properties_filename, images, true_labels, image_indices):
+def match_with_properties(properties_filename, verified_images, verified_true_labels, verified_image_indices):
     """
     This function processes the properties dataframe first, leaving only the properties which were correctly verified,
-    and then returns the lists of images, true labels, test labels and epsilons which correspond to these properties
-    only
+    intersects the images corresponding to the rows in this dataframe and the input ones and then returns the resulting
+    lists of images, their true and test labels and epsilon values.
     """
-    # Load the properties DataFrame, leave only verified properties
+    # Construct the path and load the properties DataFrame
     properties_filepath = '../cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
-    properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
-                                                (properties_dataframe['BSAT_KW'] == 'False') |
-                                                (properties_dataframe['BSAT_gnnkwT'] == 'False') |
-                                                (properties_dataframe['GSAT'] == 'False') |
-                                                (properties_dataframe['BSAT_gnnkwTO'] == 'False')]
 
-    # Remove the single property which has the same index as one of the other properties but a different prop value
-    # (applies to base_easy.pkl only)
-    if properties_filename == 'base_easy.pkl':
-        properties_dataframe = properties_dataframe.drop(properties_dataframe[(properties_dataframe['Idx'] == 6100) &
-                                                                              (properties_dataframe[
-                                                                                   'prop'] == 9)].index)
+    # If the properties file isn't the training or validation one, keep only verified properties as follows. If the file
+    # is the training or validation one, then it already contains only the verified properties or the ones which timed
+    # out so keep all dataset entries
+    if properties_filename == 'base_easy.pkl' or properties_filename == 'base_med.pkl' or \
+            properties_filename == 'base_hard.pkl':
+        properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
+                                                    (properties_dataframe['BSAT_KW'] == 'False') |
+                                                    (properties_dataframe['BSAT_gnnkwT'] == 'False') |
+                                                    (properties_dataframe['GSAT'] == 'False') |
+                                                    (properties_dataframe['BSAT_gnnkwTO'] == 'False')]
 
     # Sort the properties DataFrame by the Idx column for the purpose of easier debugging
     properties_dataframe = properties_dataframe.sort_values(by=['Idx'], ascending=True)
 
-    # Drop all the elements of the images, true_labels and image_indices which do not appear in the properties file
-    properties_image_indices = list(properties_dataframe['Idx'])
-    array_length = len(image_indices)
-    for i in range(array_length - 1, -1, -1):  # counter starts at the end due to the nature of the pop() function
-        if image_indices[i] not in properties_image_indices:
-            images.pop(i)
-            true_labels.pop(i)
-            image_indices.pop(i)
+    # Find the intersection of the set of images provided and of those appearing in the properties and retrieve all the
+    # required information from it
+    images, true_labels, test_labels, epsilons = intersection(properties_dataframe, verified_images,
+                                                              verified_true_labels, verified_image_indices)
 
-    # Create the list of classes the properties were verified against and the list of epsilons
+    return images, true_labels, test_labels, epsilons
+
+
+def intersection(properties_dataframe, verified_images, verified_true_labels, verified_image_indices):
+    """
+    This function takes a Dataframe of properties as well as lists of correctly verified images, their true labels and
+    their images in the CIFAR dataset and then performs intersection of the sets of correctly verified images and those
+    appearing in the Dataframe based on the indices. It then returns the lists of the images in the intersection set,
+    their true and test labels and their respective epsilon values.
+    """
+    # Initialise the lists which will contain the outputs
+    images = []
+    true_labels = []
     test_labels = []
     epsilons = []
-    for i in range(len(images)):
-        test_labels.append(properties_dataframe[properties_dataframe['Idx'] == image_indices[i]].iloc[0]['prop'])
-        epsilons.append(properties_dataframe[properties_dataframe['Idx'] == image_indices[i]].iloc[0]['Eps'])
+
+    # Now go over each row of the Dataframe
+    for row_idx in range(len(properties_dataframe)):
+        # If the index of the image appears in both the Dataframe and in the correctly verified image indices list, then
+        # append the image and its true label to the respective output lists
+        properties_dataframe_image_index = properties_dataframe.iloc[row_idx]['Idx']
+        if properties_dataframe_image_index in verified_image_indices:
+            verified_image_index = verified_image_indices.index(properties_dataframe_image_index)
+            images.append(verified_images[verified_image_index])
+            true_labels.append(verified_true_labels[verified_image_index])
+            test_labels.append(properties_dataframe.iloc[row_idx]['prop'])
+            epsilons.append(properties_dataframe.iloc[row_idx]['Eps'])
 
     return images, true_labels, test_labels, epsilons

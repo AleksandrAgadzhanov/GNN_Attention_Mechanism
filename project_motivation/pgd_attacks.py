@@ -1,4 +1,4 @@
-from exp_utils.model_utils import load_cifar_data
+from exp_utils.model_utils import load_verified_data
 import torch
 import random
 import copy
@@ -9,7 +9,7 @@ import numpy as np
 def pgd_attack_properties(properties_filename, model_name, attack_method_trials, epsilon_percent, pgd_learning_rate,
                           num_epochs, subset=None):
     # Load all the required data for the images which were correctly verified by the model
-    x_exact, y_true, image_indices, model = load_cifar_data(model_name)
+    x_exact, y_true, image_indices, model = load_verified_data(model_name)
 
     # Load the properties DataFrame, leave only verified properties
     properties_filepath = '../cifar_exp/' + properties_filename
