@@ -291,3 +291,20 @@ class GraphNeuralNetwork:
         self.input_embeddings = self.input_embeddings.reshape(original_size)
 
         return scores
+
+    def parameters(self):
+        """
+        This function returns an iterator over all the parameters of the 6 auxiliary neural networks.
+        """
+        # First, put all the auxiliary neural networks in a list
+        gnn_neural_networks = [self.forward_input_update_nn,
+                               self.forward_relu_update_nn,
+                               self.forward_output_update_nn,
+                               self.backward_relu_update_nn,
+                               self.backward_input_update_nn,
+                               self.score_computation_nn]
+
+        # Now use the "yield" keyword to return the generator object on all the parameters of all the above networks
+        for neural_network in gnn_neural_networks:
+            for parameter in neural_network.parameters():
+                yield parameter

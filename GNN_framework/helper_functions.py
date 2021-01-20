@@ -40,7 +40,8 @@ def perturb_image(lower_bound, upper_bound):
     return perturbed_image
 
 
-def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations):
+def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations,
+                    return_loss=False):
     """
     This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
     lead to positive loss, outputs the information about gradients
@@ -48,17 +49,21 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     # Initialise the relevant optimiser and the list to store the gradients to be later used for gradient information
     optimizer = torch.optim.Adam([perturbed_image], lr=pgd_learning_rate)
     gradients = []
+    loss = float('inf')
 
     # Perform Gradient Ascent for a specified number of epochs
     for iteration in range(num_iterations):
         # The output of the network is the difference between the logits of the correct and the test class which is
-        # the same as -loss, but since Gradient Ascent is performed, this difference must be minimised
+        # the same as -loss, but since Gradient Ascent is performed, it is this difference that must be minimised
         loss = simplified_model(perturbed_image)
 
         # If the difference between the logit of the test class and the logit of the true class is positive,
         # then the PGD attack was successful and gradient ascent can be stopped
         if loss < 0:
-            return True, None
+            if return_loss:
+                return loss
+            else:
+                return True, None
 
         optimizer.zero_grad()
         loss.backward()
@@ -75,13 +80,19 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     # If the flag has not been set yet but the perturbation resulted in the model predicting the test class instead of
     # the true one during the last iteration, return the True successful attack flag
     if simplified_model(perturbed_image) < 0:
-        return True, None
+        if return_loss:
+            return loss
+        else:
+            return True, None
 
     # If the Gradient Ascent didn't lead to the changed prediction, then generate the dictionary containing information
     # about gradients and output it as well
     gradient_info_dict = generate_gradient_info_dict(gradients)
 
-    return False, gradient_info_dict
+    if return_loss:
+        return loss
+    else:
+        return False, gradient_info_dict
 
 
 def generate_gradient_info_dict(gradients):
@@ -163,7 +174,7 @@ def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
         # Find the maximum score index in the corresponding score tensor
         max_score_index = torch.argmax(scores[:, i]).item()
 
-        # If the maximum score index is the middle index, then retain the bounds as they are
+        # If the maximum score index is the first index, then retain the bounds as they are
         if max_score_index == 0:
             new_lower_bound_row[i] = old_lower_bound_row[i]
             new_upper_bound_row[i] = old_upper_bound_row[i]

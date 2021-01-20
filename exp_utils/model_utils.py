@@ -81,20 +81,7 @@ def load_verified_data(model_name, cifar_test=None):
     This function returns the lists of CIFAR images, true labels and image indices as well as the model corresponding to
     the images which are correctly classified by the model
     """
-    if model_name == 'cifar_base_kw':
-        model_path = '../models/cifar_base_kw.pth'
-        model_name = cifar_model_m2()
-        model_name.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
-    elif model_name == 'cifar_wide_kw':
-        model_path = '../models/cifar_wide_kw.pth'
-        model_name = cifar_model()
-        model_name.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
-    elif model_name == 'cifar_deep_kw':
-        model_path = '../models/cifar_deep_kw.pth'
-        model_name = cifar_model_deep()
-        model_name.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
-    else:
-        raise NotImplementedError
+    model = load_trained_model(model_name)
 
     if cifar_test is None:
         import torchvision.datasets as datasets
@@ -112,7 +99,7 @@ def load_verified_data(model_name, cifar_test=None):
     for image_index in range(len(cifar_test)):
         image, true_label = cifar_test[image_index]
         image = image.unsqueeze(0)
-        predicted_label = torch.max(model_name(image)[0], 0)[1].item()
+        predicted_label = torch.max(model(image)[0], 0)[1].item()
 
         # Only append the image, its true label and its index to the output if the model predicts the label correctly
         if predicted_label == true_label:
@@ -120,7 +107,7 @@ def load_verified_data(model_name, cifar_test=None):
             verified_true_labels.append(true_label)
             verified_image_indices.append(image_index)
 
-    return verified_images, verified_true_labels, verified_image_indices, model_name
+    return verified_images, verified_true_labels, verified_image_indices, model
 
 
 def match_with_properties(properties_filename, verified_images, verified_true_labels, verified_image_indices):
@@ -181,3 +168,25 @@ def intersection(properties_dataframe, verified_images, verified_true_labels, ve
             epsilons.append(properties_dataframe.iloc[row_idx]['Eps'])
 
     return images, true_labels, test_labels, epsilons
+
+
+def load_trained_model(model_name):
+    """
+    This function returns the required trained model based on the name provided as input.
+    """
+    if model_name == 'cifar_base_kw':
+        model_path = '../models/cifar_base_kw.pth'
+        model = cifar_model_m2()
+        model.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
+    elif model_name == 'cifar_wide_kw':
+        model_path = '../models/cifar_wide_kw.pth'
+        model = cifar_model()
+        model.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
+    elif model_name == 'cifar_deep_kw':
+        model_path = '../models/cifar_deep_kw.pth'
+        model = cifar_model_deep()
+        model.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
+    else:
+        raise NotImplementedError
+
+    return model
