@@ -4,9 +4,8 @@ from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import simplify_model, update_domain_bounds, perturb_image, gradient_ascent
 
 
-def generate_gnn_training_parameters(training_dataset_filename, model_name, embedding_vector_size,
-                                     auxiliary_hidden_size, num_updates, num_epochs, gnn_learning_rate,
-                                     pgd_learning_rate, num_iterations, output_filename, num_update_methods=3):
+def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, pgd_learning_rate,
+                                     num_iterations, num_epochs, output_filename):
     """
     This function performs the actual training of the specified Graph Neural Network. It accepts the GraphNeuralNetwork
     object, the filename of the training dataset as well as some other parameters as inputs and stores the learned model
@@ -25,11 +24,10 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, embe
     temp_input_feature_size = list_of_feature_dicts[0]['input'].size()[0]
     temp_relu_feature_size = list_of_feature_dicts[0]['hidden'][0].size()[0]
     temp_output_feature_size = list_of_feature_dicts[0]['output'].size()[0]
-    gnn = GraphNeuralNetwork(temp_simplified_model, temp_input_size, embedding_vector_size, temp_input_feature_size,
-                             temp_relu_feature_size, temp_output_feature_size, auxiliary_hidden_size,
-                             num_update_methods)
+    gnn = GraphNeuralNetwork(temp_simplified_model, temp_input_size, temp_input_feature_size, temp_relu_feature_size,
+                             temp_output_feature_size)
 
-    # Retrieve the gnn parameters and initialise the optimizer
+    # Initialise the optimizer on the parameters of the GNN
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
 
     # Follow the training algorithm for a specified number of epochs
@@ -47,8 +45,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, embe
                 gnn.reset_input_embedding_vectors()
 
             # Perform a series of forward and backward updates of all the embedding vectors within the GNN
-            gnn.update_embedding_vectors(feature_dict['input'], feature_dict['hidden'], feature_dict['output'],
-                                         num_updates)
+            gnn.update_embedding_vectors(feature_dict['input'], feature_dict['hidden'], feature_dict['output'])
 
             # Compute the scores for each image pixel
             pixel_scores = gnn.compute_scores()
@@ -63,7 +60,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, embe
 
             # Perform a PGD attack given the new bounds and perturbation
             loss = gradient_ascent(simplified_model, perturbed_image, new_lower_bound, new_upper_bound,
-                                   pgd_learning_rate, num_iterations, return_loss=True)
+                                       pgd_learning_rate, num_iterations, return_loss=True)
 
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()
@@ -72,7 +69,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, embe
 
 
 def main():
-    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 5, 10, 5, 2, 0.1, 0.1, 10, '')
+    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 0.1, 0.1, 10, 10, '')
 
 
 if __name__ == '__main__':

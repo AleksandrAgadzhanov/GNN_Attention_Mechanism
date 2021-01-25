@@ -3,7 +3,6 @@ from plnn.modules import Flatten
 from plnn.model import simplify_network
 import pandas as pd
 import torch
-import random
 
 
 def cifar_model_m2():

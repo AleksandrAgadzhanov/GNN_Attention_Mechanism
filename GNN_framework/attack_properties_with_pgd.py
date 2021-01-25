@@ -7,8 +7,7 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_epochs, num_updates, embedding_vector_size, auxiliary_hidden_size,
-                              num_update_methods=3, subset=None):
+                              num_epochs, subset=None):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -35,9 +34,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
 
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
-                                                         pgd_learning_rate, num_iterations, num_epochs, num_updates,
-                                                         embedding_vector_size, auxiliary_hidden_size,
-                                                         num_update_methods)
+                                                         pgd_learning_rate, num_iterations, num_epochs)
 
         # If the attack was unsuccessful, increase the counter
         if not successful_attack_flag:
@@ -50,8 +47,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_epochs, num_updates, embedding_vector_size, auxiliary_hidden_size,
-                            num_update_methods):
+                            num_epochs):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
     model and epsilon value
@@ -77,9 +73,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                                                                                              epsilon * epsilon_factor)
 
     # Initialise the GNN for the given network (which also initialises all the required auxiliary neural networks)
-    gnn = GraphNeuralNetwork(simplified_model, image.size(), embedding_vector_size, input_feature_vectors.size()[0],
-                             relu_feature_vectors_list[0].size()[0], output_feature_vectors.size()[0],
-                             auxiliary_hidden_size, num_update_methods)
+    gnn = GraphNeuralNetwork(simplified_model, image.size(), input_feature_vectors.size()[0],
+                             relu_feature_vectors_list[0].size()[0], output_feature_vectors.size()[0])
 
     # Follow the GNN framework approach for a specified number of epochs
     for i in range(num_epochs):
@@ -89,8 +84,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
             gnn.reset_input_embedding_vectors()
 
         # Perform a series of forward and backward updates of all the embedding vectors within the GNN
-        gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors_list, output_feature_vectors,
-                                     num_updates)
+        gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors_list, output_feature_vectors)
 
         # Compute the scores for each image pixel
         pixel_scores = gnn.compute_scores()
@@ -124,7 +118,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    print(pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 2, 2, 4, 10, 3, subset=[0]))
+    print(pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 10, subset=[0]))
 
 
 if __name__ == '__main__':

@@ -16,8 +16,8 @@ class GraphNeuralNetwork:
     # proper node (input, ReLU and output) now containing the corresponding embedding vector filled with zeros.
     # In addition, all the auxiliary neural networks are initialised including the ones which perform the forward and
     # backward update operations and the one which computes the scores of update methods of all input nodes
-    def __init__(self, neural_network, input_size, embedding_vector_size, input_feature_size, relu_feature_size,
-                 output_feature_size, auxiliary_hidden_size, num_update_methods):
+    def __init__(self, neural_network, input_size, input_feature_size, relu_feature_size, output_feature_size,
+                 embedding_vector_size=64, auxiliary_hidden_size=64, num_update_methods=3):
         # Store the underlying neural network as a field of the GNN
         self.neural_network = neural_network
 
@@ -66,7 +66,7 @@ class GraphNeuralNetwork:
         self.input_embeddings = torch.zeros(self.input_embeddings.size())
 
     def update_embedding_vectors(self, input_feature_vectors, relu_feature_vectors_list, output_feature_vectors,
-                                 num_updates):
+                                 num_updates=2):
         """
         This function performs a series of forward and backward updates on all the embedding vectors until convergence
         is reached (specified by the number of updates input variable).
