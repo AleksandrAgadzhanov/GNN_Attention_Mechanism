@@ -122,7 +122,7 @@ class GraphNeuralNetwork:
             # If the layer is linear or convolutional, pass the embedding vectors through it, without applying the bias
             if type(layer) == nn.Linear or type(layer) == nn.Conv2d:
                 layer_without_bias = copy.deepcopy(layer)
-                layer_without_bias.bias.data.fill_(0)
+                layer_without_bias.bias.data = torch.zeros(layer_without_bias.bias.data.size())
                 embedding_vectors = layer_without_bias(embedding_vectors)
 
             # If the layer is of type Flatten, simply pass the embedding vectors through it, storing the shape before
@@ -193,7 +193,7 @@ class GraphNeuralNetwork:
             if type(layer) == nn.Linear:
                 backwards_linear_layer = nn.Linear(layer.out_features, layer.in_features)
                 backwards_linear_layer.weight.data = torch.transpose(layer.weight.data, 1, 0)
-                backwards_linear_layer.bias.data.fill_(0)
+                backwards_linear_layer.bias.data = torch.zeros(backwards_linear_layer.bias.data.size())
                 embedding_vectors = backwards_linear_layer(embedding_vectors)
 
             # If the layer is convolutional, construct the layer in the similar way to above (effectively performing
@@ -204,7 +204,7 @@ class GraphNeuralNetwork:
                                                           padding=layer.padding, dilation=layer.dilation,
                                                           groups=layer.groups)
                 backwards_conv_layer.weight.data = layer.weight.data
-                backwards_conv_layer.bias.data.fill_(0)
+                backwards_conv_layer.bias.data = torch.zeros(backwards_conv_layer.bias.data.size())
 
                 # If the next layer exists and is a ReLU layer or if this is the last layer (before the input one),
                 # find the number of connecting nodes in the convolutional layer for each ReLU layer node by calling the

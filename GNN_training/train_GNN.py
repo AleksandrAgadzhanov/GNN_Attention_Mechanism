@@ -60,7 +60,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
             # Perform a PGD attack given the new bounds and perturbation
             loss = gradient_ascent(simplified_model, perturbed_image, new_lower_bound, new_upper_bound,
-                                       pgd_learning_rate, num_iterations, return_loss=True)
+                                   pgd_learning_rate, num_iterations, return_loss=True, retain_graph=True)
 
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()

@@ -41,7 +41,7 @@ def perturb_image(lower_bound, upper_bound):
 
 
 def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations,
-                    return_loss=False):
+                    return_loss=False, retain_graph=False):
     """
     This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
     lead to positive loss, outputs the information about gradients
@@ -66,7 +66,7 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
                 return True, None
 
         optimizer.zero_grad()
-        loss.backward()
+        loss.backward(retain_graph=retain_graph)
         optimizer.step()
 
         # Store the current gradient in the list
@@ -249,8 +249,8 @@ def get_numbers_of_connecting_nodes(backwards_conv_layer, input_size):
                                               stride=backwards_conv_layer.stride, padding=backwards_conv_layer.padding,
                                               dilation=backwards_conv_layer.dilation,
                                               groups=backwards_conv_layer.groups)
-    modified_layer.weight.data.fill_(1)
-    modified_layer.bias.data.fill_(0)
+    modified_layer.weight.data = torch.ones(modified_layer.weight.data.size())
+    modified_layer.bias.data = torch.zeros(modified_layer.bias.data.size())
 
     # Now pass the test input through the modified layer to obtain, for example, a tensor of size [1, 1, _, _]. It was
     # checked that when a tensor of larger size, e.g. [4, 16, _, _] is divided by it, each of the [_, _] matrices
