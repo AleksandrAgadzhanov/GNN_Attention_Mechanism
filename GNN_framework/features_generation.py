@@ -57,7 +57,7 @@ def generate_relu_output_feature_vectors(neural_network, input_lower_bound, inpu
 
     # Now call the build_the_model function which returns the lower and upper bounds for all layers (including the input
     # one) as lists of tensors which are shaped as, for example, [3, 32, 32] instead of the usual [1, 3, 32, 32], and
-    # the list of indices of layers located just before the ReLU layers
+    # the list of indices of layers located just before the ReLU layers.
     lower_bounds_all, upper_bounds_all, pre_relu_indices = kw_conv_network.build_the_model(input_domain, image,
                                                                                            epsilon,
                                                                                            image_is_bounded)

@@ -4,7 +4,8 @@ import copy
 from plnn.modules import Flatten
 from GNN_framework.helper_functions import transform_embedding_vectors, get_numbers_of_connecting_nodes
 from GNN_framework.auxiliary_neural_networks import ForwardInputUpdateNN, ForwardReluUpdateNN, ForwardOutputUpdateNN, \
-    BackwardReluUpdateNN, BackwardInputUpdateNN, ScoreComputationNN
+    BackwardReluUpdateNN, BackwardInputUpdateNN, BoundsUpdateNN
+from torch.nn import functional as f
 
 
 class GraphNeuralNetwork:
@@ -15,9 +16,9 @@ class GraphNeuralNetwork:
     # When the GNN is initialised, a graph is created which has the same structure as the input neural network but each
     # proper node (input, ReLU and output) now containing the corresponding embedding vector filled with zeros.
     # In addition, all the auxiliary neural networks are initialised including the ones which perform the forward and
-    # backward update operations and the one which computes the scores of update methods of all input nodes
+    # backward update operations and the one which computes the new bounds of all input nodes
     def __init__(self, neural_network, input_size, input_feature_size, relu_feature_size, output_feature_size,
-                 embedding_vector_size=64, auxiliary_hidden_size=64, num_update_methods=3):
+                 embedding_vector_size=64, auxiliary_hidden_size=64, training_mode=False):
         # Store the underlying neural network as a field of the GNN
         self.neural_network = neural_network
 
@@ -48,16 +49,16 @@ class GraphNeuralNetwork:
 
         # Now, initialise all the auxiliary neural networks
         self.forward_input_update_nn = ForwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
-                                                            embedding_vector_size)
+                                                            embedding_vector_size, training_mode)
         self.forward_relu_update_nn = ForwardReluUpdateNN(relu_feature_size, auxiliary_hidden_size,
-                                                          embedding_vector_size)
+                                                          embedding_vector_size, training_mode)
         self.forward_output_update_nn = ForwardOutputUpdateNN(output_feature_size, auxiliary_hidden_size,
-                                                              embedding_vector_size)
+                                                              embedding_vector_size, training_mode)
         self.backward_relu_update_nn = BackwardReluUpdateNN(relu_feature_size, auxiliary_hidden_size,
-                                                            embedding_vector_size)
+                                                            embedding_vector_size, training_mode)
         self.backward_input_update_nn = BackwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
-                                                              embedding_vector_size)
-        self.score_computation_nn = ScoreComputationNN(embedding_vector_size, auxiliary_hidden_size, num_update_methods)
+                                                              embedding_vector_size, training_mode)
+        self.bounds_update_nn = BoundsUpdateNN(embedding_vector_size, auxiliary_hidden_size, training_mode)
 
     def reset_input_embedding_vectors(self):
         """
@@ -97,8 +98,8 @@ class GraphNeuralNetwork:
         self.input_embeddings = self.input_embeddings.reshape(self.input_embeddings.size()[0], -1)
 
         # Perform the forward update on each input embedding vector in turn
-        for input_idx in range(self.input_embeddings.size()[1]):
-            self.input_embeddings[:, input_idx] = self.forward_input_update_nn(input_feature_vectors[:, input_idx])
+        for node_idx in range(self.input_embeddings.size()[-1]):
+            self.input_embeddings[:, node_idx] = self.forward_input_update_nn(input_feature_vectors[:, node_idx])
 
         # Reshape the input embedding vectors to have the same size as before the update, since it will be easier
         self.input_embeddings = self.input_embeddings.reshape(original_size)
@@ -111,7 +112,7 @@ class GraphNeuralNetwork:
         # Initialise the variable which will be counting the number of ReLUs, thus matching the appropriate features and
         # embedding vectors to corresponding ReLUs, and the variable which will keep track of the output of each layer
         relu_layer_idx = 0
-        embedding_vectors = self.input_embeddings
+        embedding_vectors = self.input_embeddings.clone()
 
         # Initialise an extra variable which will be needed during the backward update - the size before flattening
         size_before_flattening = torch.Size([0])
@@ -144,7 +145,7 @@ class GraphNeuralNetwork:
                 # Transform all the embedding vectors so that they can enter the appropriate neural network
                 transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors)
 
-                # Update each embedding vector in turn
+                # Update the embedding vectors one at a time
                 for node_idx in range(embedding_vectors.size()[-1]):
                     embedding_vectors[:, node_idx] = self.forward_relu_update_nn(
                         relu_feature_vectors[:, node_idx], transformed_embedding_vectors[:, node_idx])
@@ -154,7 +155,7 @@ class GraphNeuralNetwork:
 
                 # Set the corresponding element of the storage to the updated embedding vectors tensor and increment the
                 # ReLU layer counter
-                self.relu_embeddings_list[relu_layer_idx] = embedding_vectors
+                self.relu_embeddings_list[relu_layer_idx] = embedding_vectors.clone()
                 relu_layer_idx += 1
 
             # Otherwise, the layer type hasn't been considered yet
@@ -169,7 +170,7 @@ class GraphNeuralNetwork:
             embedding_vectors[:, node_idx] = self.forward_output_update_nn(output_feature_vectors[:, node_idx],
                                                                            embedding_vectors[:, node_idx])
         embedding_vectors = embedding_vectors.reshape(original_size)
-        self.output_embeddings = embedding_vectors
+        self.output_embeddings = embedding_vectors.clone()
 
         return size_before_flattening
 
@@ -183,27 +184,32 @@ class GraphNeuralNetwork:
         # embedding vectors to corresponding ReLUs, and the variable which will keep track of the output of each layer
         # (now initialised at the output since this is a backward update)
         relu_layer_idx = len(self.relu_embeddings_list) - 1
-        embedding_vectors = self.output_embeddings
+        embedding_vectors = self.output_embeddings.clone()
 
         # Now go backward over each layer in turn, taking care to distinguish between the different types of layers
         for layer_idx, layer in enumerate(reversed(list(self.neural_network.children()))):
 
             # If the layer is linear, construct the layer with the same weights and zero biases, but passing in the
-            # opposite direction by swapping the inputs and outputs
+            # opposite direction by swapping the inputs and outputs. Also set all the required_grad parameters of this
+            # layer to False to avoid creating unnecessary gradient computation graphs
             if type(layer) == nn.Linear:
                 backwards_linear_layer = nn.Linear(layer.out_features, layer.in_features)
                 backwards_linear_layer.weight.data = torch.transpose(layer.weight.data, 1, 0)
                 backwards_linear_layer.bias.data = torch.zeros(backwards_linear_layer.bias.data.size())
+                for parameter in backwards_linear_layer.parameters():
+                    parameter.requires_grad = False
                 embedding_vectors = backwards_linear_layer(embedding_vectors)
 
             # If the layer is convolutional, construct the layer in the similar way to above (effectively performing
-            # deconvolution), but this time specifying the full set of parameters
+            # deconvolution), but this time specifying the full set of parameters. Also set requires_grad to False
             elif type(layer) == nn.Conv2d:
                 backwards_conv_layer = nn.ConvTranspose2d(layer.out_channels, layer.in_channels,
                                                           kernel_size=layer.kernel_size, stride=layer.stride,
                                                           padding=layer.padding, dilation=layer.dilation,
                                                           groups=layer.groups)
                 backwards_conv_layer.weight.data = layer.weight.data
+                for parameter in backwards_conv_layer.parameters():
+                    parameter.requires_grad = False
                 backwards_conv_layer.bias.data = torch.zeros(backwards_conv_layer.bias.data.size())
 
                 # If the next layer exists and is a ReLU layer or if this is the last layer (before the input one),
@@ -248,7 +254,7 @@ class GraphNeuralNetwork:
 
                 # Set the corresponding element of the storage to the updated embedding vectors tensor and decrement the
                 # ReLU layer counter
-                self.relu_embeddings_list[relu_layer_idx] = embedding_vectors
+                self.relu_embeddings_list[relu_layer_idx] = embedding_vectors.clone()
                 relu_layer_idx -= 1
 
             # Otherwise, the layer type hasn't been considered yet
@@ -263,34 +269,48 @@ class GraphNeuralNetwork:
             embedding_vectors[:, node_idx] = self.backward_input_update_nn(input_feature_vectors[:, node_idx],
                                                                            embedding_vectors[:, node_idx])
         embedding_vectors = embedding_vectors.reshape(original_size)
-        self.input_embeddings = embedding_vectors
+        self.input_embeddings = embedding_vectors.clone()
 
-    def compute_scores(self):
+    def compute_updated_bounds(self, old_lower_bound, old_upper_bound):
         """
-        This function computes the scores for all the input nodes
+        This function computes the updated lower and upper bounds of the input domain by passing the input embedding
+        vectors through the appropriate neural network and then constraining its output in a meaningful way.
         """
-        # Initialise the row tensor of tensors of scores where each tensor corresponds to the scores associated with a
-        # particular pixel (size hasn't been computed yet)
-        scores = torch.tensor([0])
-
         # Reshape the input embeddings to the size which is easy to iterate over, storing the original size
         original_size = self.input_embeddings.size()
         self.input_embeddings = self.input_embeddings.reshape(self.input_embeddings.size()[0], -1)
 
-        # For each input node, pass the corresponding embedding vector through the Score Computation NN
+        # Initialise the row tensor of tensors of new lower and upper bounds where each tensor corresponds to the new
+        # lower and upper bound associated with a particular pixel
+        new_lower_bound_and_offset = torch.zeros([2, self.input_embeddings.size()[-1]])
+
+        # For each input node, pass its embedding vector through the Bounds Update NN
         for input_idx in range(self.input_embeddings.size()[-1]):
-            pixel_scores = self.score_computation_nn(self.input_embeddings[:, input_idx])
-
-            # During the first loop, resize the tensor containing scores to the correct size
-            if input_idx == 0:
-                scores = torch.zeros(torch.Size([pixel_scores.size()[0], self.input_embeddings.size()[-1]]))
-
-            scores[:, input_idx] = self.score_computation_nn(self.input_embeddings[:, input_idx])
+            new_lower_bound_and_offset[:, input_idx] = self.bounds_update_nn(self.input_embeddings[:, input_idx])
 
         # Reshape the input embeddings to the original size
         self.input_embeddings = self.input_embeddings.reshape(original_size)
 
-        return scores
+        # Initialise the new lower and the offset tensors
+        new_lower_bound = new_lower_bound_and_offset[0, :].reshape(old_lower_bound.size())
+        offset = new_lower_bound_and_offset[1, :].reshape(old_lower_bound.size())
+
+        # Now the constraints should be applied on new lower bounds and offsets.
+        # 1. If the obtained lower bound is smaller than the old lower bound, set the new lower bound to the old one; if
+        # it is larger than the old upper bound, set it to the old upper bound
+        new_lower_bound = torch.max(new_lower_bound, old_lower_bound)
+        new_lower_bound = torch.min(new_lower_bound, old_upper_bound)
+
+        # 2. If some elements of the offset are negative, set them to zero
+        offset = f.relu(offset)
+
+        # Initialise the upper bound tensor
+        new_upper_bound = new_lower_bound + offset
+
+        # 3. Finally, if the new upper bound is bigger than the old upper bound, set it to the old upper bound
+        new_upper_bound = torch.min(new_upper_bound, new_lower_bound)
+
+        return new_lower_bound, new_upper_bound
 
     def parameters(self):
         """
@@ -302,9 +322,9 @@ class GraphNeuralNetwork:
                                self.forward_output_update_nn,
                                self.backward_relu_update_nn,
                                self.backward_input_update_nn,
-                               self.score_computation_nn]
+                               self.bounds_update_nn]
 
         # Now use the "yield" keyword to return the generator object on all the parameters of all the above networks
         for neural_network in gnn_neural_networks:
             for parameter in neural_network.parameters():
-                yield parameter
+                yield parameter.requires_grad_(True)

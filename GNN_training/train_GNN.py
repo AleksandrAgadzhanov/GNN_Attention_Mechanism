@@ -39,8 +39,8 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             # Simplify the model according to the current true and test class labels
             simplified_model = simplify_model(model, feature_dict['true label'], feature_dict['test label'])
 
-            # When the epoch is not the first one, reset the input embedding vectors since the forward input update
-            # function only activates when the input embedding vectors are zero
+            # When the epoch and the subdomain index are not the first one, reset the input embedding vectors since the
+            # forward input update function only activates when the input embedding vectors are zero
             if epoch != 0 and subdomain_index != 0:
                 gnn.reset_input_embedding_vectors()
 
@@ -48,19 +48,20 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             gnn.update_embedding_vectors(feature_dict['input'], feature_dict['hidden'], feature_dict['output'])
 
             # Compute the scores for each image pixel
-            pixel_scores = gnn.compute_scores()
+            pixel_scores = gnn.compute_updated_bounds()
 
             # Update the domain bounds for each pixel based on the pixel scores above
             old_lower_bound = feature_dict['input'][0, :].reshape(temp_input_size)
             old_upper_bound = feature_dict['input'][1, :].reshape(temp_input_size)
             new_lower_bound, new_upper_bound = update_domain_bounds(old_lower_bound, old_upper_bound, pixel_scores)
 
-            # Perturb each pixel within the updated domain bounds
-            perturbed_image = perturb_image(new_lower_bound, new_upper_bound).requires_grad_(True)
-
-            # Perform a PGD attack given the new bounds and perturbation
-            loss = gradient_ascent(simplified_model, perturbed_image, new_lower_bound, new_upper_bound,
-                                   pgd_learning_rate, num_iterations, return_loss=True, retain_graph=True)
+            # # Perturb each pixel within the updated domain bounds
+            # perturbed_image = perturb_image(new_lower_bound, new_upper_bound)
+            #
+            # # Perform a PGD attack given the new bounds and perturbation
+            # loss = gradient_ascent(simplified_model, perturbed_image, new_lower_bound, new_upper_bound,
+            #                        pgd_learning_rate, num_iterations, return_loss=True)
+            loss = simplified_model(torch.add(new_upper_bound, new_lower_bound) / 2)
 
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()
@@ -69,7 +70,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 0.1, 0.1, 10, 10, '')
+    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 0.1, 0.1, 10, 2, '')
 
 
 if __name__ == '__main__':

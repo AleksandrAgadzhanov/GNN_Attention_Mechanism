@@ -1,8 +1,7 @@
 import torch
 from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
-from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent, \
-    update_domain_bounds
+from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
 from GNN_framework.features_generation import generate_input_feature_vectors, generate_relu_output_feature_vectors
 
 
@@ -55,9 +54,10 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     # First, perturb the image randomly within the allowed bounds and perform a PGD attack
     lower_bound = torch.add(-epsilon * epsilon_factor, image)
     upper_bound = torch.add(epsilon * epsilon_factor, image)
-    perturbed_image = perturb_image(lower_bound, upper_bound).requires_grad_(True)
-    successful_attack_flag, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image, lower_bound,
-                                                                 upper_bound, pgd_learning_rate, num_iterations)
+    perturbed_image = perturb_image(lower_bound, upper_bound)
+    successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image,
+                                                                                  lower_bound, upper_bound,
+                                                                                  pgd_learning_rate, num_iterations)
 
     # If the attack was successful, the procedure can be terminated and True can be returned
     if successful_attack_flag:
@@ -86,18 +86,16 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
         # Perform a series of forward and backward updates of all the embedding vectors within the GNN
         gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors_list, output_feature_vectors)
 
-        # Compute the scores for each image pixel
-        pixel_scores = gnn.compute_scores()
-
         # Update the domain bounds for each pixel based on the pixel scores above
-        lower_bound, upper_bound = update_domain_bounds(lower_bound, upper_bound, pixel_scores)
+        lower_bound, upper_bound = gnn.compute_updated_bounds(lower_bound, upper_bound)
 
         # Perturb each pixel within the updated domain bounds
-        perturbed_image = perturb_image(lower_bound, upper_bound).requires_grad_(True)
+        perturbed_image = perturb_image(lower_bound, upper_bound)
 
         # Perform a PGD attack given the new bounds and perturbation
-        successful_attack_flag, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image, lower_bound,
-                                                                     upper_bound, pgd_learning_rate, num_iterations)
+        successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image,
+                                                                                      lower_bound, upper_bound,
+                                                                                      pgd_learning_rate, num_iterations)
 
         # If the attack was successful, the procedure can be terminated and True can be returned, otherwise continue
         if successful_attack_flag:
@@ -118,7 +116,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    print(pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 10, subset=[0]))
+    print(pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 10, 2, subset=[0]))
 
 
 if __name__ == '__main__':

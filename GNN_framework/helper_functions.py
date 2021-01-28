@@ -41,11 +41,14 @@ def perturb_image(lower_bound, upper_bound):
 
 
 def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations,
-                    return_loss=False, retain_graph=False):
+                    return_loss=False):
     """
     This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
-    lead to positive loss, outputs the information about gradients
+    lead to positive loss, outputs the information about gradients and the last version of the optimized variable.
     """
+    # First of all, set the requires_grad parameter of the perturbed image to True to make it suitable for optimization
+    perturbed_image.requires_grad = True
+
     # Initialise the relevant optimiser and the list to store the gradients to be later used for gradient information
     optimizer = torch.optim.Adam([perturbed_image], lr=pgd_learning_rate)
     gradients = []
@@ -53,27 +56,27 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
 
     # Perform Gradient Ascent for a specified number of epochs
     for iteration in range(num_iterations):
-        # The output of the network is the difference between the logits of the correct and the test class which is
-        # the same as -loss, but since Gradient Ascent is performed, it is this difference that must be minimised
+        # The output of the network is the difference between the logits of the correct and the test class which is the
+        # same as -loss, but since Gradient Ascent is performed, it is this difference that must be minimised
         loss = simplified_model(perturbed_image)
 
-        # If the difference between the logit of the test class and the logit of the true class is positive,
-        # then the PGD attack was successful and gradient ascent can be stopped
+        # If the difference between the logit of the test class and the logit of the true class is positive, then the
+        # PGD attack was successful and gradient ascent can be stopped
         if loss < 0:
             if return_loss:
                 return loss
             else:
-                return True, None
+                return True, None, None
 
         optimizer.zero_grad()
-        loss.backward(retain_graph=retain_graph)
+        loss.backward()
         optimizer.step()
 
         # Store the current gradient in the list
         gradients.append(perturbed_image.grad.clone())
 
-        # Clip the values of the perturbed image so that they are within the allowed perturbation magnitude
-        # This operation isn't related to optimisation, hence it is wrapped with torch.no_grad()
+        # Clip the values of the perturbed image so that they are within the allowed perturbation magnitude. This
+        # operation isn't related to optimisation, hence it is wrapped with torch.no_grad()
         with torch.no_grad():
             perturbed_image[:] = torch.max(torch.min(perturbed_image, upper_bound), lower_bound)
 
@@ -83,16 +86,20 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
         if return_loss:
             return loss
         else:
-            return True, None
+            return True, None, None
 
     # If the Gradient Ascent didn't lead to the changed prediction, then generate the dictionary containing information
     # about gradients and output it as well
     gradient_info_dict = generate_gradient_info_dict(gradients)
 
+    # Set the requires_grad parameter of the perturbed image to False so that gradients with respect to it aren't
+    # computed outside of this function
+    perturbed_image.requires_grad = False
+
     if return_loss:
         return loss
     else:
-        return False, gradient_info_dict
+        return False, perturbed_image, gradient_info_dict
 
 
 def generate_gradient_info_dict(gradients):
@@ -110,18 +117,18 @@ def generate_gradient_info_dict(gradients):
     gradient_magnitudes_pixels = grouped_by_iteration_to_grouped_by_pixel(gradient_magnitudes)
 
     # Compute pixel-wise mean, median, maximum and minimum gradients as well as the standard deviation and store them
-    mean_gradient_magnitudes_pixels = []
-    median_gradient_magnitudes_pixels = []
-    max_gradient_magnitudes_pixels = []
-    min_gradient_magnitudes_pixels = []
-    std_gradient_magnitudes_pixels = []
+    mean_gradient_magnitudes_pixels = torch.zeros(gradient_info_dict['last gradient'].size())
+    median_gradient_magnitudes_pixels = torch.zeros(gradient_info_dict['last gradient'].size())
+    max_gradient_magnitudes_pixels = torch.zeros(gradient_info_dict['last gradient'].size())
+    min_gradient_magnitudes_pixels = torch.zeros(gradient_info_dict['last gradient'].size())
+    std_gradient_magnitudes_pixels = torch.zeros(gradient_info_dict['last gradient'].size())
 
     for pixel_idx in range(len(gradient_magnitudes_pixels)):
-        mean_gradient_magnitudes_pixels.append(torch.mean(gradient_magnitudes_pixels[pixel_idx]))
-        median_gradient_magnitudes_pixels.append(torch.median(gradient_magnitudes_pixels[pixel_idx]))
-        max_gradient_magnitudes_pixels.append(torch.max(gradient_magnitudes_pixels[pixel_idx]))
-        min_gradient_magnitudes_pixels.append(torch.min(gradient_magnitudes_pixels[pixel_idx]))
-        std_gradient_magnitudes_pixels.append(torch.std(gradient_magnitudes_pixels[pixel_idx]))
+        mean_gradient_magnitudes_pixels[pixel_idx] = torch.mean(gradient_magnitudes_pixels[pixel_idx])
+        median_gradient_magnitudes_pixels[pixel_idx] = torch.median(gradient_magnitudes_pixels[pixel_idx])
+        max_gradient_magnitudes_pixels[pixel_idx] = torch.max(gradient_magnitudes_pixels[pixel_idx])
+        min_gradient_magnitudes_pixels[pixel_idx] = torch.min(gradient_magnitudes_pixels[pixel_idx])
+        std_gradient_magnitudes_pixels[pixel_idx] = torch.std(gradient_magnitudes_pixels[pixel_idx])
 
     # Add the above statistics to the gradient information dictionary
     gradient_info_dict['mean gradient'] = mean_gradient_magnitudes_pixels
@@ -151,46 +158,6 @@ def grouped_by_iteration_to_grouped_by_pixel(gradients):
         row_gradients_grouped_by_pixel.append(torch.tensor(pixel_gradients_list))
 
     return row_gradients_grouped_by_pixel
-
-
-def update_domain_bounds(old_lower_bound, old_upper_bound, scores):
-    """
-    This function updates the domain bounds based on the scores. For each input node, it chooses the update method
-    corresponding to the maximum score among all scores for that node
-    """
-    # First, reshape the old lower and upper bounds to be row tensors
-    old_lower_bound_row = old_lower_bound.view(-1)
-    old_upper_bound_row = old_upper_bound.view(-1)
-
-    # Initialise the new lower and upper bound tensors
-    new_lower_bound_row = torch.zeros(old_lower_bound_row.size())
-    new_upper_bound_row = torch.zeros(old_upper_bound_row.size())
-
-    # The size of each score tensor represents the number of update methods chosen before. It is an odd number since one
-    # update method is always for a node to retain the old bounds and all the other update methods (of which there is an
-    # even number) symmetrically divide the original domain bounds with one division boundary being at the centre of the
-    # old domain. Each score tensor  Make the decision for each input node
-    for i in range(old_lower_bound_row.size()[0]):
-        # Find the maximum score index in the corresponding score tensor
-        max_score_index = torch.argmax(scores[:, i]).item()
-
-        # If the maximum score index is the first index, then retain the bounds as they are
-        if max_score_index == 0:
-            new_lower_bound_row[i] = old_lower_bound_row[i]
-            new_upper_bound_row[i] = old_upper_bound_row[i]
-
-        # Otherwise update the bounds according to the approach outlined above
-        else:
-            new_lower_bound_row[i] = old_lower_bound_row[i] + (max_score_index - 1) \
-                                     * (old_upper_bound_row[i] - old_lower_bound_row[i]) / (scores[0].size()[0] - 1)
-            new_upper_bound_row[i] = old_lower_bound_row[i] + max_score_index * (
-                    old_upper_bound_row[i] - old_lower_bound_row[i]) / (scores[0].size()[0] - 1)
-
-    # Finally, reshape the new lower and upper bounds so that they have the image shape
-    new_lower_bound = new_lower_bound_row.reshape(old_lower_bound.size())
-    new_upper_bound = new_upper_bound_row.reshape(old_upper_bound.size())
-
-    return new_lower_bound, new_upper_bound
 
 
 def transform_embedding_vectors(embedding_vectors, local_feature_vectors):
@@ -244,13 +211,15 @@ def get_numbers_of_connecting_nodes(backwards_conv_layer, input_size):
 
     # Construct a copy of the passed convolutional layer but with 1 input and 1 output channel. Also set all weights of
     # the layer to ones and biases to zeros so that the numbers of connecting nodes appear in the output for each output
-    # node
+    # node. Finally, set all the required_grad parameters of its parameters to False
     modified_layer = torch.nn.ConvTranspose2d(1, 1, kernel_size=backwards_conv_layer.kernel_size,
                                               stride=backwards_conv_layer.stride, padding=backwards_conv_layer.padding,
                                               dilation=backwards_conv_layer.dilation,
                                               groups=backwards_conv_layer.groups)
     modified_layer.weight.data = torch.ones(modified_layer.weight.data.size())
     modified_layer.bias.data = torch.zeros(modified_layer.bias.data.size())
+    for parameter in modified_layer.parameters():
+        parameter.requires_grad = False
 
     # Now pass the test input through the modified layer to obtain, for example, a tensor of size [1, 1, _, _]. It was
     # checked that when a tensor of larger size, e.g. [4, 16, _, _] is divided by it, each of the [_, _] matrices
