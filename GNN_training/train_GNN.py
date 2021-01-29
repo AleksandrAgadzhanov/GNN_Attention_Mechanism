@@ -1,7 +1,7 @@
 import torch
 from exp_utils.model_utils import load_trained_model
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
-from GNN_framework.helper_functions import simplify_model, update_domain_bounds, perturb_image, gradient_ascent
+from GNN_framework.helper_functions import simplify_model, perturb_image, gradient_ascent
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, pgd_learning_rate,
@@ -25,7 +25,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     temp_relu_feature_size = list_of_feature_dicts[0]['hidden'][0].size()[0]
     temp_output_feature_size = list_of_feature_dicts[0]['output'].size()[0]
     gnn = GraphNeuralNetwork(temp_simplified_model, temp_input_size, temp_input_feature_size, temp_relu_feature_size,
-                             temp_output_feature_size)
+                             temp_output_feature_size, training_mode=True)
 
     # Initialise the optimizer on the parameters of the GNN
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
@@ -47,13 +47,10 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             # Perform a series of forward and backward updates of all the embedding vectors within the GNN
             gnn.update_embedding_vectors(feature_dict['input'], feature_dict['hidden'], feature_dict['output'])
 
-            # Compute the scores for each image pixel
-            pixel_scores = gnn.compute_updated_bounds()
-
-            # Update the domain bounds for each pixel based on the pixel scores above
+            # Update the domain bounds for each pixel based on the GNN outputs
             old_lower_bound = feature_dict['input'][0, :].reshape(temp_input_size)
             old_upper_bound = feature_dict['input'][1, :].reshape(temp_input_size)
-            new_lower_bound, new_upper_bound = update_domain_bounds(old_lower_bound, old_upper_bound, pixel_scores)
+            new_lower_bound, new_upper_bound = gnn.compute_updated_bounds(old_lower_bound, old_upper_bound)
 
             # # Perturb each pixel within the updated domain bounds
             # perturbed_image = perturb_image(new_lower_bound, new_upper_bound)

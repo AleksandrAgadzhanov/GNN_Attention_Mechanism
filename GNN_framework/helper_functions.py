@@ -196,8 +196,9 @@ def transform_embedding_vectors(embedding_vectors, local_feature_vectors):
             alphas_dashed[i] = 1 - alphas[i]
 
     # Finally, the transformed embedding vectors are defined in the following way
-    transformed_embedding_vectors = torch.cat([torch.mul(embedding_vectors, alphas),
-                                               torch.mul(embedding_vectors, alphas_dashed)])
+    product_1 = torch.mul(embedding_vectors, alphas)
+    product_2 = torch.mul(embedding_vectors, alphas_dashed)
+    transformed_embedding_vectors = torch.cat([product_1, product_2])
 
     return transformed_embedding_vectors
 
