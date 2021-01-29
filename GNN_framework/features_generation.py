@@ -6,34 +6,18 @@ def generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image, gr
     """
     This function generates the feature vectors for each input node from all the inputs provided.
     """
-    # Transform the gradient information dictionary into rows of gradient information tensors where each row has the
-    # same size as the image and contains a piece of information about gradients for all pixels
-    gradient_info_row_tensors = list(gradient_info_dict.values())
+    # Initialise the variable which will be storing all the gradient information tensors at once as its row tensors
+    gradient_info_row_tensors = torch.zeros([len(gradient_info_dict), lower_bound.view(-1).size()[0]])
 
-    # Initialise the tensor variable to store the input feature vectors in (size hasn't been computed yet)
-    input_feature_vectors = torch.tensor([0])
+    # Fill in the values of the above variable
+    for info_tensor_idx, info_tensor in enumerate(gradient_info_dict.values()):
+        gradient_info_row_tensors[info_tensor_idx] = info_tensor
 
-    # For each input node, generate the corresponding feature vector
-    for input_idx in range(gradient_info_row_tensors[0].size()[0]):
+    # Combine the information about the lower and upper bounds as well as the perturbed value of the pixel
+    pixel_info = torch.stack([lower_bound.view(-1), upper_bound.view(-1), perturbed_image.view(-1)])
 
-        # Combine the information about the lower and upper bounds as well as the perturbed value of the pixel
-        pixel_info = [torch.tensor([lower_bound.view(-1)[input_idx]]),
-                      torch.tensor([upper_bound.view(-1)[input_idx]]),
-                      torch.tensor([perturbed_image.view(-1)[input_idx]])]
-
-        # Now extract all the information about gradients for a particular pixel
-        pixel_gradient_info = []
-        for i in range(len(gradient_info_row_tensors)):
-            pixel_gradient_info.append(torch.tensor([gradient_info_row_tensors[i][input_idx]]))
-
-        # During the first loop, resize the tensor containing input feature vectors to the correct size
-        if input_idx == 0:
-            input_feature_vectors = torch.zeros(torch.Size([len(pixel_info + pixel_gradient_info),
-                                                            *lower_bound.size()]))
-            input_feature_vectors = input_feature_vectors.reshape(input_feature_vectors.size()[0], -1)
-
-        # Finally, add the generated feature vector in the required place
-        input_feature_vectors[:, input_idx] = torch.cat(pixel_info + pixel_gradient_info)
+    # Finally, construct the feature vectors variable by combining the pixel information with the gradient information
+    input_feature_vectors = torch.cat([pixel_info, gradient_info_row_tensors])
 
     return input_feature_vectors
 
@@ -138,16 +122,10 @@ def get_relaxation_triangle_intercepts(lower_bounds_before_relu, upper_bounds_be
     and upper bounds of the layer just before the ReLU layer. The intercepts themselves act as features capturing the
     extent of convex relaxation that is introduced at each ReLU node.
     """
-    # Initialise the output row tensor of appropriate size
-    relaxation_triangle_intercepts = torch.zeros(lower_bounds_before_relu.size())
-
     # If the ratio between the lower and upper bound is +ve, then the intercept of the relaxation triangle is
     # zero, otherwise it is easily obtained as -ub * lb / (ub - lb) (ub and lb - upper and lower bounds)
-    for i in range(lower_bounds_before_relu.size()[0]):
-        if lower_bounds_before_relu[i] * upper_bounds_before_relu[i] > 0:
-            relaxation_triangle_intercepts[i] = 0.0
-        else:
-            relaxation_triangle_intercepts[i] = - upper_bounds_before_relu[i] * lower_bounds_before_relu[i] / \
-                                                (upper_bounds_before_relu[i] - lower_bounds_before_relu[i])
+    relaxation_triangle_intercepts = torch.where(lower_bounds_before_relu * upper_bounds_before_relu > 0, torch.zeros(
+        lower_bounds_before_relu.size()[0]), torch.div(torch.mul(-upper_bounds_before_relu, lower_bounds_before_relu),
+                                                       torch.add(upper_bounds_before_relu, -lower_bounds_before_relu)))
 
     return relaxation_triangle_intercepts

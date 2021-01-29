@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import copy
 from plnn.modules import Flatten
 from GNN_framework.helper_functions import transform_embedding_vectors, get_numbers_of_connecting_nodes
 from GNN_framework.auxiliary_neural_networks import ForwardInputUpdateNN, ForwardReluUpdateNN, ForwardOutputUpdateNN, \
@@ -60,6 +59,9 @@ class GraphNeuralNetwork:
                                                               embedding_vector_size, training_mode)
         self.bounds_update_nn = BoundsUpdateNN(embedding_vector_size, auxiliary_hidden_size, training_mode)
 
+        # Finally, store the training mode flag
+        self.training_mode = training_mode
+
     def reset_input_embedding_vectors(self):
         """
         This function resets all the input embedding vectors to the zero vectors
@@ -97,9 +99,9 @@ class GraphNeuralNetwork:
         original_size = self.input_embeddings.size()
         self.input_embeddings = self.input_embeddings.reshape(self.input_embeddings.size()[0], -1)
 
-        # Perform the forward update on each input embedding vector in turn
-        for node_idx in range(self.input_embeddings.size()[-1]):
-            self.input_embeddings[:, node_idx] = self.forward_input_update_nn(input_feature_vectors[:, node_idx])
+        # Perform the forward update on all the embedding vectors at once in order to avoid inplace operations
+        self.input_embeddings = torch.transpose(self.forward_input_update_nn(
+            torch.transpose(input_feature_vectors, 1, 0)), 1, 0)
 
         # Reshape the input embedding vectors to have the same size as before the update, since it will be easier
         self.input_embeddings = self.input_embeddings.reshape(original_size)
@@ -122,9 +124,10 @@ class GraphNeuralNetwork:
 
             # If the layer is linear or convolutional, pass the embedding vectors through it, without applying the bias
             if type(layer) == nn.Linear or type(layer) == nn.Conv2d:
-                layer_without_bias = copy.deepcopy(layer)
-                layer_without_bias.bias.data = torch.zeros(layer_without_bias.bias.data.size())
-                embedding_vectors = layer_without_bias(embedding_vectors)
+                layer_bias = layer.bias.data
+                layer.bias.data = torch.zeros(layer.bias.data.size())
+                embedding_vectors = layer(embedding_vectors)
+                layer.bias.data = layer_bias
 
             # If the layer is of type Flatten, simply pass the embedding vectors through it, storing the shape before
             # flattening in an extra variable
@@ -145,10 +148,9 @@ class GraphNeuralNetwork:
                 # Transform all the embedding vectors so that they can enter the appropriate neural network
                 transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors)
 
-                # Update the embedding vectors one at a time
-                for node_idx in range(embedding_vectors.size()[-1]):
-                    embedding_vectors[:, node_idx] = self.forward_relu_update_nn(
-                        relu_feature_vectors[:, node_idx], transformed_embedding_vectors[:, node_idx])
+                # Update the embedding vectors all at once in order to avoid inplace operations
+                embedding_vectors = torch.transpose(self.forward_relu_update_nn(torch.transpose(
+                    relu_feature_vectors, 1, 0), torch.transpose(transformed_embedding_vectors, 1, 0)), 1, 0)
 
                 # Reshape the embedding vectors tensor to have the original size
                 embedding_vectors = embedding_vectors.reshape(original_size)
@@ -166,9 +168,8 @@ class GraphNeuralNetwork:
         # form of the propagated embeddings using the same procedure as for the ReLU layers
         original_size = embedding_vectors.size()
         embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
-        for node_idx in range(embedding_vectors.size()[-1]):
-            embedding_vectors[:, node_idx] = self.forward_output_update_nn(output_feature_vectors[:, node_idx],
-                                                                           embedding_vectors[:, node_idx])
+        embedding_vectors = torch.transpose(self.forward_output_update_nn(
+            torch.transpose(output_feature_vectors, 1, 0), torch.transpose(embedding_vectors, 1, 0)), 1, 0)
         embedding_vectors = embedding_vectors.reshape(original_size)
         self.output_embeddings = embedding_vectors.clone()
 
@@ -191,13 +192,14 @@ class GraphNeuralNetwork:
 
             # If the layer is linear, construct the layer with the same weights and zero biases, but passing in the
             # opposite direction by swapping the inputs and outputs. Also set all the required_grad parameters of this
-            # layer to False to avoid creating unnecessary gradient computation graphs
+            # layer to False to avoid creating unnecessary gradient computation graphs if not in training mode
             if type(layer) == nn.Linear:
                 backwards_linear_layer = nn.Linear(layer.out_features, layer.in_features)
                 backwards_linear_layer.weight.data = torch.transpose(layer.weight.data, 1, 0)
                 backwards_linear_layer.bias.data = torch.zeros(backwards_linear_layer.bias.data.size())
-                for parameter in backwards_linear_layer.parameters():
-                    parameter.requires_grad = False
+                if not self.training_mode:
+                    for parameter in backwards_linear_layer.parameters():
+                        parameter.requires_grad = False
                 embedding_vectors = backwards_linear_layer(embedding_vectors)
 
             # If the layer is convolutional, construct the layer in the similar way to above (effectively performing
@@ -208,8 +210,9 @@ class GraphNeuralNetwork:
                                                           padding=layer.padding, dilation=layer.dilation,
                                                           groups=layer.groups)
                 backwards_conv_layer.weight.data = layer.weight.data
-                for parameter in backwards_conv_layer.parameters():
-                    parameter.requires_grad = False
+                if not self.training_mode:
+                    for parameter in backwards_conv_layer.parameters():
+                        parameter.requires_grad = False
                 backwards_conv_layer.bias.data = torch.zeros(backwards_conv_layer.bias.data.size())
 
                 # If the next layer exists and is a ReLU layer or if this is the last layer (before the input one),
@@ -219,7 +222,8 @@ class GraphNeuralNetwork:
                     type(list(reversed(list(self.neural_network.children())))[layer_idx + 1]) == nn.ReLU) or \
                         layer_idx == len((list(self.neural_network.children()))) - 1:
                     numbers_of_connecting_nodes = get_numbers_of_connecting_nodes(backwards_conv_layer,
-                                                                                  embedding_vectors.size())
+                                                                                  embedding_vectors.size(),
+                                                                                  self.training_mode)
                     embedding_vectors = backwards_conv_layer(embedding_vectors)
                     embedding_vectors = embedding_vectors / numbers_of_connecting_nodes
                 # Otherwise, simply pass the embedding vectors through without scaling
@@ -244,10 +248,9 @@ class GraphNeuralNetwork:
                 # Transform all the embedding vectors so that they can enter the appropriate neural network
                 transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors)
 
-                # Update each embedding vector in turn
-                for node_idx in range(embedding_vectors.size()[-1]):
-                    embedding_vectors[:, node_idx] = self.backward_relu_update_nn(
-                        relu_feature_vectors[:, node_idx], transformed_embedding_vectors[:, node_idx])
+                # Update all embedding vectors at once to avoid inplace operations
+                embedding_vectors = torch.transpose(self.backward_relu_update_nn(torch.transpose(
+                    relu_feature_vectors, 1, 0), torch.transpose(transformed_embedding_vectors, 1, 0)), 1, 0)
 
                 # Reshape the embedding vectors tensor to have the original size
                 embedding_vectors = embedding_vectors.reshape(original_size)
@@ -265,9 +268,8 @@ class GraphNeuralNetwork:
         # form of the propagated embeddings using the same procedure as for the ReLU layers
         original_size = embedding_vectors.size()
         embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
-        for node_idx in range(embedding_vectors.size()[-1]):
-            embedding_vectors[:, node_idx] = self.backward_input_update_nn(input_feature_vectors[:, node_idx],
-                                                                           embedding_vectors[:, node_idx])
+        embedding_vectors = torch.transpose(self.backward_input_update_nn(
+            torch.transpose(input_feature_vectors, 1, 0), torch.transpose(embedding_vectors, 1, 0)), 1, 0)
         embedding_vectors = embedding_vectors.reshape(original_size)
         self.input_embeddings = embedding_vectors.clone()
 
@@ -284,9 +286,9 @@ class GraphNeuralNetwork:
         # lower and upper bound associated with a particular pixel
         new_lower_bound_and_offset = torch.zeros([2, self.input_embeddings.size()[-1]])
 
-        # For each input node, pass its embedding vector through the Bounds Update NN
-        for input_idx in range(self.input_embeddings.size()[-1]):
-            new_lower_bound_and_offset[:, input_idx] = self.bounds_update_nn(self.input_embeddings[:, input_idx])
+        # Pass all the embedding vectors through the Bounds Update NN at once to avoid inplace operations
+        new_lower_bound_and_offset = torch.transpose(self.bounds_update_nn(
+            torch.transpose(self.input_embeddings, 1, 0)), 1, 0)
 
         # Reshape the input embeddings to the original size
         self.input_embeddings = self.input_embeddings.reshape(original_size)
@@ -309,7 +311,8 @@ class GraphNeuralNetwork:
 
         # 3. Finally, if the new upper bound is bigger than the old upper bound, set it to the old upper bound
         new_upper_bound = torch.min(new_upper_bound, new_lower_bound)
-
+        if torch.eq(new_upper_bound, new_lower_bound).all().item():
+            new_lower_bound = torch.add(new_upper_bound, new_lower_bound) / 2
         return new_lower_bound, new_upper_bound
 
     def parameters(self):

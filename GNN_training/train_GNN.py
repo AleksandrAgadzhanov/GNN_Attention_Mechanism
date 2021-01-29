@@ -39,9 +39,9 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             # Simplify the model according to the current true and test class labels
             simplified_model = simplify_model(model, feature_dict['true label'], feature_dict['test label'])
 
-            # When the epoch and the subdomain index are not the first one, reset the input embedding vectors since the
+            # When the epoch or the subdomain index are not the first one, reset the input embedding vectors since the
             # forward input update function only activates when the input embedding vectors are zero
-            if epoch != 0 and subdomain_index != 0:
+            if epoch != 0 or subdomain_index != 0:
                 gnn.reset_input_embedding_vectors()
 
             # Perform a series of forward and backward updates of all the embedding vectors within the GNN
@@ -52,13 +52,12 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             old_upper_bound = feature_dict['input'][1, :].reshape(temp_input_size)
             new_lower_bound, new_upper_bound = gnn.compute_updated_bounds(old_lower_bound, old_upper_bound)
 
-            # # Perturb each pixel within the updated domain bounds
-            # perturbed_image = perturb_image(new_lower_bound, new_upper_bound)
-            #
-            # # Perform a PGD attack given the new bounds and perturbation
-            # loss = gradient_ascent(simplified_model, perturbed_image, new_lower_bound, new_upper_bound,
-            #                        pgd_learning_rate, num_iterations, return_loss=True)
-            loss = simplified_model(torch.add(new_upper_bound, new_lower_bound) / 2)
+            # Perturb each pixel within the updated domain bounds
+            perturbed_image = perturb_image(new_lower_bound, new_upper_bound)
+
+            # Perform a PGD attack given the new bounds and perturbation
+            loss = gradient_ascent(simplified_model, perturbed_image, new_lower_bound, new_upper_bound,
+                                   pgd_learning_rate, num_iterations, return_loss=True)
 
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()

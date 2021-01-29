@@ -10,8 +10,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;fixed errors due to initialization of unneeded gradient computation graphs&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;some minor fixes&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/auxiliary_neural_networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/auxiliary_neural_networks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/features_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/features_generation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_framework/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/helper_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
     </list>
@@ -48,7 +51,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.train_GNN">
+  <component name="RunManager" selected="Python.attack_properties_with_pgd">
     <configuration name="GraphNeuralNetwork" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -156,10 +159,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.attack_properties_with_pgd" />
-        <item itemvalue="Python.GraphNeuralNetwork" />
+        <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.auxiliary_neural_networks" />
+        <item itemvalue="Python.GraphNeuralNetwork" />
         <item itemvalue="Python.soft_argmax_exponent_factor" />
       </list>
     </recent_temporary>
@@ -320,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611862350905</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="&quot;some minor fixes&quot;">
+      <created>1611910667098</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1611910667098</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -353,13 +363,20 @@
     <MESSAGE value="&quot;implemented the first version of the training dataset generation&quot;" />
     <MESSAGE value="&quot;implemented the first version of training the GNN (not working)&quot;" />
     <MESSAGE value="&quot;changed some GNN parameters to optional&quot;" />
-    <MESSAGE value="&quot;some minor fixes&quot;" />
     <MESSAGE value="&quot;added the baselines to compare the GNN framework against&quot;" />
     <MESSAGE value="&quot;fixed errors due to initialization of unneeded gradient computation graphs&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;fixed errors due to initialization of unneeded gradient computation graphs&quot;" />
+    <MESSAGE value="&quot;some minor fixes&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;some minor fixes&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/GNN_training/train_GNN.py</url>
+          <line>55</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
