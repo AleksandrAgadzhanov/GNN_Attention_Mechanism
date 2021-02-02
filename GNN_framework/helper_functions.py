@@ -40,8 +40,7 @@ def perturb_image(lower_bound, upper_bound):
     return perturbed_image
 
 
-def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations,
-                    return_loss=False):
+def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations):
     """
     This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
     lead to positive loss, outputs the information about gradients and the last version of the optimized variable.
@@ -52,7 +51,6 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     # Initialise the relevant optimiser and the tensor to store the gradients to be later used for gradient information
     optimizer = torch.optim.Adam([perturbed_image], lr=pgd_learning_rate)
     gradients = torch.zeros([num_iterations, *perturbed_image.size()])
-    loss = float('inf')
 
     # Perform Gradient Ascent for a specified number of epochs
     for iteration_idx in range(num_iterations):
@@ -63,10 +61,7 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
         # If the difference between the logit of the test class and the logit of the true class is positive, then the
         # PGD attack was successful and gradient ascent can be stopped
         if loss < 0:
-            if return_loss:
-                return loss
-            else:
-                return True, None, None
+            return True, perturbed_image, None
 
         optimizer.zero_grad()
         loss.backward()
@@ -83,10 +78,7 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     # If the flag has not been set yet but the perturbation resulted in the model predicting the test class instead of
     # the true one during the last iteration, return the True successful attack flag
     if simplified_model(perturbed_image) < 0:
-        if return_loss:
-            return loss
-        else:
-            return True, None, None
+        return True, perturbed_image, None
 
     # If the Gradient Ascent didn't lead to the changed prediction, then generate the dictionary containing information
     # about gradients and output it as well
@@ -96,10 +88,7 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     # computed outside of this function
     perturbed_image.requires_grad = False
 
-    if return_loss:
-        return loss
-    else:
-        return False, perturbed_image, gradient_info_dict
+    return False, perturbed_image, gradient_info_dict
 
 
 def generate_gradient_info_dict(gradients):

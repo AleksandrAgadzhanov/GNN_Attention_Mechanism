@@ -111,17 +111,16 @@ def load_verified_data(model_name, cifar_test=None):
 
 def match_with_properties(properties_filename, verified_images, verified_true_labels, verified_image_indices):
     """
-    This function processes the properties dataframe first, leaving only the properties which were correctly verified,
-    intersects the images corresponding to the rows in this dataframe and the input ones and then returns the resulting
-    lists of images, their true and test labels and epsilon values.
+    This function intersects the images corresponding to the rows in this dataframe and the input ones and then returns
+    the resulting lists of images, their true and test labels and epsilon values. Depending on whether the property
+    dataset provided is the one for training or testing, this function returns the intersection of the provided images
+    and those in the dataset or the intersection with correctly verified properties only respectively.
     """
     # Construct the path and load the properties DataFrame
     properties_filepath = '../cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
 
-    # If the properties file isn't the training or validation one, keep only verified properties as follows. If the file
-    # is the training or validation one, then it already contains only the verified properties or the ones which timed
-    # out so keep all dataset entries
+    # If the properties dataset is for testing, leave only the correctly verified properties
     if properties_filename == 'base_easy.pkl' or properties_filename == 'base_med.pkl' or \
             properties_filename == 'base_hard.pkl':
         properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
@@ -133,8 +132,8 @@ def match_with_properties(properties_filename, verified_images, verified_true_la
     # Sort the properties DataFrame by the Idx column for the purpose of easier debugging
     properties_dataframe = properties_dataframe.sort_values(by=['Idx'], ascending=True)
 
-    # Find the intersection of the set of images provided and of those appearing in the properties and retrieve all the
-    # required information from it
+    # Find the intersection of the set of images provided and of those appearing in the properties dataset and retrieve
+    # all the required information from it
     images, true_labels, test_labels, epsilons = intersection(properties_dataframe, verified_images,
                                                               verified_true_labels, verified_image_indices)
 
