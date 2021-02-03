@@ -1,7 +1,8 @@
 import torch
 from exp_utils.model_utils import load_trained_model
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
-from GNN_framework.helper_functions import simplify_model, perturb_image, gradient_ascent
+from GNN_framework.helper_functions import simplify_model
+from GNN_training.helper_functions import compute_loss
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs,
@@ -27,7 +28,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
     # Initialise the optimizer on the parameters of the GNN
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
-
+    losses = []
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
         # For each property appearing in the training dataset
@@ -47,16 +48,23 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             old_upper_bound = feature_dict['input'][1, :].reshape(temp_input_size)
             new_lower_bound, new_upper_bound = gnn.compute_updated_bounds(old_lower_bound, old_upper_bound)
 
+            # Compute the loss by making a call to the special function
+            loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'])
+            losses.append(loss)
+            # Make the optimizer step in a usual manner
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+    from matplotlib import pyplot as plt
+    plt.plot(range(len(losses)), losses)
+    plt.show()
 
-
-            # # Make the optimizer step in a usual manner
-            # optimizer.zero_grad()
-            # loss.backward()
-            # optimizer.step()
+    # Finally, after training is finished, store the learnt GNN parameters in the file specified
+    torch.save(gnn.parameters(), '../GNN_training/' + output_filename)
 
 
 def main():
-    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 0.1, 0.1, 10, 2, '')
+    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 0.01, 100, "learnt_gnn_parameters.pkl")
 
 
 if __name__ == '__main__':

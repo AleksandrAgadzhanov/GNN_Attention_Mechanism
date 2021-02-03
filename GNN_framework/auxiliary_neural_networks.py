@@ -69,9 +69,11 @@ class ForwardReluUpdateNN(nn.Module):
         local_features_info = f.relu(local_features_info)
         local_features_info = self.linear_local_2(local_features_info)
 
-        local_features_info = torch.transpose(torch.where(local_feature_vectors[:, -1] == 0, torch.transpose(
-            torch.zeros([local_feature_vectors.size()[0], self.linear_local_2.out_features]), 1, 0), torch.transpose(
-            local_features_info, 1, 0)), 1, 0)
+        local_features_info = torch.transpose(torch.where(local_feature_vectors[:, -1] == 0,
+                                                          torch.transpose(torch.zeros([local_feature_vectors.size()[0],
+                                                                                       self.linear_local_2.out_features]
+                                                                                      ), 1, 0),
+                                                          torch.transpose(local_features_info, 1, 0)), 1, 0)
 
         # Second, get information from the transformed previous neighbour embedding vectors
         previous_neighbour_embeddings_info = self.linear_neighbour_1(transformed_embedding_vectors)
@@ -172,9 +174,11 @@ class BackwardReluUpdateNN(nn.Module):
         local_features_info = f.relu(local_features_info)
         local_features_info = self.linear_local_3(local_features_info)
 
-        local_features_info = torch.transpose(torch.where(local_feature_vectors[:, -1] == 0, torch.transpose(
-            torch.zeros([local_feature_vectors.size()[0], self.linear_local_3.out_features]), 1, 0), torch.transpose(
-            local_features_info, 1, 0)), 1, 0)
+        local_features_info = torch.transpose(torch.where(local_feature_vectors[:, -1] == 0,
+                                                          torch.transpose(torch.zeros([local_feature_vectors.size()[0],
+                                                                                       self.linear_local_3.out_features]
+                                                                                      ), 1, 0),
+                                                          torch.transpose(local_features_info, 1, 0)), 1, 0)
 
         # Second, get information from the transformed next neighbour embedding vectors
         next_neighbour_embeddings_info = self.linear_neighbour_1(transformed_next_layer_embeddings)
@@ -249,5 +253,8 @@ class BoundsUpdateNN(nn.Module):
             for parameter in self.linear_2.parameters():
                 parameter.requires_grad = False
 
-    def forward(self, input_embedding_vector):
-        return self.linear_2(f.relu(self.linear_1(input_embedding_vector)))
+    def forward(self, input_embedding_vectors):
+        output = self.linear_1(input_embedding_vectors)
+        output = f.relu(output)
+        output = self.linear_2(output)
+        return output

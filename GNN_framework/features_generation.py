@@ -124,8 +124,11 @@ def get_relaxation_triangle_intercepts(lower_bounds_before_relu, upper_bounds_be
     """
     # If the ratio between the lower and upper bound is +ve, then the intercept of the relaxation triangle is
     # zero, otherwise it is easily obtained as -ub * lb / (ub - lb) (ub and lb - upper and lower bounds)
-    relaxation_triangle_intercepts = torch.where(lower_bounds_before_relu * upper_bounds_before_relu > 0, torch.zeros(
-        lower_bounds_before_relu.size()[0]), torch.div(torch.mul(-upper_bounds_before_relu, lower_bounds_before_relu),
-                                                       torch.add(upper_bounds_before_relu, -lower_bounds_before_relu)))
+    relaxation_triangle_intercepts = torch.where(lower_bounds_before_relu * upper_bounds_before_relu > 0,
+                                                 torch.zeros(lower_bounds_before_relu.size()[0]),
+                                                 torch.div(torch.mul(-upper_bounds_before_relu,
+                                                                     lower_bounds_before_relu),
+                                                           torch.add(upper_bounds_before_relu,
+                                                                     -lower_bounds_before_relu)))
 
     return relaxation_triangle_intercepts

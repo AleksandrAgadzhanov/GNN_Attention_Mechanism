@@ -134,10 +134,18 @@ def transform_embedding_vectors(embedding_vectors, local_feature_vectors):
     upper_bounds = local_feature_vectors[1, :]
 
     # Compute the required ratios all at once in order to avoid inplace operations
-    alphas = torch.where(lower_bounds > 0, torch.ones(lower_bounds.size()), torch.where(upper_bounds < 0, torch.zeros(
-        lower_bounds.size()), torch.div(upper_bounds, torch.add(upper_bounds, -lower_bounds))))
-    alphas_dashed = torch.where(lower_bounds > 0, torch.ones(alphas.size()), torch.where(upper_bounds < 0, torch.zeros(
-        alphas.size()), torch.add(torch.ones(alphas.size()), -alphas)))
+    alphas = torch.where(lower_bounds > 0,
+                         torch.ones(lower_bounds.size()),
+                         torch.where(upper_bounds < 0,
+                                     torch.zeros(lower_bounds.size()),
+                                     torch.div(upper_bounds, torch.add(upper_bounds, -lower_bounds))))
+
+    alphas_dashed = torch.where(lower_bounds > 0,
+                                torch.ones(alphas.size()),
+                                torch.where(upper_bounds < 0,
+                                            torch.zeros(alphas.size()),
+                                            torch.add(torch.ones(alphas.size()),
+                                                      -alphas)))
 
     # Finally, the transformed embedding vectors are defined in the following way
     product_1 = torch.mul(embedding_vectors, alphas)

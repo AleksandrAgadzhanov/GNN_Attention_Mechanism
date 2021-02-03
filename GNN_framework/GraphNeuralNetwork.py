@@ -282,10 +282,6 @@ class GraphNeuralNetwork:
         original_size = self.input_embeddings.size()
         self.input_embeddings = self.input_embeddings.reshape(self.input_embeddings.size()[0], -1)
 
-        # Initialise the row tensor of tensors of new lower and upper bounds where each tensor corresponds to the new
-        # lower and upper bound associated with a particular pixel
-        new_lower_bound_and_offset = torch.zeros([2, self.input_embeddings.size()[-1]])
-
         # Pass all the embedding vectors through the Bounds Update NN at once to avoid inplace operations
         new_lower_bound_and_offset = torch.transpose(self.bounds_update_nn(
             torch.transpose(self.input_embeddings, 1, 0)), 1, 0)
@@ -293,7 +289,7 @@ class GraphNeuralNetwork:
         # Reshape the input embeddings to the original size
         self.input_embeddings = self.input_embeddings.reshape(original_size)
 
-        # Initialise the new lower and the offset tensors
+        # Initialise the new lower bound and the offset tensors
         new_lower_bound = new_lower_bound_and_offset[0, :].reshape(old_lower_bound.size())
         offset = new_lower_bound_and_offset[1, :].reshape(old_lower_bound.size())
 
@@ -307,12 +303,11 @@ class GraphNeuralNetwork:
         offset = f.relu(offset)
 
         # Initialise the upper bound tensor
-        new_upper_bound = new_lower_bound + offset
+        new_upper_bound = torch.add(new_lower_bound, offset)
 
         # 3. Finally, if the new upper bound is bigger than the old upper bound, set it to the old upper bound
-        new_upper_bound = torch.min(new_upper_bound, new_lower_bound)
-        if torch.eq(new_upper_bound, new_lower_bound).all().item():
-            new_lower_bound = torch.add(new_upper_bound, new_lower_bound) / 2
+        new_upper_bound = torch.min(new_upper_bound, old_upper_bound)
+
         return new_lower_bound, new_upper_bound
 
     def parameters(self):

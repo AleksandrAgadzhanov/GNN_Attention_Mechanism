@@ -1,7 +1,7 @@
 import torch
 import time
 from GNN_framework.helper_functions import perturb_image, gradient_ascent
-from GNN_framework.features_generation import generate_input_feature_vectors, generate_relu_output_feature_vectors
+from GNN_training.helper_functions import generate_feature_dict, compute_pixel_scores
 
 
 def pgd_branch_and_bound(simplified_model, image, epsilon, pgd_learning_rate, num_iterations, timeout):
@@ -69,29 +69,6 @@ def pgd_branch_and_bound(simplified_model, image, epsilon, pgd_learning_rate, nu
     return list_of_feature_dicts
 
 
-def generate_feature_dict(neural_network, lower_bound, upper_bound, image, perturbed_image, epsilon,
-                          gradient_info_dict):
-    """
-    This function generates a complete feature dictionary for one a subdomain of the training dataset. This dictionary
-    consists of the input feature vectors, list of feature vectors of the ReLU nodes and output feature vectors.
-    """
-    # Use the special function to generate all the input feature vectors
-    input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
-                                                           gradient_info_dict)
-
-    # Use the special function to generate all the hidden layer and output feature vectors
-    relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(neural_network,
-                                                                                             lower_bound, upper_bound,
-                                                                                             image, perturbed_image,
-                                                                                             epsilon)
-
-    # Construct the feature dictionary and return it
-    feature_dict = {'input': input_feature_vectors, 'hidden': relu_feature_vectors_list,
-                    'output': output_feature_vectors}
-
-    return feature_dict
-
-
 def pick_out(list_of_feature_dicts):
     """
     This function picks the subdomain and the input node within this subdomain on which further branching will be
@@ -118,19 +95,6 @@ def pick_out(list_of_feature_dicts):
             best_subdomain_index = subdomain_index
 
     return best_subdomain_index, best_pixel_index
-
-
-# TODO create a better method based on more heuristics than just last gradient magnitude
-def compute_pixel_scores(feature_dict):
-    """
-    This function takes a feature dictionary of a particular subdomain and computes the scores for all pixels based on
-    the information contained in the gradient information part of the dictionary. In this implementation, the scores are
-    based only on the last gradient magnitudes of pixels.
-    """
-    # Initialise the output scores variable as the tensor of last gradient magnitudes of pixels
-    pixel_scores = feature_dict['input'][3, :]
-
-    return pixel_scores
 
 
 def split(list_of_feature_dicts, subdomain_index, pixel_index):

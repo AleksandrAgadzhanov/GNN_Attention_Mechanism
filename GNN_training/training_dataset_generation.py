@@ -3,6 +3,7 @@ from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.helper_functions import match_with_subset, simplify_model
 from GNN_framework.helper_functions import perturb_image, gradient_ascent
 from GNN_training.pgd_branch_and_bound import generate_feature_dict
+from GNN_training.helper_functions import pgd_attack_property_until_successful
 
 
 def generate_training_dataset(properties_filename, model_name, pgd_learning_rate, num_iterations, output_filename,
@@ -78,35 +79,9 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
     torch.save(overall_list_of_feature_dicts, '../GNN_training/' + output_filename)
 
 
-def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations):
-    """
-    This function performs randomly initialized PGD attacks on a given property until a counterexample is found. When
-    it happens, the function returns the feature dictionary containing the correct
-    """
-    # Initialize the variable which will be indicating whether the property was successfully attacked
-    successful_attack_flag = False
-
-    # Compute the lower and upper bound within which the image pixels can be perturbed (these will be the same for all
-    # PGD attacks)
-    lower_bound = torch.add(-epsilon, image)
-    upper_bound = torch.add(epsilon, image)
-
-    # Now perform PGD attacks on a given property until a counter-example is found
-    while not successful_attack_flag:
-        # Initialize a random PGD attack
-        perturbed_image = perturb_image(lower_bound, upper_bound)
-
-        # Perform gradient ascent on the PGD attack initialized above
-        successful_attack_flag, perturbed_image, _ = gradient_ascent(simplified_model, perturbed_image, lower_bound,
-                                                                     upper_bound, pgd_learning_rate, num_iterations)
-
-        # If the attack was successful, return the last values of the perturbed pixels
-        if successful_attack_flag:
-            return perturbed_image
-
-
 def main():
-    generate_training_dataset('train_SAT_med.pkl', 'cifar_base_kw', 0.1, 100, 'training_dataset.pkl', subset=[0], epsilon_factor=1)
+    generate_training_dataset('train_SAT_med.pkl', 'cifar_base_kw', 0.1, 100, 'training_dataset.pkl', subset=[0],
+                              epsilon_factor=1)
 
 
 if __name__ == '__main__':
