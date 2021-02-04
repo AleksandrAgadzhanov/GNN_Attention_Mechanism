@@ -308,13 +308,53 @@ class GraphNeuralNetwork:
         # 3. Finally, if the new upper bound is bigger than the old upper bound, set it to the old upper bound
         new_upper_bound = torch.min(new_upper_bound, old_upper_bound)
 
+        # If the lower and upper bounds are exactly the same and equal to the old lower bound then to prevent Gurobi
+        # from crashing increase the new upper bound by 10% of the range. Analogously, if they are both equal to the old
+        # upper bound then decrease the new lower bound by 1% of the range.
+        new_upper_bound = torch.where(torch.logical_and(torch.eq(new_upper_bound, new_lower_bound),
+                                                        torch.eq(new_lower_bound, old_lower_bound)),
+                                      torch.add(new_upper_bound, 0.1 * torch.add(old_upper_bound, -old_lower_bound)),
+                                      new_upper_bound)
+
+        new_lower_bound = torch.where(torch.logical_and(torch.eq(new_upper_bound, new_lower_bound),
+                                                        torch.eq(new_upper_bound, old_upper_bound)),
+                                      torch.add(new_lower_bound, -0.1 * torch.add(old_upper_bound, -old_lower_bound)),
+                                      new_lower_bound)
+
         return new_lower_bound, new_upper_bound
 
     def parameters(self):
         """
         This function returns an iterator over all the parameters of the 6 auxiliary neural networks.
         """
-        # First, put all the auxiliary neural networks in a list
+        # First, get a list of all the auxiliary neural networks of the GNN
+        gnn_neural_networks = self.get_auxiliary_networks_list()
+
+        # Now use the "yield" keyword to return the generator object on all the parameters of all the above networks
+        for neural_network in gnn_neural_networks:
+            for parameter in neural_network.parameters():
+                if self.training_mode:
+                    parameter.requires_grad_(True)
+                yield parameter
+
+    def load_parameters(self, filename):
+        """
+        This function loads the parameters learnt through training into the auxiliary neural networks of the GNN.
+        """
+        # First, get the list of all the auxiliary neural networks of the GNN
+        gnn_neural_networks = self.get_auxiliary_networks_list()
+
+        # Load the list of state dictionaries from the specified filename
+        state_dicts_list = torch.load('../GNN_training/' + filename)
+
+        # Now load the appropriate state dictionary into each of these networks
+        for index, gnn_neural_network in enumerate(gnn_neural_networks):
+            gnn_neural_network.load_state_dict(state_dicts_list[index])
+
+    def get_auxiliary_networks_list(self):
+        """
+        This function returns the list of the auxiliary neural networks of the GNN in a logical order.
+        """
         gnn_neural_networks = [self.forward_input_update_nn,
                                self.forward_relu_update_nn,
                                self.forward_output_update_nn,
@@ -322,7 +362,4 @@ class GraphNeuralNetwork:
                                self.backward_input_update_nn,
                                self.bounds_update_nn]
 
-        # Now use the "yield" keyword to return the generator object on all the parameters of all the above networks
-        for neural_network in gnn_neural_networks:
-            for parameter in neural_network.parameters():
-                yield parameter.requires_grad_(True)
+        return gnn_neural_networks

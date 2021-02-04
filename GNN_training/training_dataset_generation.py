@@ -41,24 +41,34 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         # the information about the true and test classes into the network
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
 
-        # Now compute the lower and upper bounds and initialize the variables storing the perturbed image pixel values
-        # and gradient information dictionary
-        lower_bound = torch.add(-epsilons[i] * epsilon_factor, images[i])
-        upper_bound = torch.add(epsilons[i] * epsilon_factor, images[i])
-        perturbed_image = torch.zeros(lower_bound.size())
+        # Now initialize the variables storing the lower and upper bounds, the perturbed image pixel values and gradient
+        # information dictionary
+        lower_bound = torch.zeros(images[i].size())
+        upper_bound = torch.zeros(images[i].size())
+        perturbed_image = torch.zeros(images[i].size())
         gradient_info_dict = {}
 
         # The first attack needs to be unsuccessful because to utilise each training property in training the GNN
         # feature vectors have to be constructed for each property and this cannot be achieved if there is no
         # information about the gradients of the previous unsuccessful PGD attack. Hence, perform the first attack
-        # until it is unsuccessful
+        # until it is unsuccessful. If the attack is successful, decrease the epsilon factor by 1%
+        original_epsilon_factor = epsilon_factor  # store the original value of epsilon to reset it later
         while successful_attack_flag:
+            lower_bound = torch.add(-epsilons[i] * epsilon_factor, images[i])
+            upper_bound = torch.add(epsilons[i] * epsilon_factor, images[i])
             perturbed_image = perturb_image(lower_bound, upper_bound)
             successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model,
                                                                                           perturbed_image, lower_bound,
                                                                                           upper_bound,
                                                                                           pgd_learning_rate,
                                                                                           num_iterations)
+            epsilon_factor -= 0.01
+
+        # Reset the epsilon factor to the original value
+        epsilon_factor = original_epsilon_factor
+
+        # Reset the successful attack flag for it to be correctly used for the next image
+        successful_attack_flag = True
 
         # Generate the features dictionary for the current property by calling the appropriate function
         feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, images[i], perturbed_image,
@@ -74,14 +84,14 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
         # Append the generated feature dictionary to the overall list
         overall_list_of_feature_dicts.append(feature_dict)
+        print("Image " + str(i) + " was attacked successfully")
 
     # Store all the generated subdomains in a file
     torch.save(overall_list_of_feature_dicts, '../GNN_training/' + output_filename)
 
 
 def main():
-    generate_training_dataset('train_SAT_med.pkl', 'cifar_base_kw', 0.1, 100, 'training_dataset.pkl', subset=[0],
-                              epsilon_factor=1)
+    generate_training_dataset('train_SAT_med.pkl', 'cifar_base_kw', 0.1, 100, 'training_dataset.pkl', epsilon_factor=1)
 
 
 if __name__ == '__main__':

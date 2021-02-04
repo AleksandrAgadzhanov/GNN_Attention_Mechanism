@@ -44,17 +44,20 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
     This function performs randomly initialized PGD attacks on a given property until a counterexample is found. When
     it happens, the function returns the feature dictionary containing the correct
     """
-    # Initialize the variable which will be indicating whether the property was successfully attacked
+    # Initialize the variable which will be indicating whether the property was successfully attacked and also the
+    # variable storing the original epsilon in case it has to be increased by a constant amount
     successful_attack_flag = False
+    original_epsilon = epsilon
 
-    # Compute the lower and upper bound within which the image pixels can be perturbed (these will be the same for all
-    # PGD attacks)
-    lower_bound = torch.add(-epsilon, image)
-    upper_bound = torch.add(epsilon, image)
+    # Initialise the lower and upper bound within which the image pixels can be perturbed
+    lower_bound = torch.zeros(image.size())
+    upper_bound = torch.zeros(image.size())
 
     # Now perform PGD attacks on a given property until a counter-example is found
     while not successful_attack_flag:
         # Initialize a random PGD attack
+        lower_bound = torch.add(-epsilon, image)
+        upper_bound = torch.add(epsilon, image)
         perturbed_image = perturb_image(lower_bound, upper_bound)
 
         # Perform gradient ascent on the PGD attack initialized above
@@ -64,6 +67,9 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
         # If the attack was successful, return the last values of the perturbed pixels
         if successful_attack_flag:
             return perturbed_image
+
+        # Otherwise, increase the epsilon factor by 1%
+        epsilon += 0.01 * original_epsilon
 
 
 def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack):

@@ -32,6 +32,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
         # For each property appearing in the training dataset
+        loss_epoch = 0
         for property_index in range(len(list_of_feature_dicts)):
             feature_dict = list_of_feature_dicts[property_index]
 
@@ -50,21 +51,36 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
             # Compute the loss by making a call to the special function
             loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'])
-            losses.append(loss)
+
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            loss_epoch += loss
+
+        print("Epoch " + str(epoch) + " complete")
+        loss_epoch = loss_epoch / len(list_of_feature_dicts)
+        losses.append(loss_epoch)
     from matplotlib import pyplot as plt
     plt.plot(range(len(losses)), losses)
     plt.show()
 
-    # Finally, after training is finished, store the learnt GNN parameters in the file specified
-    torch.save(gnn.parameters(), '../GNN_training/' + output_filename)
+    # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
+    # networks of the GNN
+    gnn_state_dicts_list = []
+    gnn_neural_networks = [gnn.forward_input_update_nn,
+                           gnn.forward_relu_update_nn,
+                           gnn.forward_output_update_nn,
+                           gnn.backward_relu_update_nn,
+                           gnn.backward_input_update_nn,
+                           gnn.bounds_update_nn]
+    for gnn_neural_network in gnn_neural_networks:
+        gnn_state_dicts_list.append(gnn_neural_network.state_dict())
+    torch.save(gnn_state_dicts_list, '../GNN_training/' + output_filename)
 
 
 def main():
-    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 0.01, 100, "learnt_gnn_parameters.pkl")
+    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 0.001, 10, "learnt_gnn_parameters.pkl", subset)
 
 
 if __name__ == '__main__':

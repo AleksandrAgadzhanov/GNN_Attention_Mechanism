@@ -3,10 +3,11 @@ from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
 from GNN_framework.features_generation import generate_input_feature_vectors, generate_relu_output_feature_vectors
+from GNN_framework.baselines import pgd_attack_properties, pgd_attack_properties_trials
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_epochs, subset=None):
+                              num_epochs, gnn_parameters_filename, subset=None):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -33,7 +34,8 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
 
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
-                                                         pgd_learning_rate, num_iterations, num_epochs)
+                                                         pgd_learning_rate, num_iterations, num_epochs,
+                                                         gnn_parameters_filename)
 
         # If the attack was unsuccessful, increase the counter
         if not successful_attack_flag:
@@ -46,7 +48,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_epochs):
+                            num_epochs, gnn_parameters_filename):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
     model and epsilon value
@@ -75,6 +77,9 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     # Initialise the GNN for the given network (which also initialises all the required auxiliary neural networks)
     gnn = GraphNeuralNetwork(simplified_model, image.size(), input_feature_vectors.size()[0],
                              relu_feature_vectors_list[0].size()[0], output_feature_vectors.size()[0])
+
+    # Load the learnt GNN parameters into the GNN
+    gnn.load_parameters(gnn_parameters_filename)
 
     # Follow the GNN framework approach for a specified number of epochs
     for i in range(num_epochs):
@@ -116,7 +121,14 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    print(pgd_gnn_attack_properties('base_easy.pkl', 'cifar_base_kw', 1, 0.1, 100, 2, subset=[0]))
+    verification_accuracy_pgd_gnn = pgd_gnn_attack_properties('train_SAT_med.pkl', 'cifar_base_kw', 1.05, 0.1, 200, 5, 'learnt_gnn_parameters.pkl')
+    print("PGD with GNN: " + str(verification_accuracy_pgd_gnn) + "%")
+
+    # verification_accuracy_pgd = pgd_attack_properties('train_SAT_med.pkl', 'cifar_base_kw', 1.05, 0.1, 1000)
+    # print("Simple PGD: " + str(verification_accuracy_pgd) + "%")
+    #
+    # verification_accuracy_pgd_trials = pgd_attack_properties_trials('train_SAT_med.pkl', 'cifar_base_kw', 1.05, 0.1, 200, 5)
+    # print("PGD with trials: " + str(verification_accuracy_pgd_trials) + "%")
 
 
 if __name__ == '__main__':

@@ -35,11 +35,11 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
         # First, perturb the image randomly within the allowed bounds
         lower_bound = torch.add(-epsilons[i] * epsilon_factor, images[i])
         upper_bound = torch.add(epsilons[i] * epsilon_factor, images[i])
-        perturbed_image = perturb_image(lower_bound, upper_bound).requires_grad_(True)
+        perturbed_image = perturb_image(lower_bound, upper_bound)
 
         # Now perform a single PGD attack
-        successful_attack_flag, _ = gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
-                                                    pgd_learning_rate, num_iterations)
+        successful_attack_flag, _, _ = gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
+                                                       pgd_learning_rate, num_iterations)
 
         # If the attack was unsuccessful, increase the counter
         if not successful_attack_flag:
@@ -84,11 +84,11 @@ def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor
             # First, perturb the image randomly within the allowed bounds
             lower_bound = torch.add(-epsilons[i] * epsilon_factor, images[i])
             upper_bound = torch.add(epsilons[i] * epsilon_factor, images[i])
-            perturbed_image = perturb_image(lower_bound, upper_bound).requires_grad_(True)
+            perturbed_image = perturb_image(lower_bound, upper_bound)
 
             # Now perform a single PGD attack
-            successful_attack_flag, _ = gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
-                                                        pgd_learning_rate, num_iterations)
+            successful_attack_flag, _, _ = gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
+                                                           pgd_learning_rate, num_iterations)
 
             # If the attack was unsuccessful, increase the counter and break from the loop
             if not successful_attack_flag:
