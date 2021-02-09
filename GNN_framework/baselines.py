@@ -26,7 +26,7 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
                                                                        epsilons)
 
     # Now attack each property in turn by calling the appropriate function
-    num_properties_still_verified = 0  # counter of properties which are still verified after the PGD attack
+    num_successful_attacks = 0  # counter of properties which were successfully PGD attacked
     for i in range(len(images)):
         # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating
         # the information about the true and test classes into the network
@@ -42,13 +42,13 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
                                                        pgd_learning_rate, num_iterations)
 
         # If the attack was unsuccessful, increase the counter
-        if not successful_attack_flag:
-            num_properties_still_verified += 1
+        if successful_attack_flag:
+            num_successful_attacks += 1
 
-    # Calculate the verification accuracy for the properties in the file provided after all the PGD attacks
-    verification_accuracy = 100.0 * num_properties_still_verified / len(images)
+    # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
+    attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
-    return verification_accuracy
+    return attack_success_rate
 
 
 def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
@@ -74,7 +74,7 @@ def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor
                                                                        epsilons)
 
     # Now attack each property in turn for the specified number of trials
-    num_properties_still_verified = 0  # counter of properties which are still verified after the PGD attack
+    num_successful_attacks = 0  # counter of properties which were successfully PGD attacked
     for i in range(len(images)):
         # First, simplify the network by adding the final layer and merging the last two layers into one,
         # incorporating the information about the true and test classes into the network
@@ -91,11 +91,11 @@ def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor
                                                            pgd_learning_rate, num_iterations)
 
             # If the attack was unsuccessful, increase the counter and break from the loop
-            if not successful_attack_flag:
-                num_properties_still_verified += 1
+            if successful_attack_flag:
+                num_successful_attacks += 1
                 break
 
-    # Calculate the verification accuracy for the properties in the file provided after all the PGD attacks
-    verification_accuracy = 100.0 * num_properties_still_verified / len(images)
+    # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
+    attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
-    return verification_accuracy
+    return attack_success_rate

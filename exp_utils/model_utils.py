@@ -128,6 +128,9 @@ def match_with_properties(properties_filename, verified_images, verified_true_la
                                                     (properties_dataframe['BSAT_gnnkwT'] == 'False') |
                                                     (properties_dataframe['GSAT'] == 'False') |
                                                     (properties_dataframe['BSAT_gnnkwTO'] == 'False')]
+    # TODO
+    elif properties_filename == 'train_SAT_med.pkl' or properties_filename == 'val_SAT_jade.pkl':
+        properties_dataframe = properties_dataframe[:50]
 
     # Sort the properties DataFrame by the Idx column for the purpose of easier debugging
     properties_dataframe = properties_dataframe.sort_values(by=['Idx'], ascending=True)

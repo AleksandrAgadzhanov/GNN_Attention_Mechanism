@@ -3,7 +3,6 @@ from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
 from GNN_framework.features_generation import generate_input_feature_vectors, generate_relu_output_feature_vectors
-from GNN_framework.baselines import pgd_attack_properties, pgd_attack_properties_trials
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
@@ -27,7 +26,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
                                                                        epsilons)
 
     # Now attack each property in turn by calling the appropriate function
-    num_properties_still_verified = 0  # counter of properties which are still verified after the PGD attack
+    num_successful_attacks = 0  # counter of properties which were successfully PGD attacked
     for i in range(len(images)):
         # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating
         # the information about the true and test classes into the network
@@ -38,13 +37,13 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
                                                          gnn_parameters_filename)
 
         # If the attack was unsuccessful, increase the counter
-        if not successful_attack_flag:
-            num_properties_still_verified += 1
+        if successful_attack_flag:
+            num_successful_attacks += 1
 
-    # Calculate the verification accuracy for the properties in the file provided after all the PGD attacks
-    verification_accuracy = 100.0 * num_properties_still_verified / len(images)
+    # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
+    attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
-    return verification_accuracy
+    return attack_success_rate
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
@@ -121,14 +120,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    verification_accuracy_pgd_gnn = pgd_gnn_attack_properties('train_SAT_med.pkl', 'cifar_base_kw', 1.05, 0.1, 200, 5, 'learnt_gnn_parameters.pkl')
-    print("PGD with GNN: " + str(verification_accuracy_pgd_gnn) + "%")
-
-    # verification_accuracy_pgd = pgd_attack_properties('train_SAT_med.pkl', 'cifar_base_kw', 1.05, 0.1, 1000)
-    # print("Simple PGD: " + str(verification_accuracy_pgd) + "%")
-    #
-    # verification_accuracy_pgd_trials = pgd_attack_properties_trials('train_SAT_med.pkl', 'cifar_base_kw', 1.05, 0.1, 200, 5)
-    # print("PGD with trials: " + str(verification_accuracy_pgd_trials) + "%")
+    pass
 
 
 if __name__ == '__main__':

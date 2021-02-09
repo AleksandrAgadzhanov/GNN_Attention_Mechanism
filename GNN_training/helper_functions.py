@@ -42,16 +42,12 @@ def compute_pixel_scores(feature_dict):
 def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations):
     """
     This function performs randomly initialized PGD attacks on a given property until a counterexample is found. When
-    it happens, the function returns the feature dictionary containing the correct
+    it happens, the function returns the pixel values which resulted in a successful attack.
     """
     # Initialize the variable which will be indicating whether the property was successfully attacked and also the
     # variable storing the original epsilon in case it has to be increased by a constant amount
     successful_attack_flag = False
     original_epsilon = epsilon
-
-    # Initialise the lower and upper bound within which the image pixels can be perturbed
-    lower_bound = torch.zeros(image.size())
-    upper_bound = torch.zeros(image.size())
 
     # Now perform PGD attacks on a given property until a counter-example is found
     while not successful_attack_flag:
@@ -72,7 +68,39 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
         epsilon += 0.01 * original_epsilon
 
 
-def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack):
+def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations):
+    """
+    This function performs randomly initialized PGD attacks on a given property until one of them is unsuccessful. When
+    it happens, the function returns the feature dictionary associated with the unsuccessful attack.
+    """
+    # Initialize the variable which will be indicating whether the property was successfully attacked and also the
+    # variable storing the original epsilon in case it has to be decreased by a constant amount
+    successful_attack_flag = True
+    original_epsilon = epsilon
+
+    # Now perform PGD attacks on a given property until one of the, is unsuccessful
+    while successful_attack_flag:
+        # Initialize a random PGD attack
+        lower_bound = torch.add(-epsilon, image)
+        upper_bound = torch.add(epsilon, image)
+        perturbed_image = perturb_image(lower_bound, upper_bound)
+
+        # Perform gradient ascent on the PGD attack initialized above
+        successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image,
+                                                                                      lower_bound, upper_bound,
+                                                                                      pgd_learning_rate, num_iterations)
+
+        # If the attack was unsuccessful, return the gradient information dictionary
+        if not successful_attack_flag:
+            feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, image, perturbed_image,
+                                                 epsilon, gradient_info_dict)
+            return feature_dict
+
+        # Otherwise, decrease the epsilon factor by 1%
+        epsilon -= 0.01 * original_epsilon
+
+
+def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda):
     """
     This function computes the loss characterised by the bounds output from the GNN and the ground truth PGD attack
     pixel values from the training dataset. It does so by using a convex approximation to the 0-1 loss associated with
@@ -98,6 +126,6 @@ def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack):
     loss_term_2 = torch.sum(torch.add(new_upper_bound, -new_lower_bound)) / num_pixels
 
     # Return the overall loss which is simply the sum of the two terms computed above
-    loss = loss_term_1 + loss_term_2
+    loss = loss_term_1 + loss_lambda * loss_term_2
 
     return loss

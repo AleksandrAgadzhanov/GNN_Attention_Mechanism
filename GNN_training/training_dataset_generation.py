@@ -1,9 +1,7 @@
 import torch
 from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.helper_functions import match_with_subset, simplify_model
-from GNN_framework.helper_functions import perturb_image, gradient_ascent
-from GNN_training.pgd_branch_and_bound import generate_feature_dict
-from GNN_training.helper_functions import pgd_attack_property_until_successful
+from GNN_training.helper_functions import pgd_attack_property_until_successful, pgd_attack_property_until_unsuccessful
 
 
 def generate_training_dataset(properties_filename, model_name, pgd_learning_rate, num_iterations, output_filename,
@@ -32,47 +30,18 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
     # Initialise the overall list of dictionaries for storing the features of all the considered properties
     overall_list_of_feature_dicts = []
 
-    # Initialize the variable which will be keeping track of whether the lat PGD attack was successful or not
-    successful_attack_flag = True
-
     # Go over one property at a time and make a function call which deals with the single property
     for i in range(len(images)):
         # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating
         # the information about the true and test classes into the network
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
 
-        # Now initialize the variables storing the lower and upper bounds, the perturbed image pixel values and gradient
-        # information dictionary
-        lower_bound = torch.zeros(images[i].size())
-        upper_bound = torch.zeros(images[i].size())
-        perturbed_image = torch.zeros(images[i].size())
-        gradient_info_dict = {}
-
         # The first attack needs to be unsuccessful because to utilise each training property in training the GNN
         # feature vectors have to be constructed for each property and this cannot be achieved if there is no
         # information about the gradients of the previous unsuccessful PGD attack. Hence, perform the first attack
-        # until it is unsuccessful. If the attack is successful, decrease the epsilon factor by 1%
-        original_epsilon_factor = epsilon_factor  # store the original value of epsilon to reset it later
-        while successful_attack_flag:
-            lower_bound = torch.add(-epsilons[i] * epsilon_factor, images[i])
-            upper_bound = torch.add(epsilons[i] * epsilon_factor, images[i])
-            perturbed_image = perturb_image(lower_bound, upper_bound)
-            successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model,
-                                                                                          perturbed_image, lower_bound,
-                                                                                          upper_bound,
-                                                                                          pgd_learning_rate,
-                                                                                          num_iterations)
-            epsilon_factor -= 0.01
-
-        # Reset the epsilon factor to the original value
-        epsilon_factor = original_epsilon_factor
-
-        # Reset the successful attack flag for it to be correctly used for the next image
-        successful_attack_flag = True
-
-        # Generate the features dictionary for the current property by calling the appropriate function
-        feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, images[i], perturbed_image,
-                                             epsilons[i] * epsilon_factor, gradient_info_dict)
+        # until it is unsuccessful
+        feature_dict = pgd_attack_property_until_unsuccessful(simplified_model, images[i], epsilons[i] * epsilon_factor,
+                                                              pgd_learning_rate, num_iterations)
 
         # Now make a call to the function which attacks the property until a successful counter-example is found in
         # order to obtain the ground-truth values of a successful attack
@@ -91,7 +60,8 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
 
 def main():
-    generate_training_dataset('train_SAT_med.pkl', 'cifar_base_kw', 0.1, 100, 'training_dataset.pkl', epsilon_factor=1)
+    generate_training_dataset('train_SAT_med.pkl', 'cifar_base_kw', 0.1, 100,
+                              '../cifar_exp/training_dataset_subset_50.pkl', subset=list(range(50)))
 
 
 if __name__ == '__main__':

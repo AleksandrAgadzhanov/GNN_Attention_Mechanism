@@ -5,7 +5,7 @@ from GNN_framework.helper_functions import simplify_model
 from GNN_training.helper_functions import compute_loss
 
 
-def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs,
+def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
                                      output_filename):
     """
     This function performs training of a Graph Neural Network by utilising supervised learning. After the parameters of
@@ -13,7 +13,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     """
     # First, load the training dataset which is a list of feature dictionaries from the specified filename. Also load
     # the model
-    list_of_feature_dicts = torch.load('../GNN_training/' + training_dataset_filename)
+    list_of_feature_dicts = torch.load('../cifar_exp/' + training_dataset_filename)
     model = load_trained_model(model_name)
 
     # Create the temporary variables which will only be used to initialise the GNN structure. Then create an instance of
@@ -28,11 +28,10 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
     # Initialise the optimizer on the parameters of the GNN
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
-    losses = []
+
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
         # For each property appearing in the training dataset
-        loss_epoch = 0
         for property_index in range(len(list_of_feature_dicts)):
             feature_dict = list_of_feature_dicts[property_index]
 
@@ -50,20 +49,15 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             new_lower_bound, new_upper_bound = gnn.compute_updated_bounds(old_lower_bound, old_upper_bound)
 
             # Compute the loss by making a call to the special function
-            loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'])
+            loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'], loss_lambda)
 
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            loss_epoch += loss
 
-        print("Epoch " + str(epoch) + " complete")
-        loss_epoch = loss_epoch / len(list_of_feature_dicts)
-        losses.append(loss_epoch)
-    from matplotlib import pyplot as plt
-    plt.plot(range(len(losses)), losses)
-    plt.show()
+        # Print a message to the terminal at the end of each epoch
+        print("Epoch №" + str(epoch + 1) + " complete")
 
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
@@ -76,11 +70,12 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                            gnn.bounds_update_nn]
     for gnn_neural_network in gnn_neural_networks:
         gnn_state_dicts_list.append(gnn_neural_network.state_dict())
-    torch.save(gnn_state_dicts_list, '../GNN_training/' + output_filename)
+    torch.save(gnn_state_dicts_list, '../cifar_exp/' + output_filename)
 
 
 def main():
-    generate_gnn_training_parameters('training_dataset.pkl', 'cifar_base_kw', 0.001, 10, "learnt_gnn_parameters.pkl", subset)
+    generate_gnn_training_parameters('../cifar_exp/training_dataset.pkl', 'cifar_base_kw', 0.001, 10, 0,
+                                     "../cifar_exp/learnt_gnn_parameters.pkl")
 
 
 if __name__ == '__main__':
