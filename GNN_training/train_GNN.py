@@ -6,7 +6,7 @@ from GNN_training.helper_functions import compute_loss
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
-                                     output_filename):
+                                     output_filename, device='cpu'):
     """
     This function performs training of a Graph Neural Network by utilising supervised learning. After the parameters of
     the Graph Neural Network are learned, they are stored in a desired file.
@@ -15,6 +15,13 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     # the model
     list_of_feature_dicts = torch.load('../cifar_exp/' + training_dataset_filename)
     model = load_trained_model(model_name)
+    if device == 'cuda' and torch.cuda.is_available():
+        for dict_idx in range(len(list_of_feature_dicts)):
+            list_of_feature_dicts[dict_idx]['input'] = list_of_feature_dicts[dict_idx]['input'].cuda()
+            list_of_feature_dicts[dict_idx]['hidden'] = [
+                tensor.cuda() for tensor in list_of_feature_dicts[dict_idx]['hidden']]
+            list_of_feature_dicts[dict_idx]['output'] = list_of_feature_dicts[dict_idx]['output'].cuda()
+        model = model.cuda()
 
     # Create the temporary variables which will only be used to initialise the GNN structure. Then create an instance of
     # the GraphNeuralNetwork object using these variables
@@ -27,7 +34,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                              temp_output_feature_size, training_mode=True)
 
     # Initialise the optimizer on the parameters of the GNN
-    optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
+    optimizer = torch.optim.Adam(gnn.parameters(device=device), lr=gnn_learning_rate)
 
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
@@ -46,10 +53,18 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             # Update the domain bounds for each pixel based on the GNN outputs
             old_lower_bound = feature_dict['input'][0, :].reshape(temp_input_size)
             old_upper_bound = feature_dict['input'][1, :].reshape(temp_input_size)
+            if device == 'cuda' and torch.cuda.is_available():
+                old_lower_bound = old_lower_bound.cuda()
+                old_upper_bound = old_upper_bound.cuda()
             new_lower_bound, new_upper_bound = gnn.compute_updated_bounds(old_lower_bound, old_upper_bound)
+            if device == 'cuda' and torch.cuda.is_available():
+                new_lower_bound = new_lower_bound.cuda()
+                new_upper_bound = new_upper_bound.cuda()
 
             # Compute the loss by making a call to the special function
             loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'], loss_lambda)
+            if device == 'cuda' and torch.cuda.is_available():
+                loss = loss.cuda()
 
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()
@@ -74,8 +89,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    generate_gnn_training_parameters('../cifar_exp/training_dataset.pkl', 'cifar_base_kw', 0.001, 10, 0,
-                                     "../cifar_exp/learnt_gnn_parameters.pkl")
+    pass
 
 
 if __name__ == '__main__':

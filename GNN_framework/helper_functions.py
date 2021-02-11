@@ -40,13 +40,21 @@ def perturb_image(lower_bound, upper_bound):
     return perturbed_image
 
 
-def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations):
+def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound, pgd_learning_rate, num_iterations,
+                    device='cpu'):
     """
     This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
     lead to positive loss, outputs the information about gradients and the last version of the optimized variable.
     """
     # First of all, set the requires_grad parameter of the perturbed image to True to make it suitable for optimization
     perturbed_image.requires_grad = True
+
+    # If cuda was specified as the device, move the model and all the tensors to cuda
+    if device == 'cuda' and torch.cuda.is_available():
+        simplified_model = simplified_model.cuda()
+        perturbed_image = perturbed_image.cuda()
+        lower_bound = lower_bound.cuda()
+        upper_bound = upper_bound.cuda()
 
     # Initialise the relevant optimiser and the tensor to store the gradients to be later used for gradient information
     optimizer = torch.optim.Adam([perturbed_image], lr=pgd_learning_rate)
@@ -57,6 +65,8 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
         # The output of the network is the difference between the logits of the correct and the test class which is the
         # same as -loss, but since Gradient Ascent is performed, it is this difference that must be minimised
         loss = simplified_model(perturbed_image)
+        if device == 'cuda' and torch.cuda.is_available():
+            loss = loss.cuda()
 
         # If the difference between the logit of the test class and the logit of the true class is positive, then the
         # PGD attack was successful and gradient ascent can be stopped

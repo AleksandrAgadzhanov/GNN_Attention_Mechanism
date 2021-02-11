@@ -20,13 +20,13 @@ def generate_feature_dict(neural_network, lower_bound, upper_bound, image, pertu
                                                                                              epsilon)
 
     # Construct the feature dictionary and return it
-    feature_dict = {'input': input_feature_vectors, 'hidden': relu_feature_vectors_list,
+    feature_dict = {'input': input_feature_vectors,
+                    'hidden': relu_feature_vectors_list,
                     'output': output_feature_vectors}
 
     return feature_dict
 
 
-# TODO create a better method based on more heuristics than just last gradient magnitude
 def compute_pixel_scores(feature_dict):
     """
     This function takes a feature dictionary of a particular subdomain and computes the scores for all pixels based on
@@ -39,7 +39,8 @@ def compute_pixel_scores(feature_dict):
     return pixel_scores
 
 
-def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations):
+def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations,
+                                         device='cpu'):
     """
     This function performs randomly initialized PGD attacks on a given property until a counterexample is found. When
     it happens, the function returns the pixel values which resulted in a successful attack.
@@ -58,7 +59,8 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
 
         # Perform gradient ascent on the PGD attack initialized above
         successful_attack_flag, perturbed_image, _ = gradient_ascent(simplified_model, perturbed_image, lower_bound,
-                                                                     upper_bound, pgd_learning_rate, num_iterations)
+                                                                     upper_bound, pgd_learning_rate, num_iterations,
+                                                                     device=device)
 
         # If the attack was successful, return the last values of the perturbed pixels
         if successful_attack_flag:
@@ -68,7 +70,8 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
         epsilon += 0.01 * original_epsilon
 
 
-def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations):
+def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations,
+                                           device='cpu'):
     """
     This function performs randomly initialized PGD attacks on a given property until one of them is unsuccessful. When
     it happens, the function returns the feature dictionary associated with the unsuccessful attack.
@@ -88,7 +91,8 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
         # Perform gradient ascent on the PGD attack initialized above
         successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image,
                                                                                       lower_bound, upper_bound,
-                                                                                      pgd_learning_rate, num_iterations)
+                                                                                      pgd_learning_rate, num_iterations,
+                                                                                      device=device)
 
         # If the attack was unsuccessful, return the gradient information dictionary
         if not successful_attack_flag:

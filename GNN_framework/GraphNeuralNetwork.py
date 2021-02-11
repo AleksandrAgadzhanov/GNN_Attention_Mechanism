@@ -323,7 +323,7 @@ class GraphNeuralNetwork:
 
         return new_lower_bound, new_upper_bound
 
-    def parameters(self):
+    def parameters(self, device='cpu'):
         """
         This function returns an iterator over all the parameters of the 6 auxiliary neural networks.
         """
@@ -335,6 +335,8 @@ class GraphNeuralNetwork:
             for parameter in neural_network.parameters():
                 if self.training_mode:
                     parameter.requires_grad_(True)
+                if device == 'cuda' and torch.cuda.is_available():
+                    parameter = parameter.cuda()
                 yield parameter
 
     def load_parameters(self, filename):

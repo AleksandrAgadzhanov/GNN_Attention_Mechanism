@@ -6,7 +6,7 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_epochs, gnn_parameters_filename, subset=None):
+                              num_epochs, gnn_parameters_filename, subset=None, device='cpu'):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -34,7 +34,12 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_epochs,
-                                                         gnn_parameters_filename)
+                                                         gnn_parameters_filename, device=device)
+
+        if successful_attack_flag:
+            print('Image №' + str(i + 1) + ' was attacked successfully')
+        else:
+            print('Image №' + str(i + 1) + ' was NOT attacked successfully')
 
         # If the attack was unsuccessful, increase the counter
         if successful_attack_flag:
@@ -47,7 +52,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_epochs, gnn_parameters_filename):
+                            num_epochs, gnn_parameters_filename, device='cpu'):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
     model and epsilon value
@@ -58,7 +63,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     perturbed_image = perturb_image(lower_bound, upper_bound)
     successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image,
                                                                                   lower_bound, upper_bound,
-                                                                                  pgd_learning_rate, num_iterations)
+                                                                                  pgd_learning_rate, num_iterations,
+                                                                                  device=device)
 
     # If the attack was successful, the procedure can be terminated and True can be returned
     if successful_attack_flag:
@@ -99,7 +105,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
         # Perform a PGD attack given the new bounds and perturbation
         successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image,
                                                                                       lower_bound, upper_bound,
-                                                                                      pgd_learning_rate, num_iterations)
+                                                                                      pgd_learning_rate, num_iterations,
+                                                                                      device=device)
 
         # If the attack was successful, the procedure can be terminated and True can be returned, otherwise continue
         if successful_attack_flag:
