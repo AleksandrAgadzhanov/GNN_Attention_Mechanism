@@ -15,13 +15,6 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     # the model
     list_of_feature_dicts = torch.load('../cifar_exp/' + training_dataset_filename)
     model = load_trained_model(model_name)
-    if device == 'cuda' and torch.cuda.is_available():
-        for dict_idx in range(len(list_of_feature_dicts)):
-            list_of_feature_dicts[dict_idx]['input'] = list_of_feature_dicts[dict_idx]['input'].cuda()
-            list_of_feature_dicts[dict_idx]['hidden'] = [
-                tensor.cuda() for tensor in list_of_feature_dicts[dict_idx]['hidden']]
-            list_of_feature_dicts[dict_idx]['output'] = list_of_feature_dicts[dict_idx]['output'].cuda()
-        model = model.cuda()
 
     # Create the temporary variables which will only be used to initialise the GNN structure. Then create an instance of
     # the GraphNeuralNetwork object using these variables
@@ -31,16 +24,30 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     temp_relu_feature_size = list_of_feature_dicts[0]['hidden'][0].size()[0]
     temp_output_feature_size = list_of_feature_dicts[0]['output'].size()[0]
     gnn = GraphNeuralNetwork(temp_simplified_model, temp_input_size, temp_input_feature_size, temp_relu_feature_size,
-                             temp_output_feature_size, training_mode=True)
+                             temp_output_feature_size, training_mode=True, device=device)
+
+    if device == 'cuda' and torch.cuda.is_available():
+        for dict_idx in range(len(list_of_feature_dicts)):
+            list_of_feature_dicts[dict_idx]['input'] = list_of_feature_dicts[dict_idx]['input'].cuda()
+            list_of_feature_dicts[dict_idx]['hidden'] = [
+                tensor.cuda() for tensor in list_of_feature_dicts[dict_idx]['hidden']]
+            list_of_feature_dicts[dict_idx]['output'] = list_of_feature_dicts[dict_idx]['output'].cuda()
+            list_of_feature_dicts[dict_idx]['successful attack'] = list_of_feature_dicts[dict_idx][
+                'successful attack'].cuda()
 
     # Initialise the optimizer on the parameters of the GNN
-    optimizer = torch.optim.Adam(gnn.parameters(device=device), lr=gnn_learning_rate)
+    optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
 
+    epoch_losses = []
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
         # For each property appearing in the training dataset
+        epoch_loss = 0
         for property_index in range(len(list_of_feature_dicts)):
             feature_dict = list_of_feature_dicts[property_index]
+
+            # Update the last layer of the GNN according to the currently considered true and test labels
+            gnn.reconnect_last_layer(feature_dict['true label'], feature_dict['test label'])
 
             # When the epoch or the subdomain index are not the first one, reset the input embedding vectors since the
             # forward input update function only activates when the input embedding vectors are zero
@@ -62,10 +69,11 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                 new_upper_bound = new_upper_bound.cuda()
 
             # Compute the loss by making a call to the special function
-            loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'], loss_lambda)
+            loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'], loss_lambda,
+                                device=device)
             if device == 'cuda' and torch.cuda.is_available():
                 loss = loss.cuda()
-
+            epoch_loss += loss
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()
             loss.backward()
@@ -73,6 +81,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
         # Print a message to the terminal at the end of each epoch
         print("Epoch №" + str(epoch + 1) + " complete")
+        epoch_losses.append(epoch_loss)
 
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
@@ -87,9 +96,14 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         gnn_state_dicts_list.append(gnn_neural_network.state_dict())
     torch.save(gnn_state_dicts_list, '../cifar_exp/' + output_filename)
 
+    from matplotlib import pyplot as plt
+    plt.plot(range(len(epoch_losses)), epoch_losses)
+    plt.show()
+
 
 def main():
-    pass
+    generate_gnn_training_parameters('train_SAT_med_dataset_subset_50.pkl', 'cifar_base_kw', 0.001, 10, 0,
+                                     'learnt_gnn_parameters.pkl', device='cuda')
 
 
 if __name__ == '__main__':

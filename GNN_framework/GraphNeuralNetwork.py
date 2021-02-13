@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from plnn.modules import Flatten
-from GNN_framework.helper_functions import transform_embedding_vectors, get_numbers_of_connecting_nodes
+from GNN_framework.helper_functions import transform_embedding_vectors, get_numbers_of_connecting_nodes, simplify_model
 from GNN_framework.auxiliary_neural_networks import ForwardInputUpdateNN, ForwardReluUpdateNN, ForwardOutputUpdateNN, \
     BackwardReluUpdateNN, BackwardInputUpdateNN, BoundsUpdateNN
 from torch.nn import functional as f
@@ -17,18 +17,23 @@ class GraphNeuralNetwork:
     # In addition, all the auxiliary neural networks are initialised including the ones which perform the forward and
     # backward update operations and the one which computes the new bounds of all input nodes
     def __init__(self, neural_network, input_size, input_feature_size, relu_feature_size, output_feature_size,
-                 embedding_vector_size=64, auxiliary_hidden_size=64, training_mode=False):
-        # Store the underlying neural network as a field of the GNN
+                 embedding_vector_size=64, auxiliary_hidden_size=64, training_mode=False, device='cpu'):
+        # Store the underlying device type as a field of the GNN first
+        self.device = device
+
+        # Store the underlying neural network as a field
         self.neural_network = neural_network
+        if device == 'cuda' and torch.cuda.is_available():
+            self.neural_network = self.neural_network.cuda()
 
         # Initialise a row tensor of tensors each corresponding to a particular pixel
-        self.input_embeddings = torch.zeros([embedding_vector_size, *input_size[1:]])
+        self.input_embeddings = torch.zeros([embedding_vector_size, *input_size[1:]], device=device)
 
         # Initialise the list of embeddings of each ReLU hidden layer
         self.relu_embeddings_list = []
 
         # Initialise the test input to the network for the purpose of determining the sizes at the output of each layer
-        test_image = torch.zeros(input_size)
+        test_image = torch.zeros(input_size, device=device)
 
         # Now iterate over the neural network layers, passing the input through one layer in turn, and initialise the
         # embeddings and edges of each layer of nodes containing ReLU activation functions
@@ -41,10 +46,11 @@ class GraphNeuralNetwork:
 
             # Only add the embeddings to the list if the current layer of interest is the ReLU layer
             if type(layer) == torch.nn.ReLU:
-                self.relu_embeddings_list.append(torch.zeros([embedding_vector_size, *test_image.size()[1:]]))
+                self.relu_embeddings_list.append(torch.zeros([embedding_vector_size, *test_image.size()[1:]],
+                                                             device=device))
 
         # Finally, initialise the output embedding vectors for the output nodes using the test output from the network
-        self.output_embeddings = torch.zeros([embedding_vector_size, *test_image.size()[1:]])
+        self.output_embeddings = torch.zeros([embedding_vector_size, *test_image.size()[1:]], device=device)
 
         # Now, initialise all the auxiliary neural networks
         self.forward_input_update_nn = ForwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
@@ -58,6 +64,14 @@ class GraphNeuralNetwork:
         self.backward_input_update_nn = BackwardInputUpdateNN(input_feature_size, auxiliary_hidden_size,
                                                               embedding_vector_size, training_mode)
         self.bounds_update_nn = BoundsUpdateNN(embedding_vector_size, auxiliary_hidden_size, training_mode)
+
+        if device == 'cuda' and torch.cuda.is_available():
+            self.forward_input_update_nn = self.forward_input_update_nn.cuda()
+            self.forward_relu_update_nn = self.forward_relu_update_nn.cuda()
+            self.forward_output_update_nn = self.forward_output_update_nn.cuda()
+            self.backward_relu_update_nn = self.backward_relu_update_nn.cuda()
+            self.backward_input_update_nn = self.backward_input_update_nn.cuda()
+            self.bounds_update_nn = self.bounds_update_nn.cuda()
 
         # Finally, store the training mode flag
         self.training_mode = training_mode
@@ -79,7 +93,7 @@ class GraphNeuralNetwork:
 
             # First, perform the forward update of the input embedding vectors if they are still all zero (only happens
             # during the first update)
-            if torch.eq(self.input_embeddings, torch.zeros(self.input_embeddings.size())).all().item():
+            if i == 0:
                 self.forward_update_input_embeddings(input_feature_vectors)
 
             # Now, perform the forward update of the ReLU layers and output layer embedding vectors using a dedicated
@@ -109,7 +123,8 @@ class GraphNeuralNetwork:
     def forward_update_relu_output_embeddings(self, relu_feature_vectors_list, output_feature_vectors):
         """
         This function performs the forward updates of all the ReLU layers and output layer embedding vectors based on
-        the techniques outlined in the "NN Branching for NN Verification" paper.
+        the techniques outlined in the "NN Branching for NN Verification" paper. It returns the size before flattening
+        which will be necessary during the backward update pass.
         """
         # Initialise the variable which will be counting the number of ReLUs, thus matching the appropriate features and
         # embedding vectors to corresponding ReLUs, and the variable which will keep track of the output of each layer
@@ -125,7 +140,7 @@ class GraphNeuralNetwork:
             # If the layer is linear or convolutional, pass the embedding vectors through it, without applying the bias
             if type(layer) == nn.Linear or type(layer) == nn.Conv2d:
                 layer_bias = layer.bias.data
-                layer.bias.data = torch.zeros(layer.bias.data.size())
+                layer.bias.data = torch.zeros(layer.bias.data.size(), device=self.device)
                 embedding_vectors = layer(embedding_vectors)
                 layer.bias.data = layer_bias
 
@@ -146,11 +161,13 @@ class GraphNeuralNetwork:
                 embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
 
                 # Transform all the embedding vectors so that they can enter the appropriate neural network
-                transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors)
+                transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors,
+                                                                            device=self.device)
 
                 # Update the embedding vectors all at once in order to avoid inplace operations
                 embedding_vectors = torch.transpose(self.forward_relu_update_nn(torch.transpose(
-                    relu_feature_vectors, 1, 0), torch.transpose(transformed_embedding_vectors, 1, 0)), 1, 0)
+                    relu_feature_vectors, 1, 0), torch.transpose(transformed_embedding_vectors, 1, 0),
+                    device=self.device), 1, 0)
 
                 # Reshape the embedding vectors tensor to have the original size
                 embedding_vectors = embedding_vectors.reshape(original_size)
@@ -196,7 +213,8 @@ class GraphNeuralNetwork:
             if type(layer) == nn.Linear:
                 backwards_linear_layer = nn.Linear(layer.out_features, layer.in_features)
                 backwards_linear_layer.weight.data = torch.transpose(layer.weight.data, 1, 0)
-                backwards_linear_layer.bias.data = torch.zeros(backwards_linear_layer.bias.data.size())
+                backwards_linear_layer.bias.data = torch.zeros(backwards_linear_layer.bias.data.size(),
+                                                               device=self.device)
                 if not self.training_mode:
                     for parameter in backwards_linear_layer.parameters():
                         parameter.requires_grad = False
@@ -213,7 +231,7 @@ class GraphNeuralNetwork:
                 if not self.training_mode:
                     for parameter in backwards_conv_layer.parameters():
                         parameter.requires_grad = False
-                backwards_conv_layer.bias.data = torch.zeros(backwards_conv_layer.bias.data.size())
+                backwards_conv_layer.bias.data = torch.zeros(backwards_conv_layer.bias.data.size(), device=self.device)
 
                 # If the next layer exists and is a ReLU layer or if this is the last layer (before the input one),
                 # find the number of connecting nodes in the convolutional layer for each ReLU layer node by calling the
@@ -223,7 +241,8 @@ class GraphNeuralNetwork:
                         layer_idx == len((list(self.neural_network.children()))) - 1:
                     numbers_of_connecting_nodes = get_numbers_of_connecting_nodes(backwards_conv_layer,
                                                                                   embedding_vectors.size(),
-                                                                                  self.training_mode)
+                                                                                  self.training_mode,
+                                                                                  device=self.device)
                     embedding_vectors = backwards_conv_layer(embedding_vectors)
                     embedding_vectors = embedding_vectors / numbers_of_connecting_nodes
                 # Otherwise, simply pass the embedding vectors through without scaling
@@ -246,11 +265,13 @@ class GraphNeuralNetwork:
                 embedding_vectors = embedding_vectors.reshape(embedding_vectors.size()[0], -1)
 
                 # Transform all the embedding vectors so that they can enter the appropriate neural network
-                transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors)
+                transformed_embedding_vectors = transform_embedding_vectors(embedding_vectors, relu_feature_vectors,
+                                                                            device=self.device)
 
                 # Update all embedding vectors at once to avoid inplace operations
                 embedding_vectors = torch.transpose(self.backward_relu_update_nn(torch.transpose(
-                    relu_feature_vectors, 1, 0), torch.transpose(transformed_embedding_vectors, 1, 0)), 1, 0)
+                    relu_feature_vectors, 1, 0), torch.transpose(transformed_embedding_vectors, 1, 0),
+                    device=self.device), 1, 0)
 
                 # Reshape the embedding vectors tensor to have the original size
                 embedding_vectors = embedding_vectors.reshape(original_size)
@@ -323,7 +344,7 @@ class GraphNeuralNetwork:
 
         return new_lower_bound, new_upper_bound
 
-    def parameters(self, device='cpu'):
+    def parameters(self):
         """
         This function returns an iterator over all the parameters of the 6 auxiliary neural networks.
         """
@@ -335,8 +356,6 @@ class GraphNeuralNetwork:
             for parameter in neural_network.parameters():
                 if self.training_mode:
                     parameter.requires_grad_(True)
-                if device == 'cuda' and torch.cuda.is_available():
-                    parameter = parameter.cuda()
                 yield parameter
 
     def load_parameters(self, filename):
@@ -365,3 +384,22 @@ class GraphNeuralNetwork:
                                self.bounds_update_nn]
 
         return gnn_neural_networks
+
+    def reconnect_last_layer(self, true_label, test_label):
+        """
+        This function disconnects the last layer of the underlying neural network of the Graph Neural Network and
+        replaces it with another one which corresponds to the provided combination of the true and test labels.
+        """
+        # Retrieve all layers of the current underlying neural network of the GNN
+        current_layers = list(self.neural_network.children())
+
+        # Pop the last layer of the current neural network
+        current_layers.pop(-1)
+
+        # Construct an incomplete model out of all the current layers except for the last one
+        model_without_last_layer = nn.Sequential(*current_layers)
+
+        # Call the special function to connect another layer instead to complete the new model and return it
+        new_model = simplify_model(model_without_last_layer, true_label, test_label)
+
+        return new_model

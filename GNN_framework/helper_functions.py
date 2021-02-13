@@ -46,15 +46,15 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     This function performs Gradient Ascent on the specified property given the bounds on the input and, if it didn't
     lead to positive loss, outputs the information about gradients and the last version of the optimized variable.
     """
-    # First of all, set the requires_grad parameter of the perturbed image to True to make it suitable for optimization
-    perturbed_image.requires_grad = True
-
-    # If cuda was specified as the device, move the model and all the tensors to cuda
+    # If cuda was specified as the device, create the CUDA versions of the model and all the required tensors
     if device == 'cuda' and torch.cuda.is_available():
         simplified_model = simplified_model.cuda()
         perturbed_image = perturbed_image.cuda()
         lower_bound = lower_bound.cuda()
         upper_bound = upper_bound.cuda()
+
+    # Set the requires_grad parameter of the perturbed image to True to make it suitable for optimization
+    perturbed_image.requires_grad = True
 
     # Initialise the relevant optimiser and the tensor to store the gradients to be later used for gradient information
     optimizer = torch.optim.Adam([perturbed_image], lr=pgd_learning_rate)
@@ -71,6 +71,12 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
         # If the difference between the logit of the test class and the logit of the true class is positive, then the
         # PGD attack was successful and gradient ascent can be stopped
         if loss < 0:
+            # If CUDA was used to perform gradient ascent, then before returning move all the variables back to the CPU
+            if device == 'cuda' and torch.cuda.is_available():
+                simplified_model = simplified_model.cpu()
+                perturbed_image = perturbed_image.cpu()
+                lower_bound = lower_bound.cpu()
+                upper_bound = upper_bound.cpu()
             return True, perturbed_image, None
 
         optimizer.zero_grad()
@@ -88,6 +94,11 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     # If the flag has not been set yet but the perturbation resulted in the model predicting the test class instead of
     # the true one during the last iteration, return the True successful attack flag
     if simplified_model(perturbed_image) < 0:
+        if device == 'cuda' and torch.cuda.is_available():
+            simplified_model = simplified_model.cpu()
+            perturbed_image = perturbed_image.cpu()
+            lower_bound = lower_bound.cpu()
+            upper_bound = upper_bound.cpu()
         return True, perturbed_image, None
 
     # If the Gradient Ascent didn't lead to the changed prediction, then generate the dictionary containing information
@@ -95,8 +106,14 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     gradient_info_dict = generate_gradient_info_dict(gradients)
 
     # Set the requires_grad parameter of the perturbed image to False so that gradients with respect to it aren't
-    # computed outside of this function
+    # computed outside of this function. This doesn't need to be done before the return statements above since if the
+    # attack was successful then gradients aren't required anymore anyway
     perturbed_image.requires_grad = False
+    if device == 'cuda' and torch.cuda.is_available():
+        simplified_model = simplified_model.cpu()
+        perturbed_image = perturbed_image.cpu()
+        lower_bound = lower_bound.cpu()
+        upper_bound = upper_bound.cpu()
 
     return False, perturbed_image, gradient_info_dict
 
@@ -133,7 +150,7 @@ def generate_gradient_info_dict(gradients):
     return gradient_info_dict
 
 
-def transform_embedding_vectors(embedding_vectors, local_feature_vectors):
+def transform_embedding_vectors(embedding_vectors, local_feature_vectors, device='cpu'):
     """
     This function transforms the embedding vectors which were propagated to the ReLU according to the technique
     outlined in the "NN Branching for NN Verification" paper.
@@ -145,17 +162,16 @@ def transform_embedding_vectors(embedding_vectors, local_feature_vectors):
 
     # Compute the required ratios all at once in order to avoid inplace operations
     alphas = torch.where(lower_bounds > 0,
-                         torch.ones(lower_bounds.size()),
+                         torch.ones(lower_bounds.size(), device=device),
                          torch.where(upper_bounds < 0,
-                                     torch.zeros(lower_bounds.size()),
+                                     torch.zeros(lower_bounds.size(), device=device),
                                      torch.div(upper_bounds, torch.add(upper_bounds, -lower_bounds))))
 
     alphas_dashed = torch.where(lower_bounds > 0,
-                                torch.ones(alphas.size()),
+                                torch.ones(alphas.size(), device=device),
                                 torch.where(upper_bounds < 0,
-                                            torch.zeros(alphas.size()),
-                                            torch.add(torch.ones(alphas.size()),
-                                                      -alphas)))
+                                            torch.zeros(alphas.size(), device=device),
+                                            torch.add(torch.ones(alphas.size(), device=device), -alphas)))
 
     # Finally, the transformed embedding vectors are defined in the following way
     product_1 = torch.mul(embedding_vectors, alphas)
@@ -165,12 +181,12 @@ def transform_embedding_vectors(embedding_vectors, local_feature_vectors):
     return transformed_embedding_vectors
 
 
-def get_numbers_of_connecting_nodes(backwards_conv_layer, input_size, training_mode=False):
+def get_numbers_of_connecting_nodes(backwards_conv_layer, input_size, training_mode=False, device='cpu'):
     """
     This function computes the number of connecting nodes for each output node of a convolutional layer
     """
     # Initialise the test input of ones so that inputs are effectively counted for each output node in this way
-    test_input = torch.ones([*[1 for _ in range(len(list(input_size[:-2])))], *input_size[-2:]])
+    test_input = torch.ones([*[1 for _ in range(len(list(input_size[:-2])))], *input_size[-2:]], device=device)
 
     # Construct a copy of the passed convolutional layer but with 1 input and 1 output channel. Also set all weights of
     # the layer to ones and biases to zeros so that the numbers of connecting nodes appear in the output for each output
@@ -179,8 +195,8 @@ def get_numbers_of_connecting_nodes(backwards_conv_layer, input_size, training_m
                                               stride=backwards_conv_layer.stride, padding=backwards_conv_layer.padding,
                                               dilation=backwards_conv_layer.dilation,
                                               groups=backwards_conv_layer.groups)
-    modified_layer.weight.data = torch.ones(modified_layer.weight.data.size())
-    modified_layer.bias.data = torch.zeros(modified_layer.bias.data.size())
+    modified_layer.weight.data = torch.ones(modified_layer.weight.data.size(), device=device)
+    modified_layer.bias.data = torch.zeros(modified_layer.bias.data.size(), device=device)
 
     if not training_mode:
         for parameter in modified_layer.parameters():

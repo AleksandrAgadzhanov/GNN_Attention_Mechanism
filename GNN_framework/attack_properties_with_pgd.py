@@ -88,8 +88,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
     # Follow the GNN framework approach for a specified number of epochs
     for i in range(num_epochs):
-        # When the epoch is not the first one, reset the input embedding vectors since the forward input update function
-        # only activates when the input embedding vectors are zero
+        # When the epoch is not the first one, reset the input embedding vectors since for the forward input update
+        # function to work properly the input embedding vectors must be zero before the first update
         if i != 0:
             gnn.reset_input_embedding_vectors()
 
@@ -127,7 +127,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pass
+    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1, 0.1, 100, 10, 'learnt_gnn_parameters.pkl', device='cuda')
 
 
 if __name__ == '__main__':

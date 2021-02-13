@@ -66,8 +66,9 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
         if successful_attack_flag:
             return perturbed_image
 
-        # Otherwise, increase the epsilon factor by 1%
-        epsilon += 0.01 * original_epsilon
+        # TODO
+        # # Otherwise, increase the epsilon factor by 1%
+        # epsilon += 0.01 * original_epsilon
 
 
 def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations,
@@ -100,11 +101,12 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
                                                  epsilon, gradient_info_dict)
             return feature_dict
 
-        # Otherwise, decrease the epsilon factor by 1%
-        epsilon -= 0.01 * original_epsilon
+        # TODO
+        # # Otherwise, decrease the epsilon factor by 1%
+        # epsilon -= 0.01 * original_epsilon
 
 
-def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda):
+def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda, device='cpu'):
     """
     This function computes the loss characterised by the bounds output from the GNN and the ground truth PGD attack
     pixel values from the training dataset. It does so by using a convex approximation to the 0-1 loss associated with
@@ -119,7 +121,7 @@ def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lam
                                      torch.add(new_lower_bound, -ground_truth_attack),
                                      torch.where(ground_truth_attack - new_upper_bound > 0,
                                                  torch.add(ground_truth_attack, -new_upper_bound),
-                                                 torch.zeros(new_lower_bound.size())))
+                                                 torch.zeros(new_lower_bound.size(), device=device)))
 
     # Determine the average pixel-wise loss for the first term
     num_pixels = new_lower_bound.view(-1).size()[0]

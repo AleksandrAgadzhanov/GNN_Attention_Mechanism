@@ -60,7 +60,7 @@ class ForwardReluUpdateNN(nn.Module):
             for parameter in self.linear_combine_2.parameters():
                 parameter.requires_grad = False
 
-    def forward(self, local_feature_vectors, transformed_embedding_vectors):
+    def forward(self, local_feature_vectors, transformed_embedding_vectors, device='cpu'):
         # First, get information from the local feature vectors. Then, if the hidden layer node is unambiguous (its
         # relaxation triangle intercept which is the last feature is zero), set its information vector to the zero
         # vector. Otherwise, pass it through the corresponding network layers. Do this for all the local feature vectors
@@ -72,7 +72,7 @@ class ForwardReluUpdateNN(nn.Module):
         local_features_info = torch.transpose(torch.where(local_feature_vectors[:, -1] == 0,
                                                           torch.transpose(torch.zeros([local_feature_vectors.size()[0],
                                                                                        self.linear_local_2.out_features]
-                                                                                      ), 1, 0),
+                                                                                      , device=device), 1, 0),
                                                           torch.transpose(local_features_info, 1, 0)), 1, 0)
 
         # Second, get information from the transformed previous neighbour embedding vectors
@@ -163,7 +163,7 @@ class BackwardReluUpdateNN(nn.Module):
             for parameter in self.linear_combine_2.parameters():
                 parameter.requires_grad = False
 
-    def forward(self, local_feature_vectors, transformed_next_layer_embeddings):
+    def forward(self, local_feature_vectors, transformed_next_layer_embeddings, device='cpu'):
         # First, get information from the local feature vectors. Then, if the hidden layer node is unambiguous (its
         # relaxation triangle intercept which is the last feature is zero), set its information vector to the zero
         # vector. Otherwise, pass it through the corresponding network layers. Do this for all the local feature vectors
@@ -177,7 +177,7 @@ class BackwardReluUpdateNN(nn.Module):
         local_features_info = torch.transpose(torch.where(local_feature_vectors[:, -1] == 0,
                                                           torch.transpose(torch.zeros([local_feature_vectors.size()[0],
                                                                                        self.linear_local_3.out_features]
-                                                                                      ), 1, 0),
+                                                                                      , device=device), 1, 0),
                                                           torch.transpose(local_features_info, 1, 0)), 1, 0)
 
         # Second, get information from the transformed next neighbour embedding vectors
