@@ -10,8 +10,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;completed preparation of the code to be run on JADE&quot;">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;added another .sh file with shorter wallclock time&quot;">
+      <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,9 +44,13 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/JADE" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\JADE" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\cifar_exp" />
     </key>
@@ -379,7 +383,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613216483185</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="&quot;added another .sh file with shorter wallclock time&quot;">
+      <created>1613414468260</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1613414468260</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -395,7 +406,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;added a feature extraction function to Gradient Ascent&quot;" />
     <MESSAGE value="&quot;started the GNN class and added a network simplification function&quot;" />
     <MESSAGE value="&quot;started implementation of GNN class&quot;" />
     <MESSAGE value="&quot;completed the auxiliary neural networks classes&quot;" />
@@ -420,7 +430,8 @@
     <MESSAGE value="&quot;some minor changes&quot;" />
     <MESSAGE value="&quot;prepared the code to be run on JADE&quot;" />
     <MESSAGE value="&quot;completed preparation of the code to be run on JADE&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;completed preparation of the code to be run on JADE&quot;" />
+    <MESSAGE value="&quot;added another .sh file with shorter wallclock time&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;added another .sh file with shorter wallclock time&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
