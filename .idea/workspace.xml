@@ -10,19 +10,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;prepared the code to be run on JADE&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;completed preparation of the code to be run on JADE&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/auxiliary_neural_networks.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/auxiliary_neural_networks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/helper_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/helper_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/launch.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cifar_exp/learnt_gnn_parameters.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/cifar_exp/learnt_gnn_parameters.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cifar_exp/train_SAT_med_dataset_subset_50.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_med_dataset_subset_50.pkl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -383,7 +372,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613035773270</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="&quot;completed preparation of the code to be run on JADE&quot;">
+      <created>1613216483185</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1613216483185</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -399,7 +395,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;started own implementation of the GNN framework&quot;" />
     <MESSAGE value="&quot;added a feature extraction function to Gradient Ascent&quot;" />
     <MESSAGE value="&quot;started the GNN class and added a network simplification function&quot;" />
     <MESSAGE value="&quot;started implementation of GNN class&quot;" />
@@ -424,7 +419,8 @@
     <MESSAGE value="&quot;some minor fixes&quot;" />
     <MESSAGE value="&quot;some minor changes&quot;" />
     <MESSAGE value="&quot;prepared the code to be run on JADE&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;prepared the code to be run on JADE&quot;" />
+    <MESSAGE value="&quot;completed preparation of the code to be run on JADE&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;completed preparation of the code to be run on JADE&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
