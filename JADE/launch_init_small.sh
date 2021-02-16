@@ -20,4 +20,4 @@
 # send mail to this address
 #SBATCH --mail-user=aleksandr.agadzhanov@st-hildas.ox.ac.uk
 
-JADE/launch.sh 0
+python JADE/launch.sh 0
