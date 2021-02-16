@@ -87,7 +87,7 @@ def load_verified_data(model_name, cifar_test=None):
         import torchvision.transforms as transforms
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                          std=[0.225, 0.225, 0.225])
-        cifar_test = datasets.CIFAR10('../cifardata/', train=False, download=True,
+        cifar_test = datasets.CIFAR10('cifardata/', train=False, download=True,
                                       transform=transforms.Compose([transforms.ToTensor(), normalize]))
 
     # Containers of correctly verified images, their true labels and their indices in the CIFAR dataset
@@ -117,7 +117,7 @@ def match_with_properties(properties_filename, verified_images, verified_true_la
     and those in the dataset or the intersection with correctly verified properties only respectively.
     """
     # Construct the path and load the properties DataFrame
-    properties_filepath = '../cifar_exp/' + properties_filename
+    properties_filepath = 'cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
 
     # If the properties dataset is for testing, leave only the correctly verified properties
@@ -177,11 +177,11 @@ def load_trained_model(model_name):
         model = cifar_model_m2()
         model.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
     elif model_name == 'cifar_wide_kw':
-        model_path = '../models/cifar_wide_kw.pth'
+        model_path = 'models/cifar_wide_kw.pth'
         model = cifar_model()
         model.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
     elif model_name == 'cifar_deep_kw':
-        model_path = '../models/cifar_deep_kw.pth'
+        model_path = 'models/cifar_deep_kw.pth'
         model = cifar_model_deep()
         model.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
     else:

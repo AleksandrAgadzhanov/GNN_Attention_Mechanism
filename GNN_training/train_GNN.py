@@ -13,7 +13,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     """
     # First, load the training dataset which is a list of feature dictionaries from the specified filename. Also load
     # the model
-    list_of_feature_dicts = torch.load('../cifar_exp/' + training_dataset_filename)
+    list_of_feature_dicts = torch.load('cifar_exp/' + training_dataset_filename)
     model = load_trained_model(model_name)
 
     # Create the temporary variables which will only be used to initialise the GNN structure. Then create an instance of
@@ -94,7 +94,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                            gnn.bounds_update_nn]
     for gnn_neural_network in gnn_neural_networks:
         gnn_state_dicts_list.append(gnn_neural_network.state_dict())
-    torch.save(gnn_state_dicts_list, '../cifar_exp/' + output_filename)
+    torch.save(gnn_state_dicts_list, 'cifar_exp/' + output_filename)
 
     from matplotlib import pyplot as plt
     plt.plot(range(len(epoch_losses)), epoch_losses)

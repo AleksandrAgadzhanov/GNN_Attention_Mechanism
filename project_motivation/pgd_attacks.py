@@ -12,7 +12,7 @@ def pgd_attack_properties(properties_filename, model_name, attack_method_trials,
     x_exact, y_true, image_indices, model = load_verified_data(model_name)
 
     # Load the properties DataFrame, leave only verified properties
-    properties_filepath = '../cifar_exp/' + properties_filename
+    properties_filepath = 'cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
     properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
                                                 (properties_dataframe['BSAT_KW'] == 'False') |

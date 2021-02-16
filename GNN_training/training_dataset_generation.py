@@ -43,7 +43,7 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         # until it is unsuccessful
         feature_dict = pgd_attack_property_until_unsuccessful(simplified_model, images[i], epsilons[i] * epsilon_factor,
                                                               pgd_learning_rate, num_iterations, device=device)
-        with mlogger.stdout_to('../GNN_training/training_dataset_generation_log.txt'):
+        with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
             print("Image " + str(i + 1) + " was attacked unsuccessfully")
 
         # Now make a call to the function which attacks the property until a successful counter-example is found in
@@ -51,7 +51,7 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         ground_truth_attack = pgd_attack_property_until_successful(simplified_model, images[i], epsilons[i] *
                                                                    epsilon_factor, pgd_learning_rate, num_iterations,
                                                                    device=device)
-        with mlogger.stdout_to('../GNN_training/training_dataset_generation_log.txt'):
+        with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
             print("Image " + str(i + 1) + " was attacked successfully")
 
         # Add the ground truth attack to the feature dictionary of the current property. Also add its true and test
@@ -64,7 +64,7 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         overall_list_of_feature_dicts.append(feature_dict)
 
     # Store all the generated subdomains in a file
-    torch.save(overall_list_of_feature_dicts, '../cifar_exp/' + output_filename)
+    torch.save(overall_list_of_feature_dicts, 'cifar_exp/' + output_filename)
 
 
 def main():
