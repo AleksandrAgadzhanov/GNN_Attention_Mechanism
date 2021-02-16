@@ -20,4 +20,5 @@
 # send mail to this address
 #SBATCH --mail-user=aleksandr.agadzhanov@st-hildas.ox.ac.uk
 
+chmod u+x JADE/launch.sh
 JADE/launch.sh 0
