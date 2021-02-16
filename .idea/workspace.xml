@@ -10,7 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;removed the ../ sequences&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -177,27 +179,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00009" summary="&quot;added the function computing the lower and upper bounds&quot;">
-      <created>1609630577982</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1609630577982</updated>
-    </task>
-    <task id="LOCAL-00010" summary="&quot;completed the function for generating hidden and output features&quot;">
-      <created>1609700823940</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1609700823940</updated>
-    </task>
-    <task id="LOCAL-00011" summary="&quot;implemented the forward update function for the hidden layers&quot;">
-      <created>1609927033057</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1609927033057</updated>
     </task>
     <task id="LOCAL-00012" summary="&quot;started implementing backward update function for all layers&quot;">
       <created>1609973751507</created>
@@ -521,7 +502,28 @@
       <option name="project" value="LOCAL" />
       <updated>1613506480630</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="&quot;fixed the 3 launch script parts and added setup.py&quot;">
+      <created>1613506903456</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1613506903456</updated>
+    </task>
+    <task id="LOCAL-00059" summary="&quot;removed the ../ sequences&quot;">
+      <created>1613509206104</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1613509206104</updated>
+    </task>
+    <task id="LOCAL-00060" summary="&quot;removed the ../ sequences&quot;">
+      <created>1613509343468</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1613509343468</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -537,7 +539,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;started feature generation and completed bounds updating functions&quot;" />
     <MESSAGE value="&quot;completed score computation and downloaded bounds computation functions&quot;" />
     <MESSAGE value="&quot;added the function computing the lower and upper bounds&quot;" />
     <MESSAGE value="&quot;completed the function for generating hidden and output features&quot;" />
@@ -562,7 +563,8 @@
     <MESSAGE value="&quot;added logger to the training dataset generation script&quot;" />
     <MESSAGE value="&quot;changed the requested time in launch script&quot;" />
     <MESSAGE value="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
+    <MESSAGE value="&quot;removed the ../ sequences&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;removed the ../ sequences&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
