@@ -10,8 +10,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;added another .sh file with shorter wallclock time&quot;">
-      <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;added logger to the training dataset generation script&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/launch.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/launch_init_small.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch_init_small.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/launch_init_small_short.sh" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -390,7 +393,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613414468260</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="&quot;added logger to the training dataset generation script&quot;">
+      <created>1613415681919</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1613415681919</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -406,7 +416,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;started the GNN class and added a network simplification function&quot;" />
     <MESSAGE value="&quot;started implementation of GNN class&quot;" />
     <MESSAGE value="&quot;completed the auxiliary neural networks classes&quot;" />
     <MESSAGE value="&quot;started feature generation and completed bounds updating functions&quot;" />
@@ -431,7 +440,8 @@
     <MESSAGE value="&quot;prepared the code to be run on JADE&quot;" />
     <MESSAGE value="&quot;completed preparation of the code to be run on JADE&quot;" />
     <MESSAGE value="&quot;added another .sh file with shorter wallclock time&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;added another .sh file with shorter wallclock time&quot;" />
+    <MESSAGE value="&quot;added logger to the training dataset generation script&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;added logger to the training dataset generation script&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
