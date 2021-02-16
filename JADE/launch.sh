@@ -4,8 +4,8 @@ exp_num=$SLURM_ARRAY_TASK_ID
 module purge
 # module load python3/anaconda
 module load cuda/10.1
-export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/bin
-conda activate /jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/venv/Scripts
+# export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/bin
+source /jmain01/home/JAD035/pkm01/axa50-pkm01/GNN_Attention_Mechanism/venv/Scripts/activate
 # source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/anaconda3/envs/python_38
 # export VISION_DATA="/jmain01/home/JAD035/pkm01/fxj15-pkm01/data/"
 # export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/GNN_Attention_Mechanism
@@ -18,4 +18,3 @@ nvcc --version
 echo "Using CUDA device" $CUDA_VISIBLE_DEVICES
 
 python JADE/cifar_jade.py --exp_num $exp_num
-# python cifar_jade.py
