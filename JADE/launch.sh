@@ -17,4 +17,4 @@ nvidia-smi
 nvcc --version
 echo "Using CUDA device" $CUDA_VISIBLE_DEVICES
 
-python3 JADE/cifar_jade.py --exp_num $exp_num
+python JADE/cifar_jade.py --exp_num $exp_num
