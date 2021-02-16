@@ -4,7 +4,8 @@ exp_num=$SLURM_ARRAY_TASK_ID
 module purge
 # module load python3/anaconda
 module load cuda/10.1
-conda activate /jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/venv/Scripts
+export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/GNN_Attention_Mechanism
+source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/venv/Scripts
 # source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/anaconda3/envs/python_38
 # export VISION_DATA="/jmain01/home/JAD035/pkm01/fxj15-pkm01/data/"
 # export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/GNN_Attention_Mechanism
