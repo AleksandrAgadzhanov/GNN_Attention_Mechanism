@@ -10,11 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;changed the requested time in launch script&quot;">
-      <change afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/launch.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch.sh" afterDir="false" />
-    </list>
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -181,13 +177,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00008" summary="&quot;completed score computation and downloaded bounds computation functions&quot;">
-      <created>1609203278632</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1609203278632</updated>
     </task>
     <task id="LOCAL-00009" summary="&quot;added the function computing the lower and upper bounds&quot;">
       <created>1609630577982</created>
@@ -525,7 +514,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613501889249</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="&quot;fixed the 3 launch script parts and added setup.py&quot;">
+      <created>1613506480630</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1613506480630</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -541,7 +537,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;completed the auxiliary neural networks classes&quot;" />
     <MESSAGE value="&quot;started feature generation and completed bounds updating functions&quot;" />
     <MESSAGE value="&quot;completed score computation and downloaded bounds computation functions&quot;" />
     <MESSAGE value="&quot;added the function computing the lower and upper bounds&quot;" />
@@ -566,7 +561,8 @@
     <MESSAGE value="&quot;added another .sh file with shorter wallclock time&quot;" />
     <MESSAGE value="&quot;added logger to the training dataset generation script&quot;" />
     <MESSAGE value="&quot;changed the requested time in launch script&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;changed the requested time in launch script&quot;" />
+    <MESSAGE value="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

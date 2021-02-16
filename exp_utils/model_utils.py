@@ -173,7 +173,7 @@ def load_trained_model(model_name):
     This function returns the required trained model based on the name provided as input.
     """
     if model_name == 'cifar_base_kw':
-        model_path = '../models/cifar_base_kw.pth'
+        model_path = 'models/cifar_base_kw.pth'
         model = cifar_model_m2()
         model.load_state_dict(torch.load(model_path, map_location="cpu")['state_dict'][0])
     elif model_name == 'cifar_wide_kw':
