@@ -7,7 +7,7 @@ module load cuda/10.1
 source /jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/venv/Scripts/activate
 # source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/anaconda3/envs/python_38
 # export VISION_DATA="/jmain01/home/JAD035/pkm01/fxj15-pkm01/data/"
-# export PATH=$PATH:/jmain01/home/JAD035/pkm01/fxj15-pkm01/workspace/Verification_bab
+export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/GNN_Attention_Mechanism
 # echo 'export PATH=$PATH:/jmain01/home/JAD035/pkm01/fxj15-pkm01/workspace/Verification_bab'  >> ~/.bash_profile
 
 # echo "path variables" $PATH
