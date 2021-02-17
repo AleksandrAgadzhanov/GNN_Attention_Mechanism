@@ -1,17 +1,17 @@
 #!/bin/bash
 
 exp_num=$SLURM_ARRAY_TASK_ID
-module purge
-# module load python3/anaconda
-module load cuda/10.1
-export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/bin
-source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/envs/GNN_Attention_Mechanism
-# source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/anaconda3/envs/python_38
-# export VISION_DATA="/jmain01/home/JAD035/pkm01/fxj15-pkm01/data/"
-# export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/GNN_Attention_Mechanism
-# echo 'export PATH=$PATH:/jmain01/home/JAD035/pkm01/fxj15-pkm01/workspace/Verification_bab'  >> ~/.bash_profile
 
-# echo "path variables" $PATH
+module purge
+
+module load cuda/10.1
+
+export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/bin
+
+export GRB_LICENSE_FILE=/jmain01/home/JAD035/pkm01/axa50-pkm01/gurobi911/gurobi.lic
+echo "Gurobi license file location: " $GRB_LICENSE_FILE
+
+source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/envs/GNN_Attention_Mechanism
 
 nvidia-smi
 nvcc --version

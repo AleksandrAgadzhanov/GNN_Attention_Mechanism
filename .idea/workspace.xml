@@ -10,12 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;changed job wallclock time&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/loss_no_regularization.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/launch.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,13 +180,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00013" summary="&quot;completed the first version of the GNN implementation&quot;">
-      <created>1610045771791</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1610045771791</updated>
     </task>
     <task id="LOCAL-00014" summary="&quot;updated the function loading the images and properties data&quot;">
       <created>1610889601498</created>
@@ -527,7 +517,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613510221165</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;">
+      <created>1613550758706</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1613550758706</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -543,7 +540,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;added the function computing the lower and upper bounds&quot;" />
     <MESSAGE value="&quot;completed the function for generating hidden and output features&quot;" />
     <MESSAGE value="&quot;implemented the forward update function for the hidden layers&quot;" />
     <MESSAGE value="&quot;started implementing backward update function for all layers&quot;" />
@@ -568,7 +564,8 @@
     <MESSAGE value="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
     <MESSAGE value="&quot;removed the ../ sequences&quot;" />
     <MESSAGE value="&quot;changed job wallclock time&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;changed job wallclock time&quot;" />
+    <MESSAGE value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
