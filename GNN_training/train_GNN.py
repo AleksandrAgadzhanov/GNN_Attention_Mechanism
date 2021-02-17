@@ -47,7 +47,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             feature_dict = list_of_feature_dicts[property_index]
 
             # Update the last layer of the GNN according to the currently considered true and test labels
-            gnn.reconnect_last_layer(feature_dict['true label'], feature_dict['test label'])
+            gnn.reconnect_last_layer(model_name, feature_dict['true label'], feature_dict['test label'])
 
             # When the epoch or the subdomain index are not the first one, reset the input embedding vectors since the
             # forward input update function only activates when the input embedding vectors are zero

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from plnn.modules import Flatten
+from exp_utils.model_utils import load_trained_model
 from GNN_framework.helper_functions import transform_embedding_vectors, get_numbers_of_connecting_nodes, simplify_model
 from GNN_framework.auxiliary_neural_networks import ForwardInputUpdateNN, ForwardReluUpdateNN, ForwardOutputUpdateNN, \
     BackwardReluUpdateNN, BackwardInputUpdateNN, BoundsUpdateNN
@@ -385,21 +386,16 @@ class GraphNeuralNetwork:
 
         return gnn_neural_networks
 
-    def reconnect_last_layer(self, true_label, test_label):
+    def reconnect_last_layer(self, model_name, true_label, test_label):
         """
         This function disconnects the last layer of the underlying neural network of the Graph Neural Network and
         replaces it with another one which corresponds to the provided combination of the true and test labels.
         """
-        # Retrieve all layers of the current underlying neural network of the GNN
-        current_layers = list(self.neural_network.children())
+        # Load the new version of the specified model
+        new_model = load_trained_model(model_name)
 
-        # Pop the last layer of the current neural network
-        current_layers.pop(-1)
+        # Get the new simplified model by calling the appropriate function
+        new_simplified_model = simplify_model(new_model, true_label, test_label)
 
-        # Construct an incomplete model out of all the current layers except for the last one
-        model_without_last_layer = nn.Sequential(*current_layers)
-
-        # Call the special function to connect another layer instead to complete the new model and return it
-        new_model = simplify_model(model_without_last_layer, true_label, test_label)
-
-        return new_model
+        # Set the underlying neural network field of the Graph Neural Network to the new simplified model
+        self.neural_network = new_simplified_model
