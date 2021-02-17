@@ -63,8 +63,8 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         # Append the generated feature dictionary to the overall list
         overall_list_of_feature_dicts.append(feature_dict)
 
-    # Store all the generated subdomains in a file
-    torch.save(overall_list_of_feature_dicts, 'cifar_exp/' + output_filename)
+        # Store all the generated subdomains in a file
+        torch.save(overall_list_of_feature_dicts, 'cifar_exp/' + output_filename)
 
 
 def main():
