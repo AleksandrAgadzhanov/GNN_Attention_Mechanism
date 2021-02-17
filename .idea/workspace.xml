@@ -10,8 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;commit&quot;">
       <change beforePath="$PROJECT_DIR$/JADE/launch.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -180,13 +179,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00014" summary="&quot;updated the function loading the images and properties data&quot;">
-      <created>1610889601498</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1610889601498</updated>
     </task>
     <task id="LOCAL-00015" summary="&quot;started implementing the branch and bound for generating the training dataset&quot;">
       <created>1610913844509</created>
@@ -524,7 +516,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613550758706</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="&quot;commit&quot;">
+      <created>1613594891289</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1613594891290</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -540,7 +539,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;completed the function for generating hidden and output features&quot;" />
     <MESSAGE value="&quot;implemented the forward update function for the hidden layers&quot;" />
     <MESSAGE value="&quot;started implementing backward update function for all layers&quot;" />
     <MESSAGE value="&quot;completed the first version of the GNN implementation&quot;" />
@@ -565,7 +563,8 @@
     <MESSAGE value="&quot;removed the ../ sequences&quot;" />
     <MESSAGE value="&quot;changed job wallclock time&quot;" />
     <MESSAGE value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
+    <MESSAGE value="&quot;commit&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;commit&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
