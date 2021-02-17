@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo hostid
 exp_num=$SLURM_ARRAY_TASK_ID
 
 module purge
@@ -8,8 +8,8 @@ module load cuda/10.1
 
 export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/bin
 
+module load Gurobi/9.1.1
 export GRB_LICENSE_FILE=/jmain01/home/JAD035/pkm01/axa50-pkm01/gurobi911/gurobi.lic
-echo "Gurobi license file location: " $GRB_LICENSE_FILE
 
 source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/envs/GNN_Attention_Mechanism
 
