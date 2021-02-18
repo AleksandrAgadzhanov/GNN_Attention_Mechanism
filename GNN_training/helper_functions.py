@@ -94,7 +94,7 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
                                                                                       pgd_learning_rate, num_iterations,
                                                                                       device=device)
 
-        # If the attack was unsuccessful, return the gradient information dictionary
+        # If the attack was unsuccessful, generate the feature dictionary for the property
         if not successful_attack_flag:
             feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, image, perturbed_image,
                                                  epsilon, gradient_info_dict)

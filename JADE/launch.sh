@@ -8,7 +8,7 @@ module load cuda/10.1
 export PATH=$PATH:/jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/bin
 source activate /jmain01/home/JAD035/pkm01/axa50-pkm01/miniconda3/envs/GNN_Attention_Mechanism
 
-grbgetkey --path /jmain01/home/JAD035/pkm01/axa50-pkm01/gurobi911/ eef6f252-71fd-11eb-846b-0a7c4f30bdbe
+grbgetkey --path /jmain01/home/JAD035/pkm01/axa50-pkm01/gurobi911/ 8f5a5bc0-721d-11eb-a7e0-0a7c4f30bdbe
 export GRB_LICENSE_FILE=/jmain01/home/JAD035/pkm01/axa50-pkm01/gurobi911/gurobi.lic
 
 nvidia-smi

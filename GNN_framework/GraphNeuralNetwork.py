@@ -77,18 +77,15 @@ class GraphNeuralNetwork:
         # Finally, store the training mode flag
         self.training_mode = training_mode
 
-    def reset_input_embedding_vectors(self):
-        """
-        This function resets all the input embedding vectors to the zero vectors
-        """
-        self.input_embeddings = torch.zeros(self.input_embeddings.size())
-
     def update_embedding_vectors(self, input_feature_vectors, relu_feature_vectors_list, output_feature_vectors,
                                  num_updates=2):
         """
         This function performs a series of forward and backward updates on all the embedding vectors until convergence
         is reached (specified by the number of updates input variable).
         """
+        # First of all, reset the input embedding vectors
+        self.input_embeddings = torch.zeros(self.input_embeddings.size())
+
         # Perform one complete forward and backward update a number of times specified
         for i in range(num_updates):
 

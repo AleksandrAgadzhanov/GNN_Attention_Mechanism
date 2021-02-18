@@ -13,5 +13,5 @@ setup(
     description='Graph Neural Networks for Finding Adversarial Example',
     author='Aleksandr Agadzhanov, University of Oxford',
     packages=find_packages(),
-    install_requires=['matplotlib', 'numpy', 'torch', 'gurobi', 'pandas', 'mlogger']
+    install_requires=['matplotlib', 'numpy', 'torch', 'gurobi', 'pandas', 'mlogger', 'torchvision']
 )

@@ -1,4 +1,5 @@
 import torch
+import mlogger
 from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
@@ -37,9 +38,11 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
                                                          gnn_parameters_filename, device=device)
 
         if successful_attack_flag:
-            print('Image №' + str(i + 1) + ' was attacked successfully')
+            with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
+                print('Image №' + str(i + 1) + ' was attacked successfully')
         else:
-            print('Image №' + str(i + 1) + ' was NOT attacked successfully')
+            with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
+                print('Image №' + str(i + 1) + ' was NOT attacked successfully')
 
         # If the attack was unsuccessful, increase the counter
         if successful_attack_flag:
@@ -88,11 +91,6 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
     # Follow the GNN framework approach for a specified number of epochs
     for i in range(num_epochs):
-        # When the epoch is not the first one, reset the input embedding vectors since for the forward input update
-        # function to work properly the input embedding vectors must be zero before the first update
-        if i != 0:
-            gnn.reset_input_embedding_vectors()
-
         # Perform a series of forward and backward updates of all the embedding vectors within the GNN
         gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors_list, output_feature_vectors)
 
@@ -127,7 +125,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1, 0.1, 100, 10, 'learnt_gnn_parameters.pkl', device='cuda')
+    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1, 0.1, 100, 10, 'learnt_gnn_parameters.pkl',
+                              device='cuda')
 
 
 if __name__ == '__main__':

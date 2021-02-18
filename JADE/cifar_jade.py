@@ -22,7 +22,7 @@ import sys
 # # generating easy but large train SAT dataset
 # jobs = ["python adv_exp/scripts/script_create_dataset_jade.py --jade --exp_name train_quick"]
 #
-# # run on new larget train dataset
+# # run on new larger train dataset
 # jobs = ["python adv_exp/scripts/script_training_jade.py --exp_name train_jade_new_train_n25e4"]
 #
 # # train 1. more steps, 2. with momentum, 3. with adam, 4. with prop lr decay
@@ -31,7 +31,7 @@ import sys
 #         "python adv_exp/scripts/script_training_jade.py --exp_name train_jade_n25e4_adam",
 #         "python adv_exp/scripts/script_training_jade.py --exp_name train_jade_n25e4_rel_decay"]
 
-jobs = ["python GNN_training/training_dataset_generation.py"]
+jobs = ["python GNN_training/cross_validation.py"]
 
 
 def run_command(command, noprint=True):

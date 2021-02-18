@@ -1,4 +1,5 @@
 import torch
+import mlogger
 from exp_utils.model_utils import load_trained_model
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import simplify_model
@@ -38,21 +39,14 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     # Initialise the optimizer on the parameters of the GNN
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
 
-    epoch_losses = []
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
         # For each property appearing in the training dataset
-        epoch_loss = 0
         for property_index in range(len(list_of_feature_dicts)):
             feature_dict = list_of_feature_dicts[property_index]
 
             # Update the last layer of the GNN according to the currently considered true and test labels
             gnn.reconnect_last_layer(model_name, feature_dict['true label'], feature_dict['test label'])
-
-            # When the epoch or the subdomain index are not the first one, reset the input embedding vectors since the
-            # forward input update function only activates when the input embedding vectors are zero
-            if epoch != 0 or property_index != 0:
-                gnn.reset_input_embedding_vectors()
 
             # Perform a series of forward and backward updates of all the embedding vectors within the GNN
             gnn.update_embedding_vectors(feature_dict['input'], feature_dict['hidden'], feature_dict['output'])
@@ -73,15 +67,15 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                                 device=device)
             if device == 'cuda' and torch.cuda.is_available():
                 loss = loss.cuda()
-            epoch_loss += loss
+
             # Make the optimizer step in a usual manner
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
         # Print a message to the terminal at the end of each epoch
-        print("Epoch №" + str(epoch + 1) + " complete")
-        epoch_losses.append(epoch_loss)
+        with mlogger.stdout_to('cross_validation_log.txt'):
+            print("Epoch №" + str(epoch + 1) + " complete")
 
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
@@ -96,14 +90,9 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         gnn_state_dicts_list.append(gnn_neural_network.state_dict())
     torch.save(gnn_state_dicts_list, 'cifar_exp/' + output_filename)
 
-    from matplotlib import pyplot as plt
-    plt.plot(range(len(epoch_losses)), epoch_losses)
-    plt.show()
-
 
 def main():
-    generate_gnn_training_parameters('train_SAT_med_dataset_subset_50.pkl', 'cifar_base_kw', 0.001, 10, 0,
-                                     'learnt_gnn_parameters.pkl', device='cuda')
+    pass
 
 
 if __name__ == '__main__':
