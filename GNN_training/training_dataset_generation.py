@@ -68,7 +68,7 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
 
 def main():
-    generate_training_dataset('train_SAT_med.pkl', 'cifar_base_kw', 0.001, 50000, 'train_SAT_med_dataset.pkl',
+    generate_training_dataset('train_SAT_med.pkl', 'cifar_base_kw', 0.1, 100, 'train_SAT_med_dataset.pkl',
                               device='cuda')
 
 
