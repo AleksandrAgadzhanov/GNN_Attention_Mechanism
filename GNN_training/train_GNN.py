@@ -74,7 +74,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             optimizer.step()
 
         # Print a message to the terminal at the end of each epoch
-        with mlogger.stdout_to('cross_validation_log.txt'):
+        with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
             print("Epoch №" + str(epoch + 1) + " complete")
 
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural

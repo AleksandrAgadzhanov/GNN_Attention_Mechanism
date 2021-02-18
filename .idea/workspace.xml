@@ -10,16 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;commit&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;prepared code for test run of cross validation on JADE&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/helper_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cifar_exp/train_SAT_med_dataset.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_med_dataset.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cifar_exp/train_SAT_med_dataset_subset_50.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,13 +180,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00025" summary="&quot;finished implementation of GNN training&quot;">
-      <created>1612361992787</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1612361992787</updated>
     </task>
     <task id="LOCAL-00026" summary="&quot;some minor fixes&quot;">
       <created>1612434521516</created>
@@ -531,7 +517,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613662316296</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="&quot;prepared code for test run of cross validation on JADE&quot;">
+      <created>1613675797297</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1613675797298</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -547,7 +540,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;started implementing backward update function for all layers&quot;" />
     <MESSAGE value="&quot;completed the first version of the GNN implementation&quot;" />
     <MESSAGE value="&quot;updated the function loading the images and properties data&quot;" />
     <MESSAGE value="&quot;started implementing the branch and bound for generating the training dataset&quot;" />
@@ -572,7 +564,8 @@
     <MESSAGE value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
     <MESSAGE value="&quot;fixed the issue with the host ID of the Gurobi license&quot;" />
     <MESSAGE value="&quot;commit&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;commit&quot;" />
+    <MESSAGE value="&quot;prepared code for test run of cross validation on JADE&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;prepared code for test run of cross validation on JADE&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
