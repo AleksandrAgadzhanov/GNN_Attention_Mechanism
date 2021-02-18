@@ -66,9 +66,8 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
         if successful_attack_flag:
             return perturbed_image
 
-        # TODO
-        # # Otherwise, increase the epsilon factor by 1%
-        # epsilon += 0.01 * original_epsilon
+        # Otherwise, increase the epsilon factor by 1%
+        epsilon += 0.01 * original_epsilon
 
 
 def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations,
@@ -101,9 +100,8 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
                                                  epsilon, gradient_info_dict)
             return feature_dict
 
-        # TODO
-        # # Otherwise, decrease the epsilon factor by 1%
-        # epsilon -= 0.01 * original_epsilon
+        # Otherwise, decrease the epsilon factor by 1%
+        epsilon -= 0.01 * original_epsilon
 
 
 def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda, device='cpu'):
