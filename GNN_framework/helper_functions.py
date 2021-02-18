@@ -48,10 +48,13 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
     """
     # If cuda was specified as the device, create the CUDA versions of the model and all the required tensors
     if device == 'cuda' and torch.cuda.is_available():
+        print("CUDA is active")
         simplified_model = simplified_model.cuda()
         perturbed_image = perturbed_image.cuda()
         lower_bound = lower_bound.cuda()
         upper_bound = upper_bound.cuda()
+    else:
+        print("CUDA is inactive")
 
     # Set the requires_grad parameter of the perturbed image to True to make it suitable for optimization
     perturbed_image.requires_grad = True

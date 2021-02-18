@@ -10,12 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;fixed the issue with the host ID of the Gurobi license&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;commit&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cifar_exp/train_SAT_med_dataset.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_med_dataset.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exp_utils/model_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/exp_utils/model_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/helper_functions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,20 +180,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00020" summary="&quot;added the baselines to compare the GNN framework against&quot;">
-      <created>1611658909688</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1611658909688</updated>
-    </task>
-    <task id="LOCAL-00021" summary="&quot;fixed errors due to initialization of unneeded gradient computation graphs&quot;">
-      <created>1611862350905</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1611862350905</updated>
     </task>
     <task id="LOCAL-00022" summary="&quot;some minor fixes&quot;">
       <created>1611910667098</created>
@@ -527,7 +510,21 @@
       <option name="project" value="LOCAL" />
       <updated>1613602773535</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="&quot;fixed the issue with the host ID of the Gurobi license&quot;">
+      <created>1613655424899</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1613655424899</updated>
+    </task>
+    <task id="LOCAL-00070" summary="&quot;commit&quot;">
+      <created>1613655510571</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1613655510571</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -566,9 +563,9 @@
     <MESSAGE value="&quot;removed the ../ sequences&quot;" />
     <MESSAGE value="&quot;changed job wallclock time&quot;" />
     <MESSAGE value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
-    <MESSAGE value="&quot;commit&quot;" />
     <MESSAGE value="&quot;fixed the issue with the host ID of the Gurobi license&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;fixed the issue with the host ID of the Gurobi license&quot;" />
+    <MESSAGE value="&quot;commit&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;commit&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
