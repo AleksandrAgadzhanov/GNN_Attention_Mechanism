@@ -180,13 +180,6 @@
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
     </task>
-    <task id="LOCAL-00031" summary="&quot;added logger to the training dataset generation script&quot;">
-      <created>1613415681919</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1613415681919</updated>
-    </task>
     <task id="LOCAL-00032" summary="&quot;changed the requested time in launch script&quot;">
       <created>1613475912460</created>
       <option name="number" value="00032" />
@@ -523,7 +516,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613819806043</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="&quot;commit&quot;">
+      <created>1613824284782</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1613824284782</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
