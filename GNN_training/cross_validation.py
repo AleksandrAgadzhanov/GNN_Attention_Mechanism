@@ -51,7 +51,7 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
 
 
 def main():
-    lambdas = np.logspace(0.01, 10, 4)
+    lambdas = np.logspace(-2, 1, 4)
     cross_validate_gnn(lambdas, 'train_SAT_med_dataset.pkl', 'val_SAT_jade.pkl', '', 'cifar_base_kw', 0.01, 1, 10, 0.01,
                        2000, 10, '')
 
