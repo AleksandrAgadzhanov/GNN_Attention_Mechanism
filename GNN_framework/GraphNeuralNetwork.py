@@ -327,18 +327,19 @@ class GraphNeuralNetwork:
         # 3. Finally, if the new upper bound is bigger than the old upper bound, set it to the old upper bound
         new_upper_bound = torch.min(new_upper_bound, old_upper_bound)
 
-        # If the lower and upper bounds are exactly the same and equal to the old lower bound then to prevent Gurobi
-        # from crashing increase the new upper bound by 10% of the range. Analogously, if they are both equal to the old
-        # upper bound then decrease the new lower bound by 1% of the range.
-        new_upper_bound = torch.where(torch.logical_and(torch.eq(new_upper_bound, new_lower_bound),
-                                                        torch.eq(new_lower_bound, old_lower_bound)),
-                                      torch.add(new_upper_bound, 0.1 * torch.add(old_upper_bound, -old_lower_bound)),
-                                      new_upper_bound)
-
-        new_lower_bound = torch.where(torch.logical_and(torch.eq(new_upper_bound, new_lower_bound),
-                                                        torch.eq(new_upper_bound, old_upper_bound)),
-                                      torch.add(new_lower_bound, -0.1 * torch.add(old_upper_bound, -old_lower_bound)),
-                                      new_lower_bound)
+        # TODO
+        # # If the lower and upper bounds are exactly the same and equal to the old lower bound then to prevent Gurobi
+        # # from crashing increase the new upper bound by 10% of the range. Analogously, if they are both equal to the old
+        # # upper bound then decrease the new lower bound by 1% of the range.
+        # new_upper_bound = torch.where(torch.logical_and(torch.eq(new_upper_bound, new_lower_bound),
+        #                                                 torch.eq(new_lower_bound, old_lower_bound)),
+        #                               torch.add(new_upper_bound, 0.1 * torch.add(old_upper_bound, -old_lower_bound)),
+        #                               new_upper_bound)
+        #
+        # new_lower_bound = torch.where(torch.logical_and(torch.eq(new_upper_bound, new_lower_bound),
+        #                                                 torch.eq(new_upper_bound, old_upper_bound)),
+        #                               torch.add(new_lower_bound, -0.1 * torch.add(old_upper_bound, -old_lower_bound)),
+        #                               new_lower_bound)
 
         return new_lower_bound, new_upper_bound
 
