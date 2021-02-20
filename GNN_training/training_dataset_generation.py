@@ -68,8 +68,7 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
 
 def main():
-    generate_training_dataset('val_SAT_jade.pkl', 'cifar_base_kw', 0.01, 2000, 'val_SAT_jade_dataset.pkl',
-                              device='cuda', subset=list(range(126, 135)))
+    pass
 
 
 if __name__ == '__main__':

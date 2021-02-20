@@ -65,10 +65,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                 old_upper_bound = old_upper_bound.cuda()
             new_lower_bound, new_upper_bound = gnn.compute_updated_bounds(old_lower_bound, old_upper_bound)
             if device == 'cuda' and torch.cuda.is_available():
-                # TODO
                 new_lower_bound = new_lower_bound.cuda()
-                with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
-                    print(new_lower_bound)
                 new_upper_bound = new_upper_bound.cuda()
 
             # Compute the loss by making a call to the special function and add it to the accumulator variable
@@ -107,7 +104,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    generate_gnn_training_parameters('train_SAT_med.pkl', 'cifar_base_kw', 0.01, 10, 0.01, )
+    generate_gnn_training_parameters('train_SAT_med_dataset.pkl', 'cifar_base_kw', 0.01, 10, 0.01, '', device='cuda')
 
 
 if __name__ == '__main__':

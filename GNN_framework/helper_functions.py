@@ -1,4 +1,5 @@
 import torch
+import mlogger
 from exp_utils.model_utils import add_single_prop
 
 
@@ -52,6 +53,9 @@ def gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
         perturbed_image = perturbed_image.cuda()
         lower_bound = lower_bound.cuda()
         upper_bound = upper_bound.cuda()
+        # TODO
+        with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
+            print(perturbed_image)
 
     # Set the requires_grad parameter of the perturbed image to True to make it suitable for optimization
     perturbed_image.requires_grad = True

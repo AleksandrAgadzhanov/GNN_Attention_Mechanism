@@ -8,7 +8,7 @@ from GNN_training.train_GNN import generate_gnn_training_parameters
 
 def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_dataset_filename, combined_dataset_filename,
                        model_name, gnn_learning_rate, epsilon_factor, num_training_epochs, pgd_learning_rate,
-                       num_iterations, num_attack_epochs, final_parameters_filename):
+                       num_iterations, num_attack_epochs, final_parameters_filename, device='cpu'):
     """
     This function performs the cross-validation procedure in order to determine the best value of the regularization
     parameter lambda for learning the parameters of the Graph Neural Network. After finding this best value, the
@@ -32,7 +32,8 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
     for loss_lambda in loss_lambdas:
         # Train the GNN using the current value of lambda and output the learnt parameters in the temporary file
         epoch_losses = generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate,
-                                                        num_training_epochs, loss_lambda, 'temp_gnn_parameters.pkl')
+                                                        num_training_epochs, loss_lambda, 'temp_gnn_parameters.pkl',
+                                                        device='cuda')
         epoch_losses_list.append(epoch_losses)
         with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
             print('\nTrained the GNN with lambda = ' + str(loss_lambda))
@@ -41,8 +42,8 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
         # Let the GNN perform PGD attacks on the validation dataset. Store the resulting attack success rate in the list
         validation_attack_success_rate = pgd_gnn_attack_properties(validation_dataset_filename, model_name,
                                                                    epsilon_factor, pgd_learning_rate, num_iterations,
-                                                                   num_attack_epochs,
-                                                                   'temp_gnn_parameters.pkl')
+                                                                   num_attack_epochs, 'temp_gnn_parameters.pkl',
+                                                                   device='cuda')
         validation_attack_success_rates.append(validation_attack_success_rate)
         with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
             print('Performed PGD attacks on the validation dataset. Attack success rate = ' +
@@ -68,7 +69,7 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
 def main():
     lambdas = np.logspace(-2, 1, 4)
     cross_validate_gnn(lambdas, 'train_SAT_med_dataset.pkl', 'val_SAT_jade.pkl', '', 'cifar_base_kw', 0.01, 1, 10, 0.01,
-                       2000, 5, '')
+                       2000, 5, '', device='cuda')
 
 
 if __name__ == '__main__':
