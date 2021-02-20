@@ -22,14 +22,18 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
     best_attack_success_rate = 0
     best_lambda = loss_lambdas[0]
 
+    # Initialize the list where the lists of epoch losses will be stored
+    epoch_losses_list = []
+
     # Start the timer
     start_time = time.time()
 
     # Try each value of lambda in the list
     for loss_lambda in loss_lambdas:
         # Train the GNN using the current value of lambda and output the learnt parameters in the temporary file
-        generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_training_epochs,
-                                         loss_lambda, 'temp_gnn_parameters.pkl')
+        epoch_losses = generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate,
+                                                        num_training_epochs, loss_lambda, 'temp_gnn_parameters.pkl')
+        epoch_losses_list.append(epoch_losses)
         with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
             print('\nTrained the GNN with lambda = ' + str(loss_lambda))
             print('Time elapsed since the start: ' + str(time.time() - start_time))
@@ -51,7 +55,8 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
             best_attack_success_rate = validation_attack_success_rate
             best_lambda = loss_lambda
 
-    output_dict = {'lambdas': loss_lambdas.tolist(), 'attack_success_rates': validation_attack_success_rates}
+    output_dict = {'lambdas': loss_lambdas.tolist(), 'attack_success_rates': validation_attack_success_rates,
+                   'epoch losses list': epoch_losses_list}
     torch.save(output_dict, 'cifar_exp/cross_validation_dict.pkl')
 
     # # Now that the best lambda parameter is obtained, train the GNN on the combined training and validation dataset and

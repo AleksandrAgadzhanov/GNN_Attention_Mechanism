@@ -39,8 +39,14 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     # Initialise the optimizer on the parameters of the GNN
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
 
+    # Initialize the list to store the epoch losses in
+    epoch_losses = []
+
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
+        # Initialize the variable which will accumulate all the losses within this epoch
+        epoch_loss = 0
+
         # For each property appearing in the training dataset
         for property_index in range(len(list_of_feature_dicts)):
             feature_dict = list_of_feature_dicts[property_index]
@@ -64,9 +70,10 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                 print(new_lower_bound)
                 new_upper_bound = new_upper_bound.cuda()
 
-            # Compute the loss by making a call to the special function
+            # Compute the loss by making a call to the special function and add it to the accumulator variable
             loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'], loss_lambda,
                                 device=device)
+            epoch_loss += loss.item()
             if device == 'cuda' and torch.cuda.is_available():
                 loss = loss.cuda()
 
@@ -75,9 +82,12 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             loss.backward()
             optimizer.step()
 
+        # Append the accumulated losses during the current epoch to the list
+        epoch_losses.append(epoch_loss)
+
         # Print a message to the terminal at the end of each epoch
         with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
-            print("Epoch №" + str(epoch + 1) + " complete")
+            print("Epoch " + str(epoch + 1) + " complete")
 
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
@@ -91,6 +101,8 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     for gnn_neural_network in gnn_neural_networks:
         gnn_state_dicts_list.append(gnn_neural_network.state_dict())
     torch.save(gnn_state_dicts_list, 'cifar_exp/' + output_filename)
+
+    return epoch_losses
 
 
 def main():
