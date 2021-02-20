@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 
 # set max wallclock time
-#SBATCH --time=00:20:00
+#SBATCH --time=8:00:00
 
 # set name of job
 #SBATCH --job-name=small

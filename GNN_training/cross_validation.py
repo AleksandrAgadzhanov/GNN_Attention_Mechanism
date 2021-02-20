@@ -33,7 +33,8 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
         # Train the GNN using the current value of lambda and output the learnt parameters in the temporary file
         epoch_losses = generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate,
                                                         num_training_epochs, loss_lambda, 'temp_gnn_parameters.pkl',
-                                                        device='cuda')
+                                                        device=device)
+
         epoch_losses_list.append(epoch_losses)
         with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
             print('\nTrained the GNN with lambda = ' + str(loss_lambda))
@@ -43,7 +44,8 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
         validation_attack_success_rate = pgd_gnn_attack_properties(validation_dataset_filename, model_name,
                                                                    epsilon_factor, pgd_learning_rate, num_iterations,
                                                                    num_attack_epochs, 'temp_gnn_parameters.pkl',
-                                                                   device='cuda')
+                                                                   device=device)
+
         validation_attack_success_rates.append(validation_attack_success_rate)
         with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
             print('Performed PGD attacks on the validation dataset. Attack success rate = ' +
