@@ -39,10 +39,10 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
         if successful_attack_flag:
             with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
-                print('Image №' + str(i + 1) + ' was attacked successfully')
+                print('Image ' + str(i + 1) + ' was attacked successfully')
         else:
             with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
-                print('Image №' + str(i + 1) + ' was NOT attacked successfully')
+                print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
         # If the attack was unsuccessful, increase the counter
         if successful_attack_flag:
