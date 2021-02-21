@@ -397,3 +397,5 @@ class GraphNeuralNetwork:
 
         # Set the underlying neural network field of the Graph Neural Network to the new simplified model
         self.neural_network = new_simplified_model
+        if self.device == 'cuda' and torch.cuda.is_available():
+            self.neural_network = self.neural_network.cuda()

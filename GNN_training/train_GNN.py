@@ -104,7 +104,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    generate_gnn_training_parameters('train_SAT_med_dataset.pkl', 'cifar_base_kw', 0.01, 10, 0.01, '', device='cuda')
+    pass
 
 
 if __name__ == '__main__':
