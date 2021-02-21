@@ -49,7 +49,7 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
         validation_attack_success_rates.append(validation_attack_success_rate)
         with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
             print('Performed PGD attacks on the validation dataset. Attack success rate = ' +
-                  str(validation_attack_success_rates[-1] + '%'))
+                  str(validation_attack_success_rates[-1]) + '%')
             print('Time elapsed since the start: ' + str(time.time() - start_time))
 
         # If the current validation attack success rate is higher than the previous best one, update the variables
