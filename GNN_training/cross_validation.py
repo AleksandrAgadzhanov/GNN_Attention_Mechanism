@@ -7,8 +7,8 @@ from GNN_training.train_GNN import generate_gnn_training_parameters
 
 
 def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_dataset_filename, combined_dataset_filename,
-                       model_name, gnn_learning_rate, epsilon_factor, num_training_epochs, pgd_learning_rate,
-                       num_iterations, num_attack_epochs, final_parameters_filename, device='cpu'):
+                       model_name, gnn_learning_rate, num_training_epochs, pgd_learning_rate, num_iterations,
+                       num_attack_epochs, final_parameters_filename, epsilon_factor=1.0, device='cpu'):
     """
     This function performs the cross-validation procedure in order to determine the best value of the regularization
     parameter lambda for learning the parameters of the Graph Neural Network. After finding this best value, the
@@ -70,8 +70,8 @@ def cross_validate_gnn(loss_lambdas, training_dataset_filename, validation_datas
 
 def main():
     lambdas = np.logspace(-2, 1, 4)
-    cross_validate_gnn(lambdas, 'train_SAT_med_dataset.pkl', 'val_SAT_jade.pkl', '', 'cifar_base_kw', 0.01, 1, 10, 0.01,
-                       2000, 5, '', device='cuda')
+    cross_validate_gnn(lambdas, 'train_SAT_med_dataset.pkl', 'val_SAT_jade.pkl', '', 'cifar_base_kw', 0.01, 10, 0.01,
+                       2000, 2, '', device='cuda')
 
 
 if __name__ == '__main__':
