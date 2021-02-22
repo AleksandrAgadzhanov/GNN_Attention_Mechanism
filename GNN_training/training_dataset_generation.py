@@ -7,7 +7,7 @@ from GNN_training.helper_functions import pgd_attack_property_until_successful, 
 
 
 def generate_training_dataset(properties_filename, model_name, pgd_learning_rate, num_iterations, output_filename,
-                              epsilon_factor=1.0, subset=None, device='cpu', timeout=float('inf')):
+                              log_filename, epsilon_factor=1.0, subset=None, device='cpu', timeout=float('inf')):
     """
     This function generates the training dataset to perform supervised learning for the GNN. It does so by performing
     PGD attacks with random initializations and big number of steps, following Branch & Bound algorithm, until an
@@ -48,12 +48,12 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
         # If a timeout was reached and None was returned above, print this and move on to the next property
         if feature_dict is None:
-            with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
+            with mlogger.stdout_to('GNN_training/' + log_filename):
                 print("Image " + str(i + 1) + " TIMED OUT before an unsuccessful attack was found")
             continue
         # Otherwise, print that an unsuccessful attack was found
         else:
-            with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
+            with mlogger.stdout_to('GNN_training/' + log_filename):
                 print("Image " + str(i + 1) + " was attacked unsuccessfully")
 
         # Now make a call to the function which attacks the property until a successful counter-example is found in
@@ -64,12 +64,12 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
         # If a timeout was reached and None was returned above, print this and move on to the next property
         if ground_truth_attack is None:
-            with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
+            with mlogger.stdout_to('GNN_training/' + log_filename):
                 print("Image " + str(i + 1) + " TIMED OUT before a successful attack was found")
             continue
         # Otherwise, print that a successful attack was found
         else:
-            with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
+            with mlogger.stdout_to('GNN_training/' + log_filename):
                 print("Image " + str(i + 1) + " was attacked successfully")
 
         # Add the ground truth attack to the feature dictionary of the current property. Also add its true and test
@@ -93,9 +93,10 @@ def main():
 
     subset = list(range(args.start_index, args.end_index))
     output_filename = 'train_SAT_jade_dataset_' + str(args.start_index) + '_' + str(args.end_index) + '.pkl'
+    log_filename = 'training_dataset_generation_log_' + str(args.start_index) + '_' + str(args.end_index) + '.txt'
 
-    generate_training_dataset('train_SAT_jade.pkl', 'cifar_base_kw', 0.01, 2000, output_filename, device='cuda',
-                              timeout=60, subset=subset)
+    generate_training_dataset('train_SAT_jade.pkl', 'cifar_base_kw', 0.01, 2000, output_filename, log_filename,
+                              device='cuda', timeout=60, subset=subset)
 
 
 if __name__ == '__main__':
