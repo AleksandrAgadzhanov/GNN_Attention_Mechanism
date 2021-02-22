@@ -77,10 +77,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
                                                            gradient_info_dict)
     relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
-                                                                                             lower_bound,
-                                                                                             upper_bound, image,
-                                                                                             perturbed_image,
-                                                                                             epsilon * epsilon_factor)
+                                                                                             lower_bound, upper_bound,
+                                                                                             perturbed_image)
 
     # Initialise the GNN for the given network (which also initialises all the required auxiliary neural networks)
     gnn = GraphNeuralNetwork(simplified_model, image.size(), input_feature_vectors.size()[0],
@@ -115,17 +113,15 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                                                                gradient_info_dict)
         relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
                                                                                                  lower_bound,
-                                                                                                 upper_bound, image,
-                                                                                                 perturbed_image,
-                                                                                                 epsilon *
-                                                                                                 epsilon_factor)
+                                                                                                 upper_bound,
+                                                                                                 perturbed_image)
 
     # If the limit on the number of epochs was reached and no PGD attack was successful, return False
     return False
 
 
 def main():
-    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1, 0.1, 100, 10, 'learnt_gnn_parameters.pkl',
+    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1, 0.1, 100, 10, '',
                               device='cuda')
 
 

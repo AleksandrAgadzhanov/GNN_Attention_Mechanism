@@ -1,5 +1,6 @@
 import torch
 import mlogger
+import argparse
 from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.helper_functions import match_with_subset, simplify_model
 from GNN_training.helper_functions import pgd_attack_property_until_successful, pgd_attack_property_until_unsuccessful
@@ -85,8 +86,16 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
 
 def main():
-    generate_training_dataset('train_SAT_jade.pkl', 'cifar_base_kw', 0.01, 2000, 'train_SAT_jade_dataset.pkl',
-                              device='cuda', timeout=60)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--start_index', type=int)
+    parser.add_argument('--end_index', type=int)
+    args = parser.parse_args()
+
+    subset = list(range(args.start_index, args.end_index))
+    output_filename = 'train_SAT_jade_dataset_' + str(args.start_index) + '_' + str(args.end_index) + '.pkl'
+
+    generate_training_dataset('train_SAT_jade.pkl', 'cifar_base_kw', 0.01, 2000, output_filename, device='cuda',
+                              timeout=60, subset=subset)
 
 
 if __name__ == '__main__':

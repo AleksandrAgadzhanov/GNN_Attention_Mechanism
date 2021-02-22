@@ -10,12 +10,31 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for new training dataset generation&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;modified cross validation script to use a single lambda value&quot;">
+      <change afterPath="$PROJECT_DIR$/plnn/naive_approximation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plnn/proxlp_solver/by_layer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plnn/proxlp_solver/by_pairs.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plnn/proxlp_solver/solver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plnn/proxlp_solver/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plnn/run_attack.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/features_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/features_generation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/helper_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cifar_exp/learnt_gnn_parameters.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/launch.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/convex_adversarial/dual.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/convex_adversarial/dual_inputs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/convex_adversarial/dual_layers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/convex_adversarial/dual_network.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/convex_adversarial/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plnn/conv_kwinter_kw.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plnn/dual_network_linear_approximation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plnn/mip_solver.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plnn/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/plnn/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plnn/network_linear_approximation.py" beforeDir="false" afterPath="$PROJECT_DIR$/plnn/network_linear_approximation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,10 +75,11 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\JADE" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\plnn\proxp_solver" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\cifar_exp" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.temp">
+  <component name="RunManager" selected="Python.training_dataset_generation">
     <configuration name="attack_properties_with_pgd" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -167,11 +187,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.temp" />
-        <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.training_dataset_generation" />
-        <item itemvalue="Python.cross_validation" />
         <item itemvalue="Python.attack_properties_with_pgd" />
+        <item itemvalue="Python.train_GNN" />
+        <item itemvalue="Python.temp" />
+        <item itemvalue="Python.cross_validation" />
       </list>
     </recent_temporary>
   </component>
@@ -183,13 +203,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00049" summary="&quot;changed the requested time in launch script&quot;">
-      <created>1613487654696</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1613487654696</updated>
     </task>
     <task id="LOCAL-00050" summary="&quot;changed the requested time in launch script&quot;">
       <created>1613487796742</created>
@@ -527,7 +540,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613990565332</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="&quot;modified cross validation script to use a single lambda value&quot;">
+      <created>1613992045735</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1613992045736</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -543,7 +563,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;started implementing the branch and bound for generating the training dataset&quot;" />
     <MESSAGE value="&quot;implemented the first version of the training dataset generation&quot;" />
     <MESSAGE value="&quot;implemented the first version of training the GNN (not working)&quot;" />
     <MESSAGE value="&quot;changed some GNN parameters to optional&quot;" />
@@ -568,7 +587,8 @@
     <MESSAGE value="&quot;commit&quot;" />
     <MESSAGE value="&quot;setup for cross validation experiment&quot;" />
     <MESSAGE value="&quot;setup for new training dataset generation&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for new training dataset generation&quot;" />
+    <MESSAGE value="&quot;modified cross validation script to use a single lambda value&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;modified cross validation script to use a single lambda value&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

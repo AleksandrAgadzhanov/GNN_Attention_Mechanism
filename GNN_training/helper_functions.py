@@ -4,8 +4,7 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 from GNN_framework.helper_functions import perturb_image, gradient_ascent
 
 
-def generate_feature_dict(neural_network, lower_bound, upper_bound, image, perturbed_image, epsilon,
-                          gradient_info_dict):
+def generate_feature_dict(neural_network, lower_bound, upper_bound, perturbed_image, gradient_info_dict, device='cpu'):
     """
     This function generates a complete feature dictionary for one a subdomain of the training dataset. This dictionary
     consists of the input feature vectors, list of feature vectors of the ReLU nodes and output feature vectors.
@@ -17,8 +16,8 @@ def generate_feature_dict(neural_network, lower_bound, upper_bound, image, pertu
     # Use the special function to generate all the hidden layer and output feature vectors
     relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(neural_network,
                                                                                              lower_bound, upper_bound,
-                                                                                             image, perturbed_image,
-                                                                                             epsilon)
+                                                                                             perturbed_image,
+                                                                                             device=device)
 
     # Construct the feature dictionary and return it
     feature_dict = {'input': input_feature_vectors,
@@ -92,7 +91,7 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
     # Start the timer
     start_time = time.time()
 
-    # Now perform PGD attacks on a given property until one of the, is unsuccessful
+    # Now perform PGD attacks on a given property until one of them is unsuccessful or the timeout is reached
     while successful_attack_flag and (time.time() - start_time) < timeout:
         # Initialize a random PGD attack
         lower_bound = torch.add(-epsilon, image)
@@ -107,8 +106,8 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
 
         # If the attack was unsuccessful, generate the feature dictionary for the property
         if not successful_attack_flag:
-            feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, image, perturbed_image,
-                                                 epsilon, gradient_info_dict)
+            feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, perturbed_image,
+                                                 gradient_info_dict, device=device)
             return feature_dict
 
         # TODO
@@ -116,6 +115,7 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
         # epsilon -= 0.01 * original_epsilon
 
     # If the timeout was reached and the property couldn't be attacked unsuccessfully, return None
+    return None
 
 
 def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda, device='cpu'):
