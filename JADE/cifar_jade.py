@@ -31,7 +31,7 @@ import sys
 #         "python adv_exp/scripts/script_training_jade.py --exp_name train_jade_n25e4_adam",
 #         "python adv_exp/scripts/script_training_jade.py --exp_name train_jade_n25e4_rel_decay"]
 
-jobs = ["python GNN_training/cross_validation.py"]
+jobs = ["python GNN_training/training_dataset_generation.py"]
 
 
 def run_command(command, noprint=True):

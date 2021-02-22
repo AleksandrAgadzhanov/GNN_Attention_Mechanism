@@ -449,8 +449,7 @@ class KWConvNetwork(LinearizedNetwork):
         self.model.setObjective(self.gurobi_vars[-1][0], grb.GRB.MINIMIZE)
         self.model.optimize()
 
-        # TODO
-        # self.check_optimization_success()
+        self.check_optimization_success()
 
         glb = self.gurobi_vars[-1][0].X
         lower_bounds[-1] = torch.tensor([glb])

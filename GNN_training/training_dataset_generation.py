@@ -6,7 +6,7 @@ from GNN_training.helper_functions import pgd_attack_property_until_successful, 
 
 
 def generate_training_dataset(properties_filename, model_name, pgd_learning_rate, num_iterations, output_filename,
-                              epsilon_factor=1.0, subset=None, device='cpu'):
+                              epsilon_factor=1.0, subset=None, device='cpu', timeout=float('inf')):
     """
     This function generates the training dataset to perform supervised learning for the GNN. It does so by performing
     PGD attacks with random initializations and big number of steps, following Branch & Bound algorithm, until an
@@ -42,7 +42,8 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         # information about the gradients of the previous unsuccessful PGD attack. Hence, perform the first attack
         # until it is unsuccessful
         feature_dict = pgd_attack_property_until_unsuccessful(simplified_model, images[i], epsilons[i] * epsilon_factor,
-                                                              pgd_learning_rate, num_iterations, device=device)
+                                                              pgd_learning_rate, num_iterations, device=device,
+                                                              timeout=timeout)
         with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
             print("Image " + str(i + 1) + " was attacked unsuccessfully")
 
@@ -50,7 +51,7 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         # order to obtain the ground-truth values of a successful attack
         ground_truth_attack = pgd_attack_property_until_successful(simplified_model, images[i], epsilons[i] *
                                                                    epsilon_factor, pgd_learning_rate, num_iterations,
-                                                                   device=device)
+                                                                   device=device, timeout=timeout)
         with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
             print("Image " + str(i + 1) + " was attacked successfully")
 
@@ -68,7 +69,8 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
 
 def main():
-    pass
+    generate_training_dataset('train_SAT_jade.pkl', 'cifar_base_kw', 0.01, 2000, 'train_SAT_jade_dataset.pkl',
+                              device='cuda', timeout=60)
 
 
 if __name__ == '__main__':

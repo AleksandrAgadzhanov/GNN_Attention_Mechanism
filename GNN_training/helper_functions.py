@@ -1,4 +1,5 @@
 import torch
+import time
 from GNN_framework.features_generation import generate_input_feature_vectors, generate_relu_output_feature_vectors
 from GNN_framework.helper_functions import perturb_image, gradient_ascent
 
@@ -40,7 +41,7 @@ def compute_pixel_scores(feature_dict):
 
 
 def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations,
-                                         device='cpu'):
+                                         device='cpu', timeout=float('inf')):
     """
     This function performs randomly initialized PGD attacks on a given property until a counterexample is found. When
     it happens, the function returns the pixel values which resulted in a successful attack.
@@ -50,8 +51,11 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
     successful_attack_flag = False
     original_epsilon = epsilon
 
+    # Start the timer
+    start_time = time.time()
+
     # Now perform PGD attacks on a given property until a counter-example is found
-    while not successful_attack_flag:
+    while not successful_attack_flag and (time.time() - start_time) < timeout:
         # Initialize a random PGD attack
         lower_bound = torch.add(-epsilon, image)
         upper_bound = torch.add(epsilon, image)
@@ -66,12 +70,13 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
         if successful_attack_flag:
             return perturbed_image
 
-        # Otherwise, increase the epsilon factor by 1%
-        epsilon += 0.01 * original_epsilon
+        # TODO
+        # # Otherwise, increase the epsilon factor by 1%
+        # epsilon += 0.01 * original_epsilon
 
 
 def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations,
-                                           device='cpu'):
+                                           device='cpu', timeout=float('inf')):
     """
     This function performs randomly initialized PGD attacks on a given property until one of them is unsuccessful. When
     it happens, the function returns the feature dictionary associated with the unsuccessful attack.
@@ -81,8 +86,11 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
     successful_attack_flag = True
     original_epsilon = epsilon
 
+    # Start the timer
+    start_time = time.time()
+
     # Now perform PGD attacks on a given property until one of the, is unsuccessful
-    while successful_attack_flag:
+    while successful_attack_flag and (time.time() - start_time) < timeout:
         # Initialize a random PGD attack
         lower_bound = torch.add(-epsilon, image)
         upper_bound = torch.add(epsilon, image)
@@ -100,8 +108,9 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
                                                  epsilon, gradient_info_dict)
             return feature_dict
 
-        # Otherwise, decrease the epsilon factor by 1%
-        epsilon -= 0.01 * original_epsilon
+        # TODO
+        # # Otherwise, decrease the epsilon factor by 1%
+        # epsilon -= 0.01 * original_epsilon
 
 
 def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda, device='cpu'):

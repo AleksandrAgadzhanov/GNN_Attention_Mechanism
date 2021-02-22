@@ -11,7 +11,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment&quot;">
+      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_training/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/helper_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plnn/conv_kwinter_kw.py" beforeDir="false" afterPath="$PROJECT_DIR$/plnn/conv_kwinter_kw.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +60,7 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\cifar_exp" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.train_GNN">
+  <component name="RunManager" selected="Python.temp">
     <configuration name="attack_properties_with_pgd" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -163,9 +168,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.temp" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.training_dataset_generation" />
-        <item itemvalue="Python.temp" />
         <item itemvalue="Python.cross_validation" />
         <item itemvalue="Python.attack_properties_with_pgd" />
       </list>
@@ -179,48 +184,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00042" summary="&quot;changed the requested time in launch script&quot;">
-      <created>1613485465951</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1613485465951</updated>
-    </task>
-    <task id="LOCAL-00043" summary="&quot;changed the requested time in launch script&quot;">
-      <created>1613485757753</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1613485757753</updated>
-    </task>
-    <task id="LOCAL-00044" summary="&quot;changed the requested time in launch script&quot;">
-      <created>1613485981862</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1613485981862</updated>
-    </task>
-    <task id="LOCAL-00045" summary="&quot;changed the requested time in launch script&quot;">
-      <created>1613486306161</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1613486306161</updated>
-    </task>
-    <task id="LOCAL-00046" summary="&quot;changed the requested time in launch script&quot;">
-      <created>1613486562560</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1613486562560</updated>
-    </task>
-    <task id="LOCAL-00047" summary="&quot;changed the requested time in launch script&quot;">
-      <created>1613487170435</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1613487170435</updated>
     </task>
     <task id="LOCAL-00048" summary="&quot;changed the requested time in launch script&quot;">
       <created>1613487435922</created>
@@ -523,7 +486,49 @@
       <option name="project" value="LOCAL" />
       <updated>1613901423785</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="&quot;setup for cross validation experiment&quot;">
+      <created>1613902469375</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1613902469375</updated>
+    </task>
+    <task id="LOCAL-00092" summary="&quot;setup for cross validation experiment&quot;">
+      <created>1613902520702</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1613902520702</updated>
+    </task>
+    <task id="LOCAL-00093" summary="&quot;setup for cross validation experiment&quot;">
+      <created>1613904732383</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1613904732383</updated>
+    </task>
+    <task id="LOCAL-00094" summary="&quot;setup for cross validation experiment&quot;">
+      <created>1613904880717</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1613904880717</updated>
+    </task>
+    <task id="LOCAL-00095" summary="&quot;setup for cross validation experiment&quot;">
+      <created>1613904979238</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1613904979238</updated>
+    </task>
+    <task id="LOCAL-00096" summary="&quot;setup for cross validation experiment&quot;">
+      <created>1613915162212</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1613915162212</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
