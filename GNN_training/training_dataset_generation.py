@@ -96,7 +96,7 @@ def main():
     log_filename = 'training_dataset_generation_log_' + str(args.start_index) + '_' + str(args.end_index) + '.txt'
 
     generate_training_dataset('train_SAT_jade.pkl', 'cifar_base_kw', 0.01, 2000, output_filename, log_filename,
-                              device='cuda', timeout=60, subset=subset)
+                              device='cuda', subset=subset)
 
 
 if __name__ == '__main__':
