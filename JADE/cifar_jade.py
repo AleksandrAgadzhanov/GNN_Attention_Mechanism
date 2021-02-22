@@ -5,10 +5,14 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/training_dataset_generation.py --start_index 0 --end_index 100",
-        "python GNN_training/training_dataset_generation.py --start_index 100 --end_index 200",
-        "python GNN_training/training_dataset_generation.py --start_index 200 --end_index 300",
-        "python GNN_training/training_dataset_generation.py --start_index 300 --end_index 430"]
+jobs = ["python GNN_training/training_dataset_generation.py --start_index 0 --end_index 50",
+        "python GNN_training/training_dataset_generation.py --start_index 50 --end_index 100",
+        "python GNN_training/training_dataset_generation.py --start_index 100 --end_index 150",
+        "python GNN_training/training_dataset_generation.py --start_index 150 --end_index 200",
+        "python GNN_training/training_dataset_generation.py --start_index 200 --end_index 250",
+        "python GNN_training/training_dataset_generation.py --start_index 250 --end_index 300",
+        "python GNN_training/training_dataset_generation.py --start_index 300 --end_index 350",
+        "python GNN_training/training_dataset_generation.py --start_index 350 --end_index 430"]
 
 
 def run_command(command, noprint=True):
