@@ -74,6 +74,9 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
         # # Otherwise, increase the epsilon factor by 1%
         # epsilon += 0.01 * original_epsilon
 
+    # If the timeout was reached and the property couldn't be successfully attacked, return None
+    return None
+
 
 def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd_learning_rate, num_iterations,
                                            device='cpu', timeout=float('inf')):
@@ -111,6 +114,8 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
         # TODO
         # # Otherwise, decrease the epsilon factor by 1%
         # epsilon -= 0.01 * original_epsilon
+
+    # If the timeout was reached and the property couldn't be attacked unsuccessfully, return None
 
 
 def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda, device='cpu'):

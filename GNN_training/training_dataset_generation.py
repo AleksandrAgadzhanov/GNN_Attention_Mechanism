@@ -44,16 +44,32 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         feature_dict = pgd_attack_property_until_unsuccessful(simplified_model, images[i], epsilons[i] * epsilon_factor,
                                                               pgd_learning_rate, num_iterations, device=device,
                                                               timeout=timeout)
-        with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
-            print("Image " + str(i + 1) + " was attacked unsuccessfully")
+
+        # If a timeout was reached and None was returned above, print this and move on to the next property
+        if feature_dict is None:
+            with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
+                print("Image " + str(i + 1) + " TIMED OUT before an unsuccessful attack was found")
+            continue
+        # Otherwise, print that an unsuccessful attack was found
+        else:
+            with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
+                print("Image " + str(i + 1) + " was attacked unsuccessfully")
 
         # Now make a call to the function which attacks the property until a successful counter-example is found in
         # order to obtain the ground-truth values of a successful attack
         ground_truth_attack = pgd_attack_property_until_successful(simplified_model, images[i], epsilons[i] *
                                                                    epsilon_factor, pgd_learning_rate, num_iterations,
                                                                    device=device, timeout=timeout)
-        with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
-            print("Image " + str(i + 1) + " was attacked successfully")
+
+        # If a timeout was reached and None was returned above, print this and move on to the next property
+        if ground_truth_attack is None:
+            with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
+                print("Image " + str(i + 1) + " TIMED OUT before a successful attack was found")
+            continue
+        # Otherwise, print that a successful attack was found
+        else:
+            with mlogger.stdout_to('GNN_training/training_dataset_generation_log.txt'):
+                print("Image " + str(i + 1) + " was attacked successfully")
 
         # Add the ground truth attack to the feature dictionary of the current property. Also add its true and test
         # labels to the dictionary
