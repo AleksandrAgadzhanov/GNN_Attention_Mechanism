@@ -52,7 +52,7 @@ def main():
 
     log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
 
-    cross_validate_gnn(args.loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade_dataset.pkl', 'cifar_base_kw',
+    cross_validate_gnn(args.loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw',
                        0.01, 20, 0.01, 2000, 10, log_filename=log_filename, device='cuda')
 
 
