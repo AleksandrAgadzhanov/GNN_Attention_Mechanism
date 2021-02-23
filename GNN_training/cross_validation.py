@@ -47,7 +47,7 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--loss_lambda', type=int)
+    parser.add_argument('--loss_lambda', type=float)
     args = parser.parse_args()
 
     log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
