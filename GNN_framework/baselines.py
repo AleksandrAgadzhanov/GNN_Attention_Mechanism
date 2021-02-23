@@ -1,10 +1,12 @@
 import torch
+import mlogger
+import argparse
 from exp_utils.model_utils import load_verified_data, match_with_properties
 from helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
 
 
 def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                          subset=None):
+                          log_filename=None, subset=None, device='cpu'):
     """
     This function acts as the 1st baseline to compare the pgd_gnn_attack_property() function against. It simply
     initialises a single PGD attack randomly and performs a specified number of iterations of gradient ascent. For
@@ -39,7 +41,15 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
 
         # Now perform a single PGD attack
         successful_attack_flag, _, _ = gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
-                                                       pgd_learning_rate, num_iterations)
+                                                       pgd_learning_rate, num_iterations, device=device)
+
+        if log_filename is not None:
+            if successful_attack_flag:
+                with mlogger.stdout_to('GNN_framework/' + log_filename):
+                    print('Image ' + str(i + 1) + ' was attacked successfully')
+            else:
+                with mlogger.stdout_to('GNN_framework/' + log_filename):
+                    print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
         # If the attack was unsuccessful, increase the counter
         if successful_attack_flag:
@@ -52,7 +62,7 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
 
 
 def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                                 num_trials, subset=None):
+                                 num_trials, log_filename=None, subset=None, device='cpu'):
     """
     This function acts as the 2nd baseline to compare the pgd_gnn_attack_property() function against. It initialises a
     specified number of trial random PGD attacks and performs a specified number of iterations of gradient ascent. For
@@ -79,6 +89,7 @@ def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor
         # First, simplify the network by adding the final layer and merging the last two layers into one,
         # incorporating the information about the true and test classes into the network
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
+        successful_attack_flag = False
 
         for j in range(num_trials):
             # First, perturb the image randomly within the allowed bounds
@@ -88,14 +99,39 @@ def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor
 
             # Now perform a single PGD attack
             successful_attack_flag, _, _ = gradient_ascent(simplified_model, perturbed_image, lower_bound, upper_bound,
-                                                           pgd_learning_rate, num_iterations)
+                                                           pgd_learning_rate, num_iterations, device=device)
 
             # If the attack was unsuccessful, increase the counter and break from the loop
             if successful_attack_flag:
                 num_successful_attacks += 1
                 break
 
+        if log_filename is not None:
+            if successful_attack_flag:
+                with mlogger.stdout_to('GNN_framework/' + log_filename):
+                    print('Image ' + str(i + 1) + ' was attacked successfully')
+            else:
+                with mlogger.stdout_to('GNN_framework/' + log_filename):
+                    print('Image ' + str(i + 1) + ' was NOT attacked successfully')
+
     # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
     attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
     return attack_success_rate
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--mode', type=str)
+    args = parser.parse_args()
+
+    if args.mode == 'usual':
+        print(pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 11 * 2000, 'temp_log_usual.txt',
+                                    device='cuda'))
+    elif args.mode == 'trials':
+        print(pgd_attack_properties_trials('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 2000, 11,
+                                           'temp_log_trials.txt', device='cuda'))
+
+
+if __name__ == '__main__':
+    main()

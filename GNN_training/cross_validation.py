@@ -6,7 +6,7 @@ from GNN_framework.attack_properties_with_pgd import pgd_gnn_attack_properties
 from GNN_training.train_GNN import generate_gnn_training_parameters
 
 
-def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_property_dataset_filename, model_name,
+def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_properties_filename, model_name,
                        gnn_learning_rate, num_training_epochs, pgd_learning_rate, num_iterations, num_attack_epochs,
                        log_filename=None, epsilon_factor=1.0, device='cpu'):
     """
@@ -23,13 +23,16 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
                                                     num_training_epochs, loss_lambda, parameters_filename, log_filename,
                                                     device=device)
 
+    output_dict = {'epoch losses': epoch_losses}
+    torch.save(output_dict, 'learnt_parameters/cross_validation_dict_' + str(loss_lambda) + '.pkl')
+
     if log_filename is not None:
         with mlogger.stdout_to('GNN_training/' + log_filename):
             print('\nTrained the GNN with lambda = ' + str(loss_lambda))
             print('Time elapsed since the start: ' + str(time.time() - start_time))
 
     # Let the GNN perform PGD attacks on the validation dataset
-    validation_attack_success_rate = pgd_gnn_attack_properties(validation_property_dataset_filename, model_name,
+    validation_attack_success_rate = pgd_gnn_attack_properties(validation_properties_filename, model_name,
                                                                epsilon_factor, pgd_learning_rate, num_iterations,
                                                                num_attack_epochs, parameters_filename, log_filename,
                                                                device=device)
@@ -40,20 +43,21 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
                   str(validation_attack_success_rate) + '%')
             print('Time elapsed since the start: ' + str(time.time() - start_time))
 
-    output_dict = {'lambda': loss_lambda, 'attack success rate': validation_attack_success_rate,
-                   'epoch losses': epoch_losses}
+    output_dict['lambda'] = loss_lambda
+    output_dict['attack success rate'] = validation_attack_success_rate
+
     torch.save(output_dict, 'learnt_parameters/cross_validation_dict_' + str(loss_lambda) + '.pkl')
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--loss_lambda', type=float)
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('--loss_lambda', type=float)
+    # args = parser.parse_args()
+    #
+    # log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
 
-    log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
-
-    cross_validate_gnn(args.loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw',
-                       0.01, 20, 0.01, 2000, 10, log_filename=log_filename, device='cuda')
+    cross_validate_gnn(0.05, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.0001, 10, 0.01, 2000,
+                       10, log_filename=None, device='cuda')
 
 
 if __name__ == '__main__':

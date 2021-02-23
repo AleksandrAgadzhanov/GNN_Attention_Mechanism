@@ -35,7 +35,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_epochs,
-                                                         gnn_parameters_filename, device=device)
+                                                         gnn_parameters_filename, log_filename, device=device)
 
         if log_filename is not None:
             if successful_attack_flag:
@@ -54,9 +54,9 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
     return attack_success_rate
 
-
+# TODO remove log_filename argument and try-except block
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_epochs, gnn_parameters_filename, device='cpu'):
+                            num_epochs, gnn_parameters_filename, log_filename, device='cpu'):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
     model and epsilon value
@@ -112,10 +112,17 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
         # Otherwise, update all the feature vectors using new information
         input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
                                                                gradient_info_dict)
-        relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
-                                                                                                 lower_bound,
-                                                                                                 upper_bound,
-                                                                                                 perturbed_image)
+        # TODO
+        try:
+            relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
+                                                                                                     lower_bound,
+                                                                                                     upper_bound,
+                                                                                                     perturbed_image)
+        except AssertionError:
+            with mlogger.stdout_to('GNN_training/' + log_filename):
+                print(lower_bound)
+                print(upper_bound)
+
 
     # If the limit on the number of epochs was reached and no PGD attack was successful, return False
     return False
