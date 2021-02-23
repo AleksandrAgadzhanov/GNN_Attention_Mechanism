@@ -10,18 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for validation dataset generation&quot;">
-      <change afterPath="$PROJECT_DIR$/cifar_exp/val_SAT_jade_dataset.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/launch.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/launch_init_small.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch_init_small.sh" afterDir="false" />
-    </list>
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -189,13 +178,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00058" summary="&quot;fixed the 3 launch script parts and added setup.py&quot;">
-      <created>1613506903456</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1613506903456</updated>
     </task>
     <task id="LOCAL-00059" summary="&quot;removed the ../ sequences&quot;">
       <created>1613509206104</created>
@@ -533,7 +515,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614027084033</updated>
     </task>
-    <option name="localTasksCounter" value="107" />
+    <task id="LOCAL-00107" summary="&quot;setup for cross validation experiment&quot;">
+      <created>1614072674044</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1614072674045</updated>
+    </task>
+    <option name="localTasksCounter" value="108" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -567,14 +556,14 @@
     <MESSAGE value="&quot;fixed the issue with the host ID of the Gurobi license&quot;" />
     <MESSAGE value="&quot;prepared code for test run of cross validation on JADE&quot;" />
     <MESSAGE value="&quot;commit&quot;" />
-    <MESSAGE value="&quot;setup for cross validation experiment&quot;" />
     <MESSAGE value="&quot;setup for new training dataset generation&quot;" />
     <MESSAGE value="&quot;modified cross validation script to use a single lambda value&quot;" />
     <MESSAGE value="&quot;incorporated new solver function and set up training dataset generation&quot;" />
     <MESSAGE value="&quot;made log filename a variable&quot;" />
     <MESSAGE value="&quot;setup for training dataset generation&quot;" />
     <MESSAGE value="&quot;setup for validation dataset generation&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for validation dataset generation&quot;" />
+    <MESSAGE value="&quot;setup for cross validation experiment&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross validation experiment&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
