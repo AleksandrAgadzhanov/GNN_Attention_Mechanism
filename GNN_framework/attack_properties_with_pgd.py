@@ -7,7 +7,7 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_epochs, gnn_parameters_filename, subset=None, device='cpu'):
+                              num_epochs, gnn_parameters_filename, log_filename=None, subset=None, device='cpu'):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -37,12 +37,13 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
                                                          pgd_learning_rate, num_iterations, num_epochs,
                                                          gnn_parameters_filename, device=device)
 
-        if successful_attack_flag:
-            with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
-                print('Image ' + str(i + 1) + ' was attacked successfully')
-        else:
-            with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
-                print('Image ' + str(i + 1) + ' was NOT attacked successfully')
+        if log_filename is not None:
+            if successful_attack_flag:
+                with mlogger.stdout_to('GNN_training/' + log_filename):
+                    print('Image ' + str(i + 1) + ' was attacked successfully')
+            else:
+                with mlogger.stdout_to('GNN_training/' + log_filename):
+                    print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
         # If the attack was unsuccessful, increase the counter
         if successful_attack_flag:
@@ -121,8 +122,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1, 0.1, 100, 10, '',
-                              device='cuda')
+    pass
 
 
 if __name__ == '__main__':

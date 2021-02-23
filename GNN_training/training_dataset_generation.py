@@ -7,7 +7,7 @@ from GNN_training.helper_functions import pgd_attack_property_until_successful, 
 
 
 def generate_training_dataset(properties_filename, model_name, pgd_learning_rate, num_iterations, output_filename,
-                              log_filename, epsilon_factor=1.0, subset=None, device='cpu', timeout=float('inf')):
+                              log_filename=None, epsilon_factor=1.0, subset=None, device='cpu', timeout=float('inf')):
     """
     This function generates the training dataset to perform supervised learning for the GNN. It does so by performing
     PGD attacks with random initializations and big number of steps, following Branch & Bound algorithm, until an
@@ -48,11 +48,12 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
         # If a timeout was reached and None was returned above, print this and move on to the next property
         if feature_dict is None:
-            with mlogger.stdout_to('GNN_training/' + log_filename):
-                print("Image " + str(i + 1) + " TIMED OUT before an unsuccessful attack was found")
+            if log_filename is not None:
+                with mlogger.stdout_to('GNN_training/' + log_filename):
+                    print("Image " + str(i + 1) + " TIMED OUT before an unsuccessful attack was found")
             continue
         # Otherwise, print that an unsuccessful attack was found
-        else:
+        elif log_filename is not None:
             with mlogger.stdout_to('GNN_training/' + log_filename):
                 print("Image " + str(i + 1) + " was attacked unsuccessfully")
 
@@ -64,11 +65,12 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
         # If a timeout was reached and None was returned above, print this and move on to the next property
         if ground_truth_attack is None:
-            with mlogger.stdout_to('GNN_training/' + log_filename):
-                print("Image " + str(i + 1) + " TIMED OUT before a successful attack was found")
+            if log_filename is not None:
+                with mlogger.stdout_to('GNN_training/' + log_filename):
+                    print("Image " + str(i + 1) + " TIMED OUT before a successful attack was found")
             continue
         # Otherwise, print that a successful attack was found
-        else:
+        elif log_filename is not None:
             with mlogger.stdout_to('GNN_training/' + log_filename):
                 print("Image " + str(i + 1) + " was attacked successfully")
 

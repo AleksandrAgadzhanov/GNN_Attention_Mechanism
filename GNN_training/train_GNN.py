@@ -7,7 +7,7 @@ from GNN_training.helper_functions import compute_loss
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
-                                     output_filename, device='cpu'):
+                                     output_filename, log_filename=None, device='cpu'):
     """
     This function performs training of a Graph Neural Network by utilising supervised learning. After the parameters of
     the Graph Neural Network are learned, they are stored in a desired file.
@@ -84,8 +84,9 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         epoch_losses.append(epoch_loss)
 
         # Print a message to the terminal at the end of each epoch
-        with mlogger.stdout_to('GNN_training/cross_validation_log.txt'):
-            print("Epoch " + str(epoch + 1) + " complete")
+        if log_filename is not None:
+            with mlogger.stdout_to('GNN_training/' + log_filename):
+                print("Epoch " + str(epoch + 1) + " complete")
 
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
@@ -98,13 +99,13 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                            gnn.bounds_update_nn]
     for gnn_neural_network in gnn_neural_networks:
         gnn_state_dicts_list.append(gnn_neural_network.state_dict())
-    torch.save(gnn_state_dicts_list, 'cifar_exp/' + output_filename)
+    torch.save(gnn_state_dicts_list, 'learnt_parameters/' + output_filename)
 
     return epoch_losses
 
 
 def main():
-    generate_gnn_training_parameters('train_SAT_med_dataset.pkl', 'cifar_base_kw', 0.01, 10, 0, '', device='cuda')
+    pass
 
 
 if __name__ == '__main__':
