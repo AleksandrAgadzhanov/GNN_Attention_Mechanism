@@ -6,7 +6,7 @@ from GNN_framework.attack_properties_with_pgd import pgd_gnn_attack_properties
 from GNN_training.train_GNN import generate_gnn_training_parameters
 
 
-def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_dataset_filename, model_name,
+def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_property_dataset_filename, model_name,
                        gnn_learning_rate, num_training_epochs, pgd_learning_rate, num_iterations, num_attack_epochs,
                        log_filename=None, epsilon_factor=1.0, device='cpu'):
     """
@@ -29,7 +29,7 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_datase
             print('Time elapsed since the start: ' + str(time.time() - start_time))
 
     # Let the GNN perform PGD attacks on the validation dataset
-    validation_attack_success_rate = pgd_gnn_attack_properties(validation_dataset_filename, model_name,
+    validation_attack_success_rate = pgd_gnn_attack_properties(validation_property_dataset_filename, model_name,
                                                                epsilon_factor, pgd_learning_rate, num_iterations,
                                                                num_attack_epochs, parameters_filename, log_filename,
                                                                device=device)
