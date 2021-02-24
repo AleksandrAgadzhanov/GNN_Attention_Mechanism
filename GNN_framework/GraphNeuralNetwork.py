@@ -292,7 +292,7 @@ class GraphNeuralNetwork:
         embedding_vectors = embedding_vectors.reshape(original_size)
         self.input_embeddings = embedding_vectors.clone()
 
-    def compute_updated_bounds(self, old_lower_bound, old_upper_bound):
+    def compute_updated_bounds(self, old_lower_bound, old_upper_bound, force_numerical_stability=True):
         """
         This function computes the updated lower and upper bounds of the input domain by passing the input embedding
         vectors through the appropriate neural network and then constraining its output in a meaningful way.
@@ -326,6 +326,23 @@ class GraphNeuralNetwork:
 
         # 3. Finally, if the new upper bound is bigger than the old upper bound, set it to the old upper bound
         new_upper_bound = torch.min(new_upper_bound, old_upper_bound)
+
+        # If numerical stability is required (e.g. during cross-validation)
+        if force_numerical_stability:
+            # To avoid numerical instability issues when computing all the intermediate layer bounds later, if some
+            # pixel values of the new lower and upper bounds are the same and equal to the old lower bound ones,
+            # increase their values by some small amount
+            new_upper_bound = torch.where(torch.eq(new_lower_bound, new_upper_bound) &
+                                          (torch.eq(new_upper_bound, old_lower_bound)),
+                                          torch.add(old_lower_bound, 0.01 * torch.abs(old_lower_bound)),
+                                          new_upper_bound)
+
+            # Similar to above, if some pixel values of the new lower and upper bounds are the same and equal to the old
+            # upper bound ones, decrease their values by some small amount
+            new_lower_bound = torch.where(torch.eq(new_lower_bound, new_upper_bound) &
+                                          (torch.eq(new_upper_bound, old_upper_bound)),
+                                          torch.add(old_upper_bound, -0.01 * torch.abs(old_upper_bound)),
+                                          new_lower_bound)
 
         return new_lower_bound, new_upper_bound
 

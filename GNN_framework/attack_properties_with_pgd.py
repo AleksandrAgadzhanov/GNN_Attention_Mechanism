@@ -44,6 +44,11 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
             else:
                 with mlogger.stdout_to('GNN_training/' + log_filename):
                     print('Image ' + str(i + 1) + ' was NOT attacked successfully')
+        else:
+            if successful_attack_flag:
+                print('Image ' + str(i + 1) + ' was attacked successfully')
+            else:
+                print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
         # If the attack was unsuccessful, increase the counter
         if successful_attack_flag:
@@ -123,7 +128,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pass
+    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 10, 'gnn_parameters_0.278.pkl',
+                              device='cuda')
 
 
 if __name__ == '__main__':

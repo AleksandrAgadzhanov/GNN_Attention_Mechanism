@@ -29,6 +29,9 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
         with mlogger.stdout_to('GNN_training/' + log_filename):
             print('Epoch losses progression:\n')
             print(epoch_losses)
+    else:
+        print('Epoch losses progression:\n')
+        print(epoch_losses)
 
     output_dict = {'epoch losses': epoch_losses}
     torch.save(output_dict, output_dictionary_filepath)
@@ -37,6 +40,9 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
         with mlogger.stdout_to('GNN_training/' + log_filename):
             print('\nTrained the GNN with lambda = ' + str(loss_lambda))
             print('Time elapsed since the start: ' + str(time.time() - start_time))
+    else:
+        print('\nTrained the GNN with lambda = ' + str(loss_lambda))
+        print('Time elapsed since the start: ' + str(time.time() - start_time))
 
     # Let the GNN perform PGD attacks on the validation dataset
     validation_attack_success_rate = pgd_gnn_attack_properties(validation_properties_filename, model_name,
@@ -49,6 +55,10 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
             print('Performed PGD attacks on the validation dataset. Attack success rate = ' +
                   str(validation_attack_success_rate) + '%')
             print('Time elapsed since the start: ' + str(time.time() - start_time))
+    else:
+        print('Performed PGD attacks on the validation dataset. Attack success rate = ' +
+              str(validation_attack_success_rate) + '%')
+        print('Time elapsed since the start: ' + str(time.time() - start_time))
 
     output_dict['lambda'] = loss_lambda
     output_dict['attack success rate'] = validation_attack_success_rate

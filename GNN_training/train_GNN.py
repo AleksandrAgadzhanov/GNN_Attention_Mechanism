@@ -87,10 +87,8 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         if log_filename is not None:
             with mlogger.stdout_to('GNN_training/' + log_filename):
                 print("Epoch " + str(epoch + 1) + " complete")
-
-    from matplotlib import pyplot as plt
-    plt.plot(range(len(epoch_losses)), epoch_losses)
-    plt.show()
+        else:
+            print("Epoch " + str(epoch + 1) + " complete")
 
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
@@ -109,7 +107,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    pass
+    generate_gnn_training_parameters('val_SAT_jade_dataset.pkl', 'cifar_base_kw', 0.001, 10, 0.278, '', device='cuda')
 
 
 if __name__ == '__main__':
