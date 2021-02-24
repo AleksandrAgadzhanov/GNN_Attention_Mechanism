@@ -25,6 +25,11 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
                                                     num_training_epochs, loss_lambda, parameters_filename, log_filename,
                                                     device=device)
 
+    if log_filename is not None:
+        with mlogger.stdout_to('GNN_training/' + log_filename):
+            print('Epoch losses progression:\n')
+            print(epoch_losses)
+
     output_dict = {'epoch losses': epoch_losses}
     torch.save(output_dict, output_dictionary_filepath)
 
