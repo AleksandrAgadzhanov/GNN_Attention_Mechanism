@@ -15,8 +15,10 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
     # Start the timer
     start_time = time.time()
 
-    # Initialize the filename in which the parameters for the given value of lambda will be stored
+    # Initialize the filename in which the parameters for the given value of lambda and will be stored. Also initialize
+    # the filepath where the output dictionary for the given value of lambda will be stored
     parameters_filename = 'gnn_parameters_' + str(loss_lambda) + '.pkl'
+    output_dictionary_filepath = 'learnt_parameters/cross_validation_dict_' + str(loss_lambda) + '.pkl'
 
     # Train the GNN using the current value of lambda and output the learnt parameters in the temporary file
     epoch_losses = generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate,
@@ -24,7 +26,7 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
                                                     device=device)
 
     output_dict = {'epoch losses': epoch_losses}
-    torch.save(output_dict, 'learnt_parameters/cross_validation_dict_' + str(loss_lambda) + '.pkl')
+    torch.save(output_dict, output_dictionary_filepath)
 
     if log_filename is not None:
         with mlogger.stdout_to('GNN_training/' + log_filename):
@@ -46,18 +48,18 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
     output_dict['lambda'] = loss_lambda
     output_dict['attack success rate'] = validation_attack_success_rate
 
-    torch.save(output_dict, 'learnt_parameters/cross_validation_dict_' + str(loss_lambda) + '.pkl')
+    torch.save(output_dict, output_dictionary_filepath)
 
 
 def main():
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--loss_lambda', type=float)
-    # args = parser.parse_args()
-    #
-    # log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--loss_lambda', type=float)
+    args = parser.parse_args()
 
-    cross_validate_gnn(0.05, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.0001, 10, 0.01, 2000,
-                       10, log_filename=None, device='cuda')
+    log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
+
+    cross_validate_gnn(args.loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.001, 25,
+                       0.01, 2000, 10, log_filename=log_filename, device='cuda')
 
 
 if __name__ == '__main__':

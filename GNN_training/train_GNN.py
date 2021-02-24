@@ -88,6 +88,10 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             with mlogger.stdout_to('GNN_training/' + log_filename):
                 print("Epoch " + str(epoch + 1) + " complete")
 
+    from matplotlib import pyplot as plt
+    plt.plot(range(len(epoch_losses)), epoch_losses)
+    plt.show()
+
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
     gnn_state_dicts_list = []

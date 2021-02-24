@@ -48,16 +48,17 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
     # Initialize the variable which will be indicating whether the property was successfully attacked and also the
     # variable storing the original epsilon in case it has to be increased by a constant amount
     successful_attack_flag = False
-    original_epsilon = epsilon
 
     # Start the timer
     start_time = time.time()
 
+    # Initialize the bounds for the PGD attacks
+    lower_bound = torch.add(-epsilon, image)
+    upper_bound = torch.add(epsilon, image)
+
     # Now perform PGD attacks on a given property until a counter-example is found
     while not successful_attack_flag and (time.time() - start_time) < timeout:
         # Initialize a random PGD attack
-        lower_bound = torch.add(-epsilon, image)
-        upper_bound = torch.add(epsilon, image)
         perturbed_image = perturb_image(lower_bound, upper_bound)
 
         # Perform gradient ascent on the PGD attack initialized above
@@ -68,10 +69,6 @@ def pgd_attack_property_until_successful(simplified_model, image, epsilon, pgd_l
         # If the attack was successful, return the last values of the perturbed pixels
         if successful_attack_flag:
             return perturbed_image
-
-        # TODO
-        # # Otherwise, increase the epsilon factor by 1%
-        # epsilon += 0.01 * original_epsilon
 
     # If the timeout was reached and the property couldn't be successfully attacked, return None
     return None
@@ -86,16 +83,17 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
     # Initialize the variable which will be indicating whether the property was successfully attacked and also the
     # variable storing the original epsilon in case it has to be decreased by a constant amount
     successful_attack_flag = True
-    original_epsilon = epsilon
 
     # Start the timer
     start_time = time.time()
 
+    # Initialize the lower and upper bounds of the PGD attacks
+    lower_bound = torch.add(-epsilon, image)
+    upper_bound = torch.add(epsilon, image)
+
     # Now perform PGD attacks on a given property until one of them is unsuccessful or the timeout is reached
     while successful_attack_flag and (time.time() - start_time) < timeout:
         # Initialize a random PGD attack
-        lower_bound = torch.add(-epsilon, image)
-        upper_bound = torch.add(epsilon, image)
         perturbed_image = perturb_image(lower_bound, upper_bound)
 
         # Perform gradient ascent on the PGD attack initialized above
@@ -109,10 +107,6 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
             feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, perturbed_image,
                                                  gradient_info_dict, device=device)
             return feature_dict
-
-        # TODO
-        # # Otherwise, decrease the epsilon factor by 1%
-        # epsilon -= 0.01 * original_epsilon
 
     # If the timeout was reached and the property couldn't be attacked unsuccessfully, return None
     return None
