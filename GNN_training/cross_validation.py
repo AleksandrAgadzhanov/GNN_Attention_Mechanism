@@ -8,7 +8,7 @@ from GNN_training.train_GNN import generate_gnn_training_parameters
 
 def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_properties_filename, model_name,
                        gnn_learning_rate, num_training_epochs, pgd_learning_rate, num_iterations, num_attack_epochs,
-                       num_restarts, log_filename=None, epsilon_factor=1.0, device='cpu'):
+                       num_trials, num_restarts, log_filename=None, epsilon_factor=1.0, device='cpu'):
     """
     This function performs the cross-validation procedure using a single value of lambda.
     """
@@ -45,8 +45,8 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
     # Let the GNN perform PGD attacks on the validation dataset
     validation_attack_success_rate = pgd_gnn_attack_properties(validation_properties_filename, model_name,
                                                                epsilon_factor, pgd_learning_rate, num_iterations,
-                                                               num_attack_epochs, num_restarts, parameters_filename,
-                                                               log_filename, device=device)
+                                                               num_attack_epochs, num_trials, num_restarts,
+                                                               parameters_filename, log_filename, device=device)
 
     if log_filename is not None:
         with mlogger.stdout_to('GNN_training/' + log_filename):
@@ -72,7 +72,7 @@ def main():
     log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
 
     cross_validate_gnn(args.loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.001, 25,
-                       0.1, 100, 1, 10, log_filename=log_filename, device='cuda')
+                       0.1, 100, 3, 10, 3, log_filename=log_filename, device='cuda')
 
 
 if __name__ == '__main__':

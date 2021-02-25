@@ -7,8 +7,8 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_attack_epochs, num_restarts, gnn_parameters_filename, log_filename=None, subset=None,
-                              device='cpu'):
+                              num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, log_filename=None,
+                              subset=None, device='cpu'):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -36,8 +36,8 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_attack_epochs,
-                                                         num_restarts, gnn_parameters_filename, log_filename,
-                                                         device=device)
+                                                         num_trials, num_restarts, gnn_parameters_filename,
+                                                         log_filename, device=device)
 
         if log_filename is not None:
             if successful_attack_flag:
@@ -63,77 +63,94 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_attack_epochs, num_restarts, gnn_parameters_filename, log_filename=None, device='cpu'):
+                            num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, log_filename=None,
+                            device='cpu'):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
-    model and epsilon value
+    model and epsilon value by utilising the GNN framework. The first PGD attack is important so a number of restarts is
+    specified by one of the arguments. During each restart, the GNN performs a specified number of bound updates and
+    after each such update a specified number of trial PGD attacks are performed on the new domain.
     """
-    # First, perturb the image randomly within the allowed bounds and perform a PGD attack
-    lower_bound = torch.add(-epsilon * epsilon_factor, image)
-    upper_bound = torch.add(epsilon * epsilon_factor, image)
-    perturbed_image = perturb_image(lower_bound, upper_bound)
-    successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image,
-                                                                                  lower_bound, upper_bound,
-                                                                                  pgd_learning_rate, num_iterations,
-                                                                                  device=device)
+    # For a specified number of restarts
+    for restart in range(num_restarts):
 
-    # If the attack was successful, the procedure can be terminated and True can be returned
-    if successful_attack_flag:
-        return True
+        # First, perturb the image randomly within the allowed bounds and perform a PGD attack
+        lower_bound = torch.add(-epsilon * epsilon_factor, image)
+        upper_bound = torch.add(epsilon * epsilon_factor, image)
+        perturbed_image = perturb_image(lower_bound, upper_bound)
+        successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image,
+                                                                                      lower_bound, upper_bound,
+                                                                                      pgd_learning_rate, num_iterations,
+                                                                                      device=device)
 
-    # Otherwise, the GNN framework approach must be followed. First, generate the feature vectors for all layers
-    input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
-                                                           gradient_info_dict)
-    relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
-                                                                                             lower_bound, upper_bound,
-                                                                                             perturbed_image)
+        # If the attack was successful, the procedure can be terminated and True can be returned
+        if successful_attack_flag:
+            if log_filename is not None:
+                with mlogger.stdout_to('GNN_training/' + log_filename):
+                    print("Initial PGD attack succeeded")
+            else:
+                print("Initial PGD attack succeeded")
+            return True
 
-    # Initialise the GNN for the given network (which also initialises all the required auxiliary neural networks)
-    gnn = GraphNeuralNetwork(simplified_model, image.size(), input_feature_vectors.size()[0],
-                             relu_feature_vectors_list[0].size()[0], output_feature_vectors.size()[0])
-
-    # Load the learnt GNN parameters into the GNN
-    gnn.load_parameters(gnn_parameters_filename)
-
-    # Follow the GNN framework approach for a specified number of epochs
-    for attack_epoch in range(num_attack_epochs):
-        # Perform a series of forward and backward updates of all the embedding vectors within the GNN
-        gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors_list, output_feature_vectors)
-
-        # Update the domain bounds for each pixel based on the pixel scores above
-        lower_bound, upper_bound = gnn.compute_updated_bounds(lower_bound, upper_bound)
-
-        # For a specified number of random restarts, perform randomly initialised PGD attacks on the new subdomain
-        for restart in range(num_restarts):
-
-            # Perturb each pixel within the updated domain bounds
-            perturbed_image = perturb_image(lower_bound, upper_bound)
-
-            # Perform a PGD attack given the new bounds and perturbation
-            successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model,
-                                                                                          perturbed_image, lower_bound,
-                                                                                          upper_bound,
-                                                                                          pgd_learning_rate,
-                                                                                          num_iterations, device=device)
-
-            # If the attack was successful, the procedure can be terminated and True can be returned, otherwise continue
-            if successful_attack_flag:
-                if log_filename is not None:
-                    with mlogger.stdout_to('GNN_training/' + log_filename):
-                        print("PGD attack succeeded during attack epoch " + str(attack_epoch + 1) + " after " +
-                              str(restart) + " restarts")
-                return True
-
-        # Otherwise, update all the feature vectors using new information
+        # Otherwise, the GNN framework approach must be followed. First, generate the feature vectors for all layers
         input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
                                                                gradient_info_dict)
-
         relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
                                                                                                  lower_bound,
                                                                                                  upper_bound,
                                                                                                  perturbed_image)
 
-    # If the limit on the number of epochs was reached and no PGD attack was successful, return False
+        # Initialise the GNN for the given network (which also initialises all the required auxiliary neural networks)
+        gnn = GraphNeuralNetwork(simplified_model, image.size(), input_feature_vectors.size()[0],
+                                 relu_feature_vectors_list[0].size()[0], output_feature_vectors.size()[0])
+
+        # Load the learnt GNN parameters into the GNN
+        gnn.load_parameters(gnn_parameters_filename)
+
+        # Follow the GNN framework approach for a specified number of epochs
+        for attack_epoch in range(num_attack_epochs):
+            # Perform a series of forward and backward updates of all the embedding vectors within the GNN
+            gnn.update_embedding_vectors(input_feature_vectors, relu_feature_vectors_list, output_feature_vectors)
+
+            # Update the domain bounds for each pixel based on the pixel scores above
+            lower_bound, upper_bound = gnn.compute_updated_bounds(lower_bound, upper_bound)
+
+            # For a specified number of random restarts, perform randomly initialised PGD attacks on the new subdomain
+            for trial in range(num_trials):
+
+                # Perturb each pixel within the updated domain bounds
+                perturbed_image = perturb_image(lower_bound, upper_bound)
+
+                # Perform a PGD attack given the new bounds and perturbation
+                successful_attack_flag, perturbed_image, gradient_info_dict = gradient_ascent(simplified_model,
+                                                                                              perturbed_image,
+                                                                                              lower_bound, upper_bound,
+                                                                                              pgd_learning_rate,
+                                                                                              num_iterations,
+                                                                                              device=device)
+
+                # If the attack was successful, the procedure can be terminated and True can be returned, otherwise
+                # continue
+                if successful_attack_flag:
+                    if log_filename is not None:
+                        with mlogger.stdout_to('GNN_training/' + log_filename):
+                            print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
+                                  str(attack_epoch + 1) + "; Restart " + str(restart + 1) + ")")
+                    else:
+                        print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
+                              str(attack_epoch + 1) + "; Restart " + str(restart + 1) + ")")
+                    return True
+
+            # Otherwise, update all the feature vectors using new information
+            input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
+                                                                   gradient_info_dict)
+
+            relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
+                                                                                                     lower_bound,
+                                                                                                     upper_bound,
+                                                                                                     perturbed_image)
+
+    # If the limit on the number of restarts was reached and no PGD attack was successful, return False
     return False
 
 
