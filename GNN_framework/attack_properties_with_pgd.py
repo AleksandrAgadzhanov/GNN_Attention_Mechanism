@@ -135,7 +135,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 2000, 10, 'gnn_parameters_0.0.pkl',
+    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 2000, 10, 'gnn_parameters_0.1.pkl',
                               log_filename='attack_log.txt', device='cuda')
 
 
