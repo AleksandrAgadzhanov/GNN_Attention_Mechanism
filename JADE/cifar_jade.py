@@ -5,16 +5,19 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/cross_validation.py --loss_lambda 0.1",
-        "python GNN_training/cross_validation.py --loss_lambda 0.167",
-        "python GNN_training/cross_validation.py --loss_lambda 0.278",
-        "python GNN_training/cross_validation.py --loss_lambda 0.464",
-        "python GNN_training/cross_validation.py --loss_lambda 0.774",
-        "python GNN_training/cross_validation.py --loss_lambda 1.29",
-        "python GNN_training/cross_validation.py --loss_lambda 2.15",
-        "python GNN_training/cross_validation.py --loss_lambda 3.59",
-        "python GNN_training/cross_validation.py --loss_lambda 5.99",
-        "python GNN_training/cross_validation.py --loss_lambda 10.0"]
+# jobs = ["python GNN_training/cross_validation.py --loss_lambda 0.1",
+#         "python GNN_training/cross_validation.py --loss_lambda 0.167",
+#         "python GNN_training/cross_validation.py --loss_lambda 0.278",
+#         "python GNN_training/cross_validation.py --loss_lambda 0.464",
+#         "python GNN_training/cross_validation.py --loss_lambda 0.774",
+#         "python GNN_training/cross_validation.py --loss_lambda 1.29",
+#         "python GNN_training/cross_validation.py --loss_lambda 2.15",
+#         "python GNN_training/cross_validation.py --loss_lambda 3.59",
+#         "python GNN_training/cross_validation.py --loss_lambda 5.99",
+#         "python GNN_training/cross_validation.py --loss_lambda 10.0"]
+
+
+jobs = ["python GNN_framework/attack_properties_with_pgd.py"]
 
 
 def run_command(command):

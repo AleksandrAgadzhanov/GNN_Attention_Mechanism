@@ -10,14 +10,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;presumably fixed numerical instability issues when computing intermediate bounds&quot;">
+      <change afterPath="$PROJECT_DIR$/learnt_parameters/gnn_parameters_0.1.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plnn/proxlp_solver/solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/plnn/proxlp_solver/solver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,13 +183,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00066" summary="&quot;fixed the issue with the host ID of the Gurobi license&quot;">
-      <created>1613596792633</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1613596792633</updated>
     </task>
     <task id="LOCAL-00067" summary="&quot;fixed the issue with the host ID of the Gurobi license&quot;">
       <created>1613602602467</created>
@@ -530,7 +520,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614171179790</updated>
     </task>
-    <option name="localTasksCounter" value="115" />
+    <task id="LOCAL-00115" summary="&quot;presumably fixed numerical instability issues when computing intermediate bounds&quot;">
+      <created>1614197800836</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1614197800836</updated>
+    </task>
+    <option name="localTasksCounter" value="116" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -546,7 +543,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;fixed errors due to initialization of unneeded gradient computation graphs&quot;" />
     <MESSAGE value="&quot;fixed the inplace operations bug and optimized the speed by removing for loops&quot;" />
     <MESSAGE value="&quot;changed the training dataset generation for supervised learning purposes&quot;" />
     <MESSAGE value="&quot;finished implementation of GNN training&quot;" />
@@ -571,7 +567,8 @@
     <MESSAGE value="&quot;setup for training dataset generation&quot;" />
     <MESSAGE value="&quot;setup for validation dataset generation&quot;" />
     <MESSAGE value="&quot;setup for cross validation experiment&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross validation experiment&quot;" />
+    <MESSAGE value="&quot;presumably fixed numerical instability issues when computing intermediate bounds&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;presumably fixed numerical instability issues when computing intermediate bounds&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

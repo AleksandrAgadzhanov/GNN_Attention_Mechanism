@@ -35,7 +35,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_epochs,
-                                                         gnn_parameters_filename, device=device)
+                                                         gnn_parameters_filename, log_filename, device=device)
 
         if log_filename is not None:
             if successful_attack_flag:
@@ -60,8 +60,9 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
     return attack_success_rate
 
 
+# TODO remove log_filename argument
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_epochs, gnn_parameters_filename, device='cpu'):
+                            num_epochs, gnn_parameters_filename, log_filename, device='cpu'):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
     model and epsilon value
@@ -77,6 +78,9 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
     # If the attack was successful, the procedure can be terminated and True can be returned
     if successful_attack_flag:
+        # TODO
+        with mlogger.stdout_to('GNN_training/' + log_filename):
+            print("INITIAL attack was successful")
         return True
 
     # Otherwise, the GNN framework approach must be followed. First, generate the feature vectors for all layers
@@ -112,6 +116,9 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
         # If the attack was successful, the procedure can be terminated and True can be returned, otherwise continue
         if successful_attack_flag:
+            # TODO
+            with mlogger.stdout_to('GNN_training/' + log_filename):
+                print("The GNN attack was successful at epoch " + str(i + 1))
             return True
 
         # Otherwise, update all the feature vectors using new information
@@ -128,8 +135,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 10, 'gnn_parameters_0.278.pkl',
-                              device='cuda')
+    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 2000, 10, 'gnn_parameters_0.0.pkl',
+                              log_filename='attack_log.txt', device='cuda')
 
 
 if __name__ == '__main__':
