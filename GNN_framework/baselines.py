@@ -61,8 +61,8 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
     return attack_success_rate
 
 
-def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                                 num_trials, log_filename=None, subset=None, device='cpu'):
+def pgd_attack_properties_restarts(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
+                                   num_restarts, log_filename=None, subset=None, device='cpu'):
     """
     This function acts as the 2nd baseline to compare the pgd_gnn_attack_property() function against. It initialises a
     specified number of trial random PGD attacks and performs a specified number of iterations of gradient ascent. For
@@ -91,7 +91,7 @@ def pgd_attack_properties_trials(properties_filename, model_name, epsilon_factor
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
         successful_attack_flag = False
 
-        for j in range(num_trials):
+        for restart in range(num_restarts):
             # First, perturb the image randomly within the allowed bounds
             lower_bound = torch.add(-epsilons[i] * epsilon_factor, images[i])
             upper_bound = torch.add(epsilons[i] * epsilon_factor, images[i])
@@ -128,9 +128,9 @@ def main():
     if args.mode == 'usual':
         print(pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 11 * 2000, 'temp_log_usual.txt',
                                     device='cuda'))
-    elif args.mode == 'trials':
-        print(pgd_attack_properties_trials('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 2000, 11,
-                                           'temp_log_trials.txt', device='cuda'))
+    elif args.mode == 'restarts':
+        print(pgd_attack_properties_restarts('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 2000, 11,
+                                             'temp_log_restarts.txt', device='cuda'))
 
 
 if __name__ == '__main__':

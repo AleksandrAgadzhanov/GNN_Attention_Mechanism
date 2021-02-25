@@ -8,7 +8,7 @@ from GNN_training.train_GNN import generate_gnn_training_parameters
 
 def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_properties_filename, model_name,
                        gnn_learning_rate, num_training_epochs, pgd_learning_rate, num_iterations, num_attack_epochs,
-                       log_filename=None, epsilon_factor=1.0, device='cpu'):
+                       num_restarts, log_filename=None, epsilon_factor=1.0, device='cpu'):
     """
     This function performs the cross-validation procedure using a single value of lambda.
     """
@@ -25,30 +25,28 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
                                                     num_training_epochs, loss_lambda, parameters_filename, log_filename,
                                                     device=device)
 
-    if log_filename is not None:
-        with mlogger.stdout_to('GNN_training/' + log_filename):
-            print('Epoch losses progression:\n')
-            print(epoch_losses)
-    else:
-        print('Epoch losses progression:\n')
-        print(epoch_losses)
-
     output_dict = {'epoch losses': epoch_losses}
     torch.save(output_dict, output_dictionary_filepath)
 
     if log_filename is not None:
         with mlogger.stdout_to('GNN_training/' + log_filename):
-            print('\nTrained the GNN with lambda = ' + str(loss_lambda))
+            print('\nTrained GNN with lambda = ' + str(loss_lambda))
             print('Time elapsed since the start: ' + str(time.time() - start_time))
+            print('Epoch losses progression:\n')
+            print(epoch_losses)
+            print('\n')
     else:
-        print('\nTrained the GNN with lambda = ' + str(loss_lambda))
+        print('\nTrained GNN with lambda = ' + str(loss_lambda))
         print('Time elapsed since the start: ' + str(time.time() - start_time))
+        print('Epoch losses progression:\n')
+        print(epoch_losses)
+        print('\n')
 
     # Let the GNN perform PGD attacks on the validation dataset
     validation_attack_success_rate = pgd_gnn_attack_properties(validation_properties_filename, model_name,
                                                                epsilon_factor, pgd_learning_rate, num_iterations,
-                                                               num_attack_epochs, parameters_filename, log_filename,
-                                                               device=device)
+                                                               num_attack_epochs, num_restarts, parameters_filename,
+                                                               log_filename, device=device)
 
     if log_filename is not None:
         with mlogger.stdout_to('GNN_training/' + log_filename):
@@ -74,7 +72,7 @@ def main():
     log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
 
     cross_validate_gnn(args.loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.001, 25,
-                       0.01, 2000, 10, log_filename=log_filename, device='cuda')
+                       0.1, 100, 1, 10, log_filename=log_filename, device='cuda')
 
 
 if __name__ == '__main__':

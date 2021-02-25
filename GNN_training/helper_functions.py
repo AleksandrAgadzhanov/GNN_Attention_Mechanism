@@ -112,7 +112,8 @@ def pgd_attack_property_until_unsuccessful(simplified_model, image, epsilon, pgd
     return None
 
 
-def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda, device='cpu'):
+def compute_loss(old_lower_bound, old_upper_bound, new_lower_bound, new_upper_bound, ground_truth_attack, loss_lambda,
+                 device='cpu'):
     """
     This function computes the loss characterised by the bounds output from the GNN and the ground truth PGD attack
     pixel values from the training dataset. It does so by using a convex approximation to the 0-1 loss associated with
@@ -133,11 +134,14 @@ def compute_loss(new_lower_bound, new_upper_bound, ground_truth_attack, loss_lam
     num_pixels = new_lower_bound.view(-1).size()[0]
     loss_term_1 = torch.sum(loss_term_1_pixels) / num_pixels
 
-    # Evaluate the second loss term for all pixels. This is simply the average of the sum of differences of the upper
-    # and lower bounds for each pixel.
-    loss_term_2 = torch.sum(torch.add(new_upper_bound, -new_lower_bound)) / num_pixels
+    # Evaluate the second loss term for all pixels. This is simply the sum of differences of the new upper and lower
+    # bounds normalized by their respective differences in the old upper and lower bounds divided by the total number of
+    # pixels.
+    normalised_bound_differences = torch.div(torch.add(new_upper_bound, -new_lower_bound),
+                                             torch.add(old_upper_bound, -old_lower_bound))
+    loss_term_2 = torch.sum(normalised_bound_differences) / num_pixels
 
     # Return the overall loss which is simply the sum of the two terms computed above
     loss = loss_term_1 + loss_lambda * loss_term_2
 
-    return loss
+    return loss, loss_term_1, loss_term_2

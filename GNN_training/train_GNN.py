@@ -39,13 +39,14 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     # Initialise the optimizer on the parameters of the GNN
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
 
-    # Initialize the list to store the epoch losses in
-    epoch_losses = []
+    # Initialize the dictionary to store both epoch loss terms progression in
+    epoch_losses = {'loss term 1': [], 'loss term 2': []}
 
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
-        # Initialize the variable which will accumulate all the losses within this epoch
-        epoch_loss = 0
+        # Initialize the variable which will accumulate the losses related to both loss terms over each epoch
+        epoch_loss_term_1 = 0
+        epoch_loss_term_2 = 0
 
         # For each property appearing in the training dataset
         for property_index in range(len(list_of_feature_dicts)):
@@ -69,9 +70,11 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                 new_upper_bound = new_upper_bound.cuda()
 
             # Compute the loss by making a call to the special function and add it to the accumulator variable
-            loss = compute_loss(new_lower_bound, new_upper_bound, feature_dict['successful attack'], loss_lambda,
-                                device=device)
-            epoch_loss += loss.item()
+            loss, loss_term_1, loss_term_2 = compute_loss(old_lower_bound, old_upper_bound, new_lower_bound,
+                                                          new_upper_bound, feature_dict['successful attack'],
+                                                          loss_lambda, device=device)
+            epoch_loss_term_1 += loss_term_1.item()
+            epoch_loss_term_2 += loss_term_2.item()
             if device == 'cuda' and torch.cuda.is_available():
                 loss = loss.cuda()
 
@@ -81,7 +84,8 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             optimizer.step()
 
         # Append the accumulated losses during the current epoch to the list
-        epoch_losses.append(epoch_loss)
+        epoch_losses['loss term 1'].append(epoch_loss_term_1)
+        epoch_losses['loss term 2'].append(epoch_loss_term_2)
 
         # Print a message to the terminal at the end of each epoch
         if log_filename is not None:
