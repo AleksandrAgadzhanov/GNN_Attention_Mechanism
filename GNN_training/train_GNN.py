@@ -40,7 +40,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
 
     # Initialize the dictionary to store both epoch loss terms progression in
-    epoch_losses = {'loss term 1': [], 'loss term 2': []}
+    mean_epoch_losses = {'loss term 1': [], 'loss term 2': []}
 
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
@@ -83,9 +83,9 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             loss.backward()
             optimizer.step()
 
-        # Append the accumulated losses during the current epoch to the list
-        epoch_losses['loss term 1'].append(epoch_loss_term_1)
-        epoch_losses['loss term 2'].append(epoch_loss_term_2)
+        # Append the mean epoch losses during the current epoch to the list
+        mean_epoch_losses['loss term 1'].append(epoch_loss_term_1 / len(list_of_feature_dicts))
+        mean_epoch_losses['loss term 2'].append(epoch_loss_term_2 / len(list_of_feature_dicts))
 
         # Print a message to the terminal at the end of each epoch
         if log_filename is not None:
@@ -93,6 +93,11 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                 print("Epoch " + str(epoch + 1) + " complete")
         else:
             print("Epoch " + str(epoch + 1) + " complete")
+
+    from matplotlib import pyplot as plt
+    overall_losses = [mean_epoch_losses['loss term 1'][i] + mean_epoch_losses['loss term 2'][i] * loss_lambda for i in range(len(mean_epoch_losses['loss term 1']))]
+    plt.plot(range(num_epochs), overall_losses)
+    plt.show()
 
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
@@ -107,11 +112,11 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         gnn_state_dicts_list.append(gnn_neural_network.state_dict())
     torch.save(gnn_state_dicts_list, 'learnt_parameters/' + output_filename)
 
-    return epoch_losses
+    return mean_epoch_losses
 
 
 def main():
-    generate_gnn_training_parameters('val_SAT_jade_dataset.pkl', 'cifar_base_kw', 0.001, 10, 0.278, '', device='cuda')
+    generate_gnn_training_parameters('val_SAT_jade_dataset.pkl', 'cifar_base_kw', 0.001, 10, 20, '', device='cuda')
 
 
 if __name__ == '__main__':

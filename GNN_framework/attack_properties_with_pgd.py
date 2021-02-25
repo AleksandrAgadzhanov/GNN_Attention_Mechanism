@@ -135,10 +135,10 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                     if log_filename is not None:
                         with mlogger.stdout_to('GNN_training/' + log_filename):
                             print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
-                                  str(attack_epoch + 1) + "; Restart " + str(restart + 1) + ")")
+                                  str(attack_epoch + 1) + "; Restart " + str(restart) + ")")
                     else:
                         print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
-                              str(attack_epoch + 1) + "; Restart " + str(restart + 1) + ")")
+                              str(attack_epoch + 1) + "; Restart " + str(restart) + ")")
                     return True
 
             # Otherwise, update all the feature vectors using new information
@@ -155,7 +155,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pass
+    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 3, 1, 3, 'gnn_parameters_0.108.pkl',
+                              device='cuda')
 
 
 if __name__ == '__main__':

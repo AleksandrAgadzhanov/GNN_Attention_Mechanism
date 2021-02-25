@@ -21,11 +21,10 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
     output_dictionary_filepath = 'learnt_parameters/cross_validation_dict_' + str(loss_lambda) + '.pkl'
 
     # Train the GNN using the current value of lambda and output the learnt parameters in the temporary file
-    epoch_losses = generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate,
-                                                    num_training_epochs, loss_lambda, parameters_filename, log_filename,
-                                                    device=device)
+    output_dict = generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate,
+                                                   num_training_epochs, loss_lambda, parameters_filename, log_filename,
+                                                   device=device)
 
-    output_dict = {'epoch losses': epoch_losses}
     torch.save(output_dict, output_dictionary_filepath)
 
     if log_filename is not None:
@@ -33,13 +32,13 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
             print('\nTrained GNN with lambda = ' + str(loss_lambda))
             print('Time elapsed since the start: ' + str(time.time() - start_time))
             print('Epoch losses progression:\n')
-            print(epoch_losses)
+            print(output_dict)
             print('\n')
     else:
         print('\nTrained GNN with lambda = ' + str(loss_lambda))
         print('Time elapsed since the start: ' + str(time.time() - start_time))
         print('Epoch losses progression:\n')
-        print(epoch_losses)
+        print(output_dict)
         print('\n')
 
     # Let the GNN perform PGD attacks on the validation dataset
@@ -72,7 +71,7 @@ def main():
     log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
 
     cross_validate_gnn(args.loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.001, 25,
-                       0.1, 100, 3, 10, 3, log_filename=log_filename, device='cuda')
+                       0.1, 100, 1, 20, 1, log_filename=log_filename, device='cuda')
 
 
 if __name__ == '__main__':
