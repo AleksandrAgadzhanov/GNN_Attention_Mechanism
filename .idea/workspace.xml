@@ -10,9 +10,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;incorporated both trials and restarts into the GNN framework&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for big cross validation experiment&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
@@ -61,7 +60,7 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\cifar_exp" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.plots (1)">
+  <component name="RunManager" selected="Python.cross_validation">
     <configuration name="attack_properties_with_pgd" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -169,11 +168,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.plots (1)" />
+        <item itemvalue="Python.cross_validation" />
         <item itemvalue="Python.train_GNN" />
+        <item itemvalue="Python.plots (1)" />
         <item itemvalue="Python.attack_properties_with_pgd" />
         <item itemvalue="Python.plots" />
-        <item itemvalue="Python.cross_validation" />
       </list>
     </recent_temporary>
   </component>
@@ -185,27 +184,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00073" summary="&quot;commit&quot;">
-      <created>1613662316296</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1613662316296</updated>
-    </task>
-    <task id="LOCAL-00074" summary="&quot;prepared code for test run of cross validation on JADE&quot;">
-      <created>1613675797297</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1613675797298</updated>
-    </task>
-    <task id="LOCAL-00075" summary="&quot;prepared code for test run of cross validation on JADE&quot;">
-      <created>1613679111075</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1613679111076</updated>
     </task>
     <task id="LOCAL-00076" summary="&quot;prepared code for test run of cross validation on JADE&quot;">
       <created>1613679359799</created>
@@ -529,7 +507,28 @@
       <option name="project" value="LOCAL" />
       <updated>1614271562388</updated>
     </task>
-    <option name="localTasksCounter" value="122" />
+    <task id="LOCAL-00122" summary="&quot;incorporated both trials and restarts into the GNN framework&quot;">
+      <created>1614291677786</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1614291677786</updated>
+    </task>
+    <task id="LOCAL-00123" summary="&quot;setup for big cross validation experiment&quot;">
+      <created>1614292116492</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1614292116492</updated>
+    </task>
+    <task id="LOCAL-00124" summary="&quot;setup for big cross validation experiment&quot;">
+      <created>1614293273168</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1614293273168</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -545,7 +544,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;some minor fixes&quot;" />
     <MESSAGE value="&quot;some minor changes&quot;" />
     <MESSAGE value="&quot;prepared the code to be run on JADE&quot;" />
     <MESSAGE value="&quot;completed preparation of the code to be run on JADE&quot;" />
@@ -570,7 +568,8 @@
     <MESSAGE value="&quot;attack experiment setup&quot;" />
     <MESSAGE value="&quot;incorporated restarts into GNN attacking framework and normalized second loss term&quot;" />
     <MESSAGE value="&quot;incorporated both trials and restarts into the GNN framework&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;incorporated both trials and restarts into the GNN framework&quot;" />
+    <MESSAGE value="&quot;setup for big cross validation experiment&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for big cross validation experiment&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

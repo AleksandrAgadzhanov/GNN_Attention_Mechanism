@@ -94,11 +94,6 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         else:
             print("Epoch " + str(epoch + 1) + " complete")
 
-    from matplotlib import pyplot as plt
-    overall_losses = [mean_epoch_losses['loss term 1'][i] + mean_epoch_losses['loss term 2'][i] * loss_lambda for i in range(len(mean_epoch_losses['loss term 1']))]
-    plt.plot(range(num_epochs), overall_losses)
-    plt.show()
-
     # Finally, after training is finished, construct a list of all the state dictionaries of the auxiliary neural
     # networks of the GNN
     gnn_state_dicts_list = []
@@ -116,7 +111,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    generate_gnn_training_parameters('val_SAT_jade_dataset.pkl', 'cifar_base_kw', 0.001, 10, 20, '', device='cuda')
+    generate_gnn_training_parameters('val_SAT_jade_dataset.pkl', 'cifar_base_kw', 0.001, 10, 0.105, '', device='cuda')
 
 
 if __name__ == '__main__':

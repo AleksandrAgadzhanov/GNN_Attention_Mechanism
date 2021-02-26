@@ -5,7 +5,16 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/cross_validation.py"]
+jobs = ["python GNN_training/cross_validation.py --loss_lambda 0.1",
+        "python GNN_training/cross_validation.py --loss_lambda 0.1011",
+        "python GNN_training/cross_validation.py --loss_lambda 0.1021",
+        "python GNN_training/cross_validation.py --loss_lambda 0.1032",
+        "python GNN_training/cross_validation.py --loss_lambda 0.1043",
+        "python GNN_training/cross_validation.py --loss_lambda 0.1054",
+        "python GNN_training/cross_validation.py --loss_lambda 0.1066",
+        "python GNN_training/cross_validation.py --loss_lambda 0.1077",
+        "python GNN_training/cross_validation.py --loss_lambda 0.1088",
+        "python GNN_training/cross_validation.py --loss_lambda 0.11"]
 
 
 def run_command(command):
