@@ -10,12 +10,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for big cross validation experiment&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment&quot;">
+      <change afterPath="$PROJECT_DIR$/GNN_training/training_loss_plotter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/launch_init.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch_init.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,27 +61,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.cross_validation">
-    <configuration name="attack_properties_with_pgd" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="GNN_Attention_Mechanism" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GNN_framework" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="cross_validation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -124,7 +103,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="plots" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="temp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -136,7 +115,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\learnt_parameters\plots.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/learnt_parameters/temp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -166,13 +145,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="training_loss_plotter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNN_Attention_Mechanism" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GNN_training" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GNN_training/training_loss_plotter.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.cross_validation" />
+        <item itemvalue="Python.training_loss_plotter" />
+        <item itemvalue="Python.temp" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.plots (1)" />
-        <item itemvalue="Python.attack_properties_with_pgd" />
-        <item itemvalue="Python.plots" />
       </list>
     </recent_temporary>
   </component>
@@ -184,13 +184,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00076" summary="&quot;prepared code for test run of cross validation on JADE&quot;">
-      <created>1613679359799</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1613679359799</updated>
     </task>
     <task id="LOCAL-00077" summary="&quot;commit&quot;">
       <created>1613680796635</created>
@@ -528,7 +521,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614293273168</updated>
     </task>
-    <option name="localTasksCounter" value="125" />
+    <task id="LOCAL-00125" summary="&quot;setup for cross validation experiment&quot;">
+      <created>1614327458135</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1614327458136</updated>
+    </task>
+    <option name="localTasksCounter" value="126" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -563,13 +563,13 @@
     <MESSAGE value="&quot;made log filename a variable&quot;" />
     <MESSAGE value="&quot;setup for training dataset generation&quot;" />
     <MESSAGE value="&quot;setup for validation dataset generation&quot;" />
-    <MESSAGE value="&quot;setup for cross validation experiment&quot;" />
     <MESSAGE value="&quot;presumably fixed numerical instability issues when computing intermediate bounds&quot;" />
     <MESSAGE value="&quot;attack experiment setup&quot;" />
     <MESSAGE value="&quot;incorporated restarts into GNN attacking framework and normalized second loss term&quot;" />
     <MESSAGE value="&quot;incorporated both trials and restarts into the GNN framework&quot;" />
     <MESSAGE value="&quot;setup for big cross validation experiment&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for big cross validation experiment&quot;" />
+    <MESSAGE value="&quot;setup for cross validation experiment&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross validation experiment&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

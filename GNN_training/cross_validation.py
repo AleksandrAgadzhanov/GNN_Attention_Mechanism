@@ -65,13 +65,23 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--loss_lambda', type=float)
+    parser.add_argument('--start_lambda', type=float)
+    parser.add_argument('--end_lambda', type=float)
+    parser.add_argument('--num', type=int)
+    parser.add_argument('--endpoint', type=bool)
     args = parser.parse_args()
 
-    log_filename = 'cross_validation_log_' + str(args.loss_lambda) + '.pkl'
+    log_filename = 'cross_validation_log_' + str(args.start_lambda) + '_to_' + str(args.end_lambda) + '.pkl'
 
-    cross_validate_gnn(args.loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.001, 25,
-                       0.1, 100, 1, 20, 1, log_filename=log_filename, device='cuda')
+    import numpy as np
+    import math
+
+    loss_lambdas = np.logspace(math.log10(args.start_lambda), math.log10(args.end_lambda), num=args.num,
+                               endpoint=args.endpoint)
+    print(loss_lambdas)
+    for loss_lambda in loss_lambdas:
+        cross_validate_gnn(loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.0001, 30,
+                           0.1, 100, 1, 20, 1, log_filename=log_filename, device='cuda')
 
 
 if __name__ == '__main__':
