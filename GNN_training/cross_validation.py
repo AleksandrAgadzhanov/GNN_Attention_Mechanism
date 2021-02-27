@@ -78,7 +78,7 @@ def main():
 
     loss_lambdas = np.logspace(math.log10(args.start_lambda), math.log10(args.end_lambda), num=args.num,
                                endpoint=args.endpoint)
-    print(loss_lambdas)
+
     for loss_lambda in loss_lambdas:
         cross_validate_gnn(loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.0001, 30,
                            0.1, 100, 1, 20, 1, log_filename=log_filename, device='cuda')

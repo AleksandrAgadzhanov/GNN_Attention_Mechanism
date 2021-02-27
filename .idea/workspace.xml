@@ -10,11 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment&quot;">
-      <change afterPath="$PROJECT_DIR$/GNN_training/training_loss_plotter.py" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for big cross-validation experiment&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +58,7 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\cifar_exp" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.cross_validation">
+  <component name="RunManager" selected="Python.training_loss_plotter">
     <configuration name="cross_validation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -168,8 +166,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.cross_validation" />
         <item itemvalue="Python.training_loss_plotter" />
+        <item itemvalue="Python.cross_validation" />
         <item itemvalue="Python.temp" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.plots (1)" />
@@ -184,20 +182,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00077" summary="&quot;commit&quot;">
-      <created>1613680796635</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1613680796635</updated>
-    </task>
-    <task id="LOCAL-00078" summary="&quot;commit&quot;">
-      <created>1613680955537</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1613680955537</updated>
     </task>
     <task id="LOCAL-00079" summary="&quot;commit&quot;">
       <created>1613819806039</created>
@@ -528,7 +512,21 @@
       <option name="project" value="LOCAL" />
       <updated>1614327458136</updated>
     </task>
-    <option name="localTasksCounter" value="126" />
+    <task id="LOCAL-00126" summary="&quot;added loss plotter function and set up for big cross-validation experiment&quot;">
+      <created>1614421941417</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1614421941417</updated>
+    </task>
+    <task id="LOCAL-00127" summary="&quot;setup for big cross-validation experiment&quot;">
+      <created>1614422054509</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1614422054509</updated>
+    </task>
+    <option name="localTasksCounter" value="128" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -544,8 +542,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;some minor changes&quot;" />
-    <MESSAGE value="&quot;prepared the code to be run on JADE&quot;" />
     <MESSAGE value="&quot;completed preparation of the code to be run on JADE&quot;" />
     <MESSAGE value="&quot;added another .sh file with shorter wallclock time&quot;" />
     <MESSAGE value="&quot;added logger to the training dataset generation script&quot;" />
@@ -569,7 +565,9 @@
     <MESSAGE value="&quot;incorporated both trials and restarts into the GNN framework&quot;" />
     <MESSAGE value="&quot;setup for big cross validation experiment&quot;" />
     <MESSAGE value="&quot;setup for cross validation experiment&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross validation experiment&quot;" />
+    <MESSAGE value="&quot;added loss plotter function and set up for big cross-validation experiment&quot;" />
+    <MESSAGE value="&quot;setup for big cross-validation experiment&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for big cross-validation experiment&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
