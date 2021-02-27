@@ -67,8 +67,6 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--start_lambda', type=float)
     parser.add_argument('--end_lambda', type=float)
-    parser.add_argument('--num', type=int)
-    parser.add_argument('--endpoint', type=bool)
     args = parser.parse_args()
 
     log_filename = 'cross_validation_log_' + str(args.start_lambda) + '_to_' + str(args.end_lambda) + '.pkl'
@@ -76,8 +74,7 @@ def main():
     import numpy as np
     import math
 
-    loss_lambdas = np.logspace(math.log10(args.start_lambda), math.log10(args.end_lambda), num=args.num,
-                               endpoint=args.endpoint)
+    loss_lambdas = np.logspace(math.log10(args.start_lambda), math.log10(args.end_lambda), num=10)
 
     for loss_lambda in loss_lambdas:
         cross_validate_gnn(loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.0001, 30,
