@@ -122,29 +122,30 @@ def generate_gradient_info_dict(gradients):
     """
     This function generates the dictionary of containing information about gradients during the PGD attack.
     """
+    # TODO decide whether it is the gradients or their magnitudes that matter
     # First take the absolute value since it is the magnitudes of gradients that matter since loss is always moving in
     # the same direction (increasing) and the pixel values may decrease or increase
-    gradient_magnitudes = torch.abs(gradients)
-    gradient_magnitudes = gradient_magnitudes.reshape(gradient_magnitudes.size()[0], -1)
+    # gradient_magnitudes = torch.abs(gradients)
+    gradients = gradients.reshape(gradients.size()[0], -1)
 
     # Initialise the output dictionary and add the row last gradient magnitude to the dictionary straight away
-    gradient_info_dict = {'last gradient': gradient_magnitudes[-1]}
+    gradient_info_dict = {'last gradient': gradients[-1]}
 
     # Transform the list of consequent gradients into the list of pixel gradients by transposing the above tensor
-    gradient_magnitudes_pixels = torch.transpose(gradient_magnitudes, 1, 0)
+    gradients_pixels = torch.transpose(gradients, 1, 0)
 
     # Compute pixel-wise mean, median, maximum and minimum gradients as well as the standard deviation and store them
-    mean_gradient_magnitudes_pixels = torch.mean(gradient_magnitudes_pixels, dim=1)
-    median_gradient_magnitudes_pixels, _ = torch.median(gradient_magnitudes_pixels, dim=1)
-    max_gradient_magnitudes_pixels, _ = torch.max(gradient_magnitudes_pixels, dim=1)
-    min_gradient_magnitudes_pixels, _ = torch.min(gradient_magnitudes_pixels, dim=1)
-    std_gradient_magnitudes_pixels = torch.std(gradient_magnitudes_pixels, dim=1)
+    mean_gradients_pixels = torch.mean(gradients_pixels, dim=1)
+    median_gradients_pixels, _ = torch.median(gradients_pixels, dim=1)
+    max_gradients_pixels, _ = torch.max(gradients_pixels, dim=1)
+    min_gradients_pixels, _ = torch.min(gradients_pixels, dim=1)
+    std_gradient_magnitudes_pixels = torch.std(gradients_pixels, dim=1)
 
     # Add the above statistics to the gradient information dictionary
-    gradient_info_dict['mean gradient'] = mean_gradient_magnitudes_pixels
-    gradient_info_dict['median gradient'] = median_gradient_magnitudes_pixels
-    gradient_info_dict['maximum gradient'] = max_gradient_magnitudes_pixels
-    gradient_info_dict['minimum gradient'] = min_gradient_magnitudes_pixels
+    gradient_info_dict['mean gradient'] = mean_gradients_pixels
+    gradient_info_dict['median gradient'] = median_gradients_pixels
+    gradient_info_dict['maximum gradient'] = max_gradients_pixels
+    gradient_info_dict['minimum gradient'] = min_gradients_pixels
     gradient_info_dict['gradient std'] = std_gradient_magnitudes_pixels
 
     return gradient_info_dict

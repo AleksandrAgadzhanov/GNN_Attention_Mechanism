@@ -38,7 +38,7 @@ def generate_loss_plot(training_dataset_filename, model_name, gnn_learning_rate,
 
 
 def main():
-    generate_loss_plot('val_SAT_jade_dataset.pkl', 'cifar_base_kw', 0.0001, 25, 100, device='cuda', save_plot=True)
+    generate_loss_plot('val_SAT_jade_dataset.pkl', 'cifar_base_kw', 0.0001, 25, 2.15, device='cuda')
 
 
 if __name__ == '__main__':
