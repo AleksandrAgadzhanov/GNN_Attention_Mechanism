@@ -72,7 +72,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     after each such update a specified number of trial PGD attacks are performed on the new domain.
     """
     # For a specified number of restarts
-    for restart in range(num_restarts):
+    for restart in range(num_restarts + 1):
 
         # First, perturb the image randomly within the allowed bounds and perform a PGD attack
         lower_bound = torch.add(-epsilon * epsilon_factor, image)
@@ -155,8 +155,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 3, 1, 3, 'gnn_parameters_0.108.pkl',
-                              device='cuda')
+    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 1, 10, 0, "stub.pkl", device='cuda')
 
 
 if __name__ == '__main__':
