@@ -5,11 +5,15 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/cross_validation.py --start_lambda 0.001 --end_lambda 0.01",
-        "python GNN_training/cross_validation.py --start_lambda 0.01 --end_lambda 0.1",
-        "python GNN_training/cross_validation.py --start_lambda 0.1 --end_lambda 1",
-        "python GNN_training/cross_validation.py --start_lambda 1 --end_lambda 10",
-        "python GNN_training/cross_validation.py --start_lambda 10 --end_lambda 100"]
+jobs = ["python GNN_training/training_dataset_generation.py --start_index 0 --end_index 50",
+        "python GNN_training/training_dataset_generation.py --start_index 50 --end_index 100",
+        "python GNN_training/training_dataset_generation.py --start_index 100 --end_index 150",
+        "python GNN_training/training_dataset_generation.py --start_index 150 --end_index 200",
+        "python GNN_training/training_dataset_generation.py --start_index 200 --end_index 250",
+        "python GNN_training/training_dataset_generation.py --start_index 250 --end_index 300",
+        "python GNN_training/training_dataset_generation.py --start_index 300 --end_index 350",
+        "python GNN_training/training_dataset_generation.py --start_index 350 --end_index 400",
+        "python GNN_training/training_dataset_generation.py --start_index 400 --end_index 430"]
 
 
 def run_command(command):
