@@ -12,7 +12,7 @@ def pgd_attack_properties(properties_filename, model_name, attack_method_trials,
     x_exact, y_true, image_indices, model = load_verified_data(model_name)
 
     # Load the properties DataFrame, leave only verified properties
-    properties_filepath = 'cifar_exp/' + properties_filename
+    properties_filepath = '../cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
     properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
                                                 (properties_dataframe['BSAT_KW'] == 'False') |
@@ -60,22 +60,22 @@ def pgd_attack_properties(properties_filename, model_name, attack_method_trials,
     # Based on the attack method specified, call the corresponding helper function
     if attack_method_trials[0] == 'random':
         num_trials = attack_method_trials[1]
-        verification_accuracy = pgd_attack_properties_random(model, x_exact, y_true, y_test, epsilons, epsilon_percent,
+        attack_success_rate = pgd_attack_properties_random(model, x_exact, y_true, y_test, epsilons, epsilon_percent,
                                                              pgd_learning_rate, num_epochs, num_trials)
     elif attack_method_trials[0] == 'branch random':
         num_branches = attack_method_trials[1]
-        verification_accuracy = pgd_attack_properties_branch_random(model, x_exact, y_true, y_test, epsilons,
+        attack_success_rate = pgd_attack_properties_branch_random(model, x_exact, y_true, y_test, epsilons,
                                                                     epsilon_percent, pgd_learning_rate, num_epochs,
                                                                     num_branches)
     elif attack_method_trials[0] == 'branch heuristic':
         num_branches = attack_method_trials[1]
-        verification_accuracy = pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsilons,
+        attack_success_rate = pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsilons,
                                                                        epsilon_percent, pgd_learning_rate, num_epochs,
                                                                        num_branches)
     else:
         raise IOError("Please enter a valid attack method (\'random\', \'branch random\' or \'branch heuristic\')")
 
-    return verification_accuracy
+    return attack_success_rate
 
 
 def logit_difference_loss(logits, test_class, true_class):
@@ -87,7 +87,7 @@ def logit_difference_loss(logits, test_class, true_class):
 def pgd_attack_properties_random(model, x_exact, y_true, y_test, epsilons, epsilon_percent, pgd_learning_rate,
                                  num_epochs, num_trials):
     # Initialise the counter of properties that have been still verified after the PGD attacks
-    verified_properties = 0
+    successfully_attacked_properties = 0
 
     # Attack each property at a time
     for i in range(len(x_exact)):
@@ -111,19 +111,21 @@ def pgd_attack_properties_random(model, x_exact, y_true, y_test, epsilons, epsil
                 break
 
         # If the property withstood all the trial PGD attacks, it is still verified
-        if not successful_attack_flag:
-            verified_properties += 1
+        if successful_attack_flag:
+            successfully_attacked_properties += 1
+
+        print('Image ' + str(i + 1) + ' was processed')
 
     # Compute the verification accuracy in response to PGD attacks
-    verification_accuracy = verified_properties / len(x_exact) * 100.0
+    attack_success_rate = successfully_attacked_properties / len(x_exact) * 100.0
 
-    return verification_accuracy
+    return attack_success_rate
 
 
 def pgd_attack_properties_branch_random(model, x_exact, y_true, y_test, epsilons, epsilon_percent, pgd_learning_rate,
                                         num_epochs, num_branches):
     # Initialise the counter of properties that have been still verified after the PGD attacks
-    verified_properties = 0
+    successfully_attacked_properties = 0
 
     # Attack each property at a time
     for i in range(len(x_exact)):
@@ -212,19 +214,19 @@ def pgd_attack_properties_branch_random(model, x_exact, y_true, y_test, epsilons
                 break
 
         # If the property withstood all the PGD attacks, it is still verified
-        if not successful_attack_flag:
-            verified_properties += 1
+        if successful_attack_flag:
+            successfully_attacked_properties += 1
 
     # Compute the verification accuracy in response to PGD attacks
-    verification_accuracy = verified_properties / len(x_exact) * 100.0
+    attack_success_rate = successfully_attacked_properties / len(x_exact) * 100.0
 
-    return verification_accuracy
+    return attack_success_rate
 
 
 def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsilons, epsilon_percent, pgd_learning_rate,
                                            num_epochs, num_branches):
     # Initialise the counter of properties that have been still verified after the PGD attacks
-    verified_properties = 0
+    successfully_attacked_properties = 0
 
     # Attack each property at a time
     for i in range(len(x_exact)):
@@ -253,6 +255,8 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
 
         # If the flag was set to True after the first attack, move on to the next image
         if successful_attack_flag:
+            successfully_attacked_properties += 1
+            print('Image ' + str(i + 1) + ' was processed')
             continue
 
         # SUBSEQUENT PGD ATTACKS
@@ -349,13 +353,15 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
                 break
 
         # If the property withstood all the PGD attacks, it is still verified
-        if not successful_attack_flag:
-            verified_properties += 1
+        if successful_attack_flag:
+            successfully_attacked_properties += 1
+
+        print('Image ' + str(i + 1) + ' was processed')
 
     # Compute the verification accuracy in response to PGD attacks
-    verification_accuracy = verified_properties / len(x_exact) * 100.0
+    attack_success_rate = successfully_attacked_properties / len(x_exact) * 100.0
 
-    return verification_accuracy
+    return attack_success_rate
 
 
 def pgd_gradient_ascent(model, x_perturbed, lower_bound, upper_bound, y_true, y_test, pgd_learning_rate, num_epochs,
@@ -442,12 +448,25 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 
 def main():
-    subset = random.sample(list(range(640)), 50)
+    subset = random.sample(list(range(640)), 25)
 
-    print(pgd_attack_properties('base_easy.pkl', 'cifar_base_kw', ['branch heuristic', 10], 160, 0.1, 50,
-                                subset=subset))
-    print(pgd_attack_properties('base_easy.pkl', 'cifar_base_kw', ['branch random', 10], 160, 0.1, 50, subset=subset))
-    print(pgd_attack_properties('base_easy.pkl', 'cifar_base_kw', ['random', 21], 160, 0.1, 50, subset=subset))
+    epsilon_percents = [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]
+    attack_success_rates_random = []
+    attack_success_rates_heuristic = []
+    for epsilon_percent in epsilon_percents:
+        print('\n Epsilon percent = ' + str(epsilon_percent) + "%")
+        attack_success_rate_random = pgd_attack_properties('base_easy.pkl', 'cifar_base_kw', ['random', 11],
+                                                           epsilon_percent, 0.1, 50, subset=subset)
+        attack_success_rate_heuristic = pgd_attack_properties('base_easy.pkl', 'cifar_base_kw',
+                                                              ['branch heuristic', 5], epsilon_percent, 0.1, 50,
+                                                              subset=subset)
+        attack_success_rates_random.append(attack_success_rate_random)
+        attack_success_rates_heuristic.append(attack_success_rate_heuristic)
+
+    output_dict = {'epsilon percents': epsilon_percents,
+                   'attack success rates random': attack_success_rates_random,
+                   'attack success rates heuristic': attack_success_rates_heuristic}
+    torch.save(output_dict, '../project_motivation/output_dict.pkl')
 
 
 if __name__ == '__main__':

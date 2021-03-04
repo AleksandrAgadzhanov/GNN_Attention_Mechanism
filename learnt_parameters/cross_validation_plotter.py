@@ -68,7 +68,7 @@ def plot_training_loss(loss_lambda):
 
 
 def main():
-    plot_training_loss(2.154434690031884)
+    plot_cross_validation_results(save_plot=True)
 
 
 if __name__ == '__main__':
