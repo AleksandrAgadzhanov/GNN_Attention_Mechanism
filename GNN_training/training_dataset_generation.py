@@ -34,6 +34,9 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
 
     # Go over one property at a time and make a function call which deals with the single property
     for i in range(len(images)):
+        # TODO
+        if i == 111:
+            continue
         # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating
         # the information about the true and test classes into the network
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
@@ -91,8 +94,8 @@ def generate_training_dataset(properties_filename, model_name, pgd_learning_rate
         # Append the generated feature dictionary to the overall list
         overall_list_of_feature_dicts.append(feature_dict)
 
-    # Store all the generated subdomains in a file
-    torch.save(overall_list_of_feature_dicts, 'cifar_exp/' + output_filename)
+        # Store all the generated subdomains in a file
+        torch.save(overall_list_of_feature_dicts, 'cifar_exp/' + output_filename)
 
 
 def main():
