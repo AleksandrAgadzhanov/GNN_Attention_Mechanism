@@ -102,11 +102,11 @@ def main():
     args = parser.parse_args()
 
     subset = list(range(args.start_index, args.end_index))
-    output_filename = 'val_SAT_jade_dataset_' + str(args.start_index) + '_' + str(args.end_index) + '.pkl'
-    log_filename = 'validation_dataset_generation_log_' + str(args.start_index) + '_' + str(args.end_index) + '.txt'
+    output_filename = 'train_SAT_jade_dataset_' + str(args.start_index) + '_' + str(args.end_index) + '.pkl'
+    log_filename = 'training_dataset_generation_log_' + str(args.start_index) + '_' + str(args.end_index) + '.txt'
 
-    generate_training_dataset('val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, output_filename, log_filename,
-                              device='cuda', subset=subset, timeout=300)
+    generate_training_dataset('train_large_easy_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, output_filename, log_filename,
+                              device='cuda', subset=subset, timeout=120)
 
 
 if __name__ == '__main__':

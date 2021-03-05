@@ -5,15 +5,16 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/cross_validation.py --start_lambda 0.01 --end_lambda 0.02",
-        "python GNN_training/cross_validation.py --start_lambda 0.02 --end_lambda 0.03",
-        "python GNN_training/cross_validation.py --start_lambda 0.03 --end_lambda 0.04",
-        "python GNN_training/cross_validation.py --start_lambda 0.04 --end_lambda 0.05",
-        "python GNN_training/cross_validation.py --start_lambda 0.05 --end_lambda 0.06",
-        "python GNN_training/cross_validation.py --start_lambda 0.06 --end_lambda 0.07",
-        "python GNN_training/cross_validation.py --start_lambda 0.07 --end_lambda 0.08",
-        "python GNN_training/cross_validation.py --start_lambda 0.08 --end_lambda 0.09",
-        "python GNN_training/cross_validation.py --start_lambda 0.09 --end_lambda 0.1"]
+jobs = ["python GNN_training/training_dataset_generation.py --start_index 0 --end_index 409",
+        "python GNN_training/training_dataset_generation.py --start_index 409 --end_index 818",
+        "python GNN_training/training_dataset_generation.py --start_index 818 --end_index 1227",
+        "python GNN_training/training_dataset_generation.py --start_index 1227 --end_index 1636",
+        "python GNN_training/training_dataset_generation.py --start_index 1636 --end_index 2045",
+        "python GNN_training/training_dataset_generation.py --start_index 2045 --end_index 2454",
+        "python GNN_training/training_dataset_generation.py --start_index 2454 --end_index 2863",
+        "python GNN_training/training_dataset_generation.py --start_index 2863 --end_index 3272",
+        "python GNN_training/training_dataset_generation.py --start_index 3272 --end_index 3681",
+        "python GNN_training/training_dataset_generation.py --start_index 3681 --end_index 4085"]
 
 
 def run_command(command):
