@@ -10,15 +10,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for next iteration of cross-validation experiment&quot;">
-      <change afterPath="$PROJECT_DIR$/cifar_exp/base_easy_SAT_jade.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/easy_base_easy_SAT_jade.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_large_easy_SAT_jade.pkl" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for large training dataset generation&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/training_dataset_generation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/launch_init.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch_init.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,13 +182,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00087" summary="&quot;setup for cross validation experiment&quot;">
-      <created>1613856372517</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
-      <option name="project" value="LOCAL" />
-      <updated>1613856372517</updated>
     </task>
     <task id="LOCAL-00088" summary="&quot;setup for cross validation experiment&quot;">
       <created>1613859018782</created>
@@ -533,7 +519,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614818934465</updated>
     </task>
-    <option name="localTasksCounter" value="136" />
+    <task id="LOCAL-00136" summary="&quot;setup for large training dataset generation&quot;">
+      <created>1614939879003</created>
+      <option name="number" value="00136" />
+      <option name="presentableId" value="LOCAL-00136" />
+      <option name="project" value="LOCAL" />
+      <updated>1614939879004</updated>
+    </task>
+    <option name="localTasksCounter" value="137" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -549,7 +542,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;changed the requested time in launch script&quot;" />
     <MESSAGE value="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
     <MESSAGE value="&quot;removed the ../ sequences&quot;" />
     <MESSAGE value="&quot;changed job wallclock time&quot;" />
@@ -574,7 +566,8 @@
     <MESSAGE value="&quot;setup for training and validation dataset generation experiment&quot;" />
     <MESSAGE value="&quot;setup for cross-validation experiment (modified gradient generation)&quot;" />
     <MESSAGE value="&quot;setup for next iteration of cross-validation experiment&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for next iteration of cross-validation experiment&quot;" />
+    <MESSAGE value="&quot;setup for large training dataset generation&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for large training dataset generation&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

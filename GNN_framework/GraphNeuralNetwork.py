@@ -334,14 +334,14 @@ class GraphNeuralNetwork:
             # increase their values by some small amount
             new_upper_bound = torch.where(torch.eq(new_lower_bound, new_upper_bound) &
                                           (torch.eq(new_upper_bound, old_lower_bound)),
-                                          torch.add(old_lower_bound, 0.01 * torch.abs(old_lower_bound)),
+                                          torch.add(old_lower_bound, 0.05 * torch.abs(old_lower_bound)),
                                           new_upper_bound)
 
             # Similar to above, if some pixel values of the new lower and upper bounds are the same and equal to the old
             # upper bound ones, decrease their values by some small amount
             new_lower_bound = torch.where(torch.eq(new_lower_bound, new_upper_bound) &
                                           (torch.eq(new_upper_bound, old_upper_bound)),
-                                          torch.add(old_upper_bound, -0.01 * torch.abs(old_upper_bound)),
+                                          torch.add(old_upper_bound, -0.05 * torch.abs(old_upper_bound)),
                                           new_lower_bound)
 
         return new_lower_bound, new_upper_bound
