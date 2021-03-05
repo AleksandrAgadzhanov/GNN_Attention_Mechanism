@@ -74,12 +74,12 @@ def main():
     import numpy as np
     import math
 
-    loss_lambdas = np.logspace(math.log10(args.start_lambda), math.log10(args.end_lambda), num=10)
+    loss_lambdas = np.logspace(math.log10(args.start_lambda), math.log10(args.end_lambda), num=4)
     loss_lambdas = [round(loss_lambda, 6) for loss_lambda in loss_lambdas]
 
     for loss_lambda in loss_lambdas:
-        cross_validate_gnn(loss_lambda, 'train_SAT_jade_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw', 0.0001, 30,
-                           0.1, 100, 1, 10, 2, log_filename=log_filename, device='cuda')
+        cross_validate_gnn(loss_lambda, 'train_SAT_jade_combined_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw',
+                           0.0001, 30, 0.1, 100, 1, 30, 2, log_filename=log_filename, device='cuda')
 
 
 if __name__ == '__main__':

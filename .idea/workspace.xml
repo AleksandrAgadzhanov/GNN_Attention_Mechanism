@@ -10,9 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for large training dataset generation&quot;">
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-    </list>
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment using large training dataset&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,28 +56,7 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\cifar_exp" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.temp">
-    <configuration name="cross_validation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="GNN_Attention_Mechanism" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GNN_training" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GNN_training/cross_validation.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.training_loss_plotter">
     <configuration name="cross_validation_plotter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -164,13 +141,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="training_loss_plotter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNN_Attention_Mechanism" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GNN_training" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GNN_training/training_loss_plotter.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.training_loss_plotter" />
         <item itemvalue="Python.temp" />
         <item itemvalue="Python.cross_validation_plotter" />
         <item itemvalue="Python.temp (1)" />
         <item itemvalue="Python.pgd_attacks" />
-        <item itemvalue="Python.cross_validation" />
       </list>
     </recent_temporary>
   </component>
@@ -182,34 +180,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00090" summary="&quot;setup for cross validation experiment&quot;">
-      <created>1613901423784</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1613901423785</updated>
-    </task>
-    <task id="LOCAL-00091" summary="&quot;setup for cross validation experiment&quot;">
-      <created>1613902469375</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1613902469375</updated>
-    </task>
-    <task id="LOCAL-00092" summary="&quot;setup for cross validation experiment&quot;">
-      <created>1613902520702</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1613902520702</updated>
-    </task>
-    <task id="LOCAL-00093" summary="&quot;setup for cross validation experiment&quot;">
-      <created>1613904732383</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1613904732383</updated>
     </task>
     <task id="LOCAL-00094" summary="&quot;setup for cross validation experiment&quot;">
       <created>1613904880717</created>
@@ -526,7 +496,35 @@
       <option name="project" value="LOCAL" />
       <updated>1614960800568</updated>
     </task>
-    <option name="localTasksCounter" value="139" />
+    <task id="LOCAL-00139" summary="&quot;setup for large training dataset generation&quot;">
+      <created>1614960993633</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1614960993634</updated>
+    </task>
+    <task id="LOCAL-00140" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
+      <created>1614979062812</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1614979062813</updated>
+    </task>
+    <task id="LOCAL-00141" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
+      <created>1614982634943</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1614982634943</updated>
+    </task>
+    <task id="LOCAL-00142" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
+      <created>1614982681606</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1614982681606</updated>
+    </task>
+    <option name="localTasksCounter" value="143" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -542,7 +540,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;fixed the 3 launch script parts and added setup.py&quot;" />
     <MESSAGE value="&quot;removed the ../ sequences&quot;" />
     <MESSAGE value="&quot;changed job wallclock time&quot;" />
     <MESSAGE value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
@@ -567,7 +564,8 @@
     <MESSAGE value="&quot;setup for cross-validation experiment (modified gradient generation)&quot;" />
     <MESSAGE value="&quot;setup for next iteration of cross-validation experiment&quot;" />
     <MESSAGE value="&quot;setup for large training dataset generation&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for large training dataset generation&quot;" />
+    <MESSAGE value="&quot;setup for cross validation experiment using large training dataset&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross validation experiment using large training dataset&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
