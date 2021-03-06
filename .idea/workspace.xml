@@ -195,13 +195,6 @@
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
     </task>
-    <task id="LOCAL-00096" summary="&quot;setup for cross validation experiment&quot;">
-      <created>1613915162212</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1613915162212</updated>
-    </task>
     <task id="LOCAL-00097" summary="&quot;setup for new training dataset generation&quot;">
       <created>1613990565332</created>
       <option name="number" value="00097" />
@@ -538,7 +531,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614983438400</updated>
     </task>
-    <option name="localTasksCounter" value="145" />
+    <task id="LOCAL-00145" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
+      <created>1615020615818</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1615020615819</updated>
+    </task>
+    <option name="localTasksCounter" value="146" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
