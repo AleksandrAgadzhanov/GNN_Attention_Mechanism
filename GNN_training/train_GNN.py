@@ -4,6 +4,7 @@ from exp_utils.model_utils import load_trained_model
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import simplify_model
 from GNN_training.helper_functions import compute_loss
+import glob
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
@@ -13,8 +14,23 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     the Graph Neural Network are learned, they are stored in a desired file.
     """
     # First, load the training dataset which is a list of feature dictionaries from the specified filename. Also load
-    # the model
-    list_of_feature_dicts = torch.load('cifar_exp/' + training_dataset_filename)
+    # the model. If the combined training dataset is specified, construct it from its constituent parts
+    if training_dataset_filename == 'train_SAT_jade_combined_dataset.pkl':
+        # First, extract all the parts of the training dataset into a list
+        filenames_list = glob.glob('cifar_exp/train_SAT_jade_combined_dataset_*')
+
+        # Sort the filenames by the indices indicated in their name
+        sorted_filenames_list = sorted(filenames_list, key=lambda name: float(name[45:-4]))
+
+        # Finally, construct the list of dictionaries fromm the parts of the overall training dataset
+        list_of_feature_dicts = []
+        for filename in sorted_filenames_list:
+            list_of_feature_dicts += torch.load(filename)
+
+    # Otherwise, load the training dataset all at once
+    else:
+        list_of_feature_dicts = torch.load('cifar_exp/' + training_dataset_filename)
+
     model = load_trained_model(model_name)
 
     # Create the temporary variables which will only be used to initialise the GNN structure. Then create an instance of
@@ -114,7 +130,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    generate_gnn_training_parameters('val_SAT_jade_dataset.pkl', 'cifar_base_kw', 0.0001, 25, 1, "stub.pkl", device='cuda')
+    generate_gnn_training_parameters('train_SAT_jade_combined_dataset.pkl', 'cifar_base_kw', 0.0001, 25, 1, "stub.pkl", device='cuda')
 
 
 if __name__ == '__main__':
