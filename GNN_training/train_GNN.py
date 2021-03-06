@@ -19,12 +19,9 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         # First, extract all the parts of the training dataset into a list
         filenames_list = glob.glob('cifar_exp/train_SAT_jade_combined_dataset_*')
 
-        # Sort the filenames by the indices indicated in their name
-        sorted_filenames_list = sorted(filenames_list, key=lambda name: float(name[45:-4]))
-
         # Finally, construct the list of dictionaries fromm the parts of the overall training dataset
         list_of_feature_dicts = []
-        for filename in sorted_filenames_list:
+        for filename in filenames_list:
             list_of_feature_dicts += torch.load(filename)
 
     # Otherwise, load the training dataset all at once
