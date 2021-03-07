@@ -62,7 +62,7 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
 
 
 def pgd_attack_properties_restarts(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                                   num_restarts, log_filename=None, subset=None, device='cpu'):
+                                   num_trials, log_filename=None, subset=None, device='cpu'):
     """
     This function acts as the 2nd baseline to compare the pgd_gnn_attack_property() function against. It initialises a
     specified number of trial random PGD attacks and performs a specified number of iterations of gradient ascent. For
@@ -91,7 +91,7 @@ def pgd_attack_properties_restarts(properties_filename, model_name, epsilon_fact
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
         successful_attack_flag = False
 
-        for restart in range(num_restarts):
+        for trial in range(num_trials):
             # First, perturb the image randomly within the allowed bounds
             lower_bound = torch.add(-epsilons[i] * epsilon_factor, images[i])
             upper_bound = torch.add(epsilons[i] * epsilon_factor, images[i])
@@ -117,20 +117,18 @@ def pgd_attack_properties_restarts(properties_filename, model_name, epsilon_fact
     # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
     attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
+    if log_filename is not None:
+        with mlogger.stdout_to(log_filename):
+            print('\nAttack success rate: ' + str(attack_success_rate))
+    else:
+        print('\nAttack success rate: ' + str(attack_success_rate))
+
     return attack_success_rate
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--mode', type=str)
-    args = parser.parse_args()
-
-    if args.mode == 'usual':
-        print(pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 11 * 2000, 'temp_log_usual.txt',
-                                    device='cuda'))
-    elif args.mode == 'restarts':
-        print(pgd_attack_properties_restarts('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.01, 2000, 11,
-                                             'temp_log_restarts.txt', device='cuda'))
+    pgd_attack_properties_restarts('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 90,
+                                   log_filename='baseline_log.txt', device='cuda')
 
 
 if __name__ == '__main__':

@@ -11,19 +11,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment using large training dataset&quot;">
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_0_407.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_1221_1628.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_1628_2035.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_2035_2442.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_2442_2849.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_2849_3256.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_3256_3663.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_3663_4070.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_407_814.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cifar_exp/train_SAT_jade_combined_dataset_814_1221.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +61,28 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\cifar_exp" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.train_GNN">
+  <component name="RunManager" selected="Python.cross_validation_plotter">
+    <configuration name="cross_validation_plotter (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNN_Attention_Mechanism" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/learnt_parameters/GNN_1_zoom" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/learnt_parameters/GNN_1_zoom/cross_validation_plotter.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="cross_validation_plotter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -84,27 +96,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="temp (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="GNN_Attention_Mechanism" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project_motivation" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project_motivation/temp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -178,11 +169,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.cross_validation_plotter" />
+        <item itemvalue="Python.cross_validation_plotter (1)" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.temp" />
         <item itemvalue="Python.training_loss_plotter" />
-        <item itemvalue="Python.cross_validation_plotter" />
-        <item itemvalue="Python.temp (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -194,20 +185,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00097" summary="&quot;setup for new training dataset generation&quot;">
-      <created>1613990565332</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1613990565332</updated>
-    </task>
-    <task id="LOCAL-00098" summary="&quot;modified cross validation script to use a single lambda value&quot;">
-      <created>1613992045735</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1613992045736</updated>
     </task>
     <task id="LOCAL-00099" summary="&quot;incorporated new solver function and set up training dataset generation&quot;">
       <created>1614006974423</created>
@@ -538,7 +515,21 @@
       <option name="project" value="LOCAL" />
       <updated>1615020615819</updated>
     </task>
-    <option name="localTasksCounter" value="146" />
+    <task id="LOCAL-00146" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
+      <created>1615021162543</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1615021162543</updated>
+    </task>
+    <task id="LOCAL-00147" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
+      <created>1615022895689</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1615022895689</updated>
+    </task>
+    <option name="localTasksCounter" value="148" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
