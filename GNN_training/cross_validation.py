@@ -72,9 +72,8 @@ def main():
     log_filename = 'cross_validation_log_' + str(args.start_lambda) + '_to_' + str(args.end_lambda) + '.pkl'
 
     import numpy as np
-    import math
 
-    loss_lambdas = np.logspace(math.log10(args.start_lambda), math.log10(args.end_lambda), num=5)
+    loss_lambdas = np.linspace(args.start_lambda, args.end_lambda, num=5)
     loss_lambdas = [round(loss_lambda, 6) for loss_lambda in loss_lambdas]
 
     for loss_lambda in loss_lambdas:

@@ -12,7 +12,7 @@
   <component name="ChangeListManager">
     <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment using large training dataset&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" afterDir="false" />
     </list>
@@ -185,13 +185,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00099" summary="&quot;incorporated new solver function and set up training dataset generation&quot;">
-      <created>1614006974423</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1614006974424</updated>
     </task>
     <task id="LOCAL-00100" summary="&quot;made log filename a variable&quot;">
       <created>1614007511641</created>
@@ -529,7 +522,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615022895689</updated>
     </task>
-    <option name="localTasksCounter" value="148" />
+    <task id="LOCAL-00148" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
+      <created>1615110449335</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1615110449336</updated>
+    </task>
+    <option name="localTasksCounter" value="149" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

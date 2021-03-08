@@ -63,7 +63,8 @@ def plot_training_loss(loss_lambda, directory=""):
 
 
 def main():
-    plot_cross_validation_results(directory='../learnt_parameters/GNN_1_zoom/')
+    # plot_training_loss(0.077426, directory='../learnt_parameters/GNN_1_zoom/')
+    plot_cross_validation_results(directory='../learnt_parameters/GNN_1_zoom_1/')
 
 
 if __name__ == '__main__':
