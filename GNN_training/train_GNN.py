@@ -24,6 +24,19 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         for filename in filenames_list:
             list_of_feature_dicts += torch.load(filename)
 
+    # If the combined training and validation dataset is specified, construct it from all the relevant parts
+    elif training_dataset_filename == 'train_val_SAT_jade_combined_dataset.pkl':
+        # First, extract all the parts of the training dataset into a list
+        training_filenames_list = glob.glob('cifar_exp/train_SAT_jade_combined_dataset_*')
+
+        # Construct the list of dictionaries fromm the parts of the overall training dataset
+        list_of_feature_dicts = []
+        for filename in training_filenames_list:
+            list_of_feature_dicts += torch.load(filename)
+
+        # Finally, add the validation dataset information to the overall list
+        list_of_feature_dicts += torch.load('cifar_exp/val_SAT_jade_dataset.pkl')
+
     # Otherwise, load the training dataset all at once
     else:
         list_of_feature_dicts = torch.load('cifar_exp/' + training_dataset_filename)
@@ -127,7 +140,11 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    generate_gnn_training_parameters('train_SAT_jade_combined_dataset.pkl', 'cifar_base_kw', 0.0001, 25, 1, "stub.pkl", device='cuda')
+    mean_epoch_losses = generate_gnn_training_parameters('train_val_SAT_jade_combined_dataset.pkl', 'cifar_base_kw',
+                                                         0.0001, 50, 0.066538,
+                                                         output_filename='gnn_parameters_1_zoom.pkl',
+                                                         log_filename='training_log.txt', device='cuda')
+    torch.save(mean_epoch_losses, 'learnt_parameters/training_loss_1_zoom.pkl')
 
 
 if __name__ == '__main__':

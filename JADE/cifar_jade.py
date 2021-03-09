@@ -5,14 +5,7 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/cross_validation.py --start_lambda 0.045 --end_lambda 0.0557692",
-        "python GNN_training/cross_validation.py --start_lambda 0.0584615 --end_lambda 0.0692308",
-        "python GNN_training/cross_validation.py --start_lambda 0.0719231 --end_lambda 0.0826923",
-        "python GNN_training/cross_validation.py --start_lambda 0.0853846 --end_lambda 0.0961539",
-        "python GNN_training/cross_validation.py --start_lambda 0.0988462 --end_lambda 0.109615",
-        "python GNN_training/cross_validation.py --start_lambda 0.112308 --end_lambda 0.123077",
-        "python GNN_training/cross_validation.py --start_lambda 0.125769 --end_lambda 0.136538",
-        "python GNN_training/cross_validation.py --start_lambda 0.139231 --end_lambda 0.15"]
+jobs = ["python GNN_training/train_GNN.py"]
 
 
 def run_command(command):

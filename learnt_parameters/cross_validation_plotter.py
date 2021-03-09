@@ -3,7 +3,7 @@ import torch
 from matplotlib import pyplot as plt
 
 
-def plot_cross_validation_results(directory=""):
+def plot_cross_validation_results(directory="", space='log'):
     """
     This function plots a graph of the attack success rate against the cross-validation hyper-parameter lambda on the
     log-linear scale. It uses all the .pkl cross validation dictionaries it finds in the current directory for plotting.
@@ -25,7 +25,10 @@ def plot_cross_validation_results(directory=""):
                             cross_validation_dicts]
 
     # Finally, plot the attack success rates vs lambda values on the log-linear scale
-    plt.semilogx(lambdas, attack_success_rates, color='b')
+    if space == 'log':
+        plt.semilogx(lambdas, attack_success_rates, color='b')
+    elif space == 'lin':
+        plt.plot(lambdas, attack_success_rates, color='b')
     plt.xlabel('Lambda')
     plt.ylabel('Attack success rate (%)')
     plt.title('Cross-validation results')
@@ -63,8 +66,8 @@ def plot_training_loss(loss_lambda, directory=""):
 
 
 def main():
-    # plot_training_loss(0.077426, directory='../learnt_parameters/GNN_1_zoom/')
-    plot_cross_validation_results(directory='../learnt_parameters/GNN_1_zoom_1/')
+    plot_training_loss(0.066538, directory='../learnt_parameters/GNN_1_zoom_2_results/')
+    # plot_cross_validation_results(directory='../learnt_parameters/GNN_1_zoom_2_results/', space='lin')
 
 
 if __name__ == '__main__':
