@@ -10,10 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment using large training dataset&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for final training of GNN with 1 zoom&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,6 +103,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="temp (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNN_Attention_Mechanism" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/learnt_parameters" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/learnt_parameters/temp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="temp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -146,34 +166,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="training_loss_plotter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="GNN_Attention_Mechanism" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GNN_training" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GNN_training/training_loss_plotter.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.cross_validation_plotter" />
+        <item itemvalue="Python.temp (1)" />
         <item itemvalue="Python.temp" />
         <item itemvalue="Python.cross_validation_plotter (1)" />
         <item itemvalue="Python.train_GNN" />
-        <item itemvalue="Python.training_loss_plotter" />
       </list>
     </recent_temporary>
   </component>
@@ -185,13 +184,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00101" summary="&quot;setup for training dataset generation&quot;">
-      <created>1614008251053</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
-      <option name="project" value="LOCAL" />
-      <updated>1614008251053</updated>
     </task>
     <task id="LOCAL-00102" summary="&quot;setup for training dataset generation&quot;">
       <created>1614008405530</created>
@@ -529,7 +521,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615196163701</updated>
     </task>
-    <option name="localTasksCounter" value="150" />
+    <task id="LOCAL-00150" summary="&quot;setup for final training of GNN with 1 zoom&quot;">
+      <created>1615299079519</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1615299079520</updated>
+    </task>
+    <option name="localTasksCounter" value="151" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -545,7 +544,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;removed the ../ sequences&quot;" />
     <MESSAGE value="&quot;changed job wallclock time&quot;" />
     <MESSAGE value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
     <MESSAGE value="&quot;fixed the issue with the host ID of the Gurobi license&quot;" />
@@ -570,7 +568,8 @@
     <MESSAGE value="&quot;setup for next iteration of cross-validation experiment&quot;" />
     <MESSAGE value="&quot;setup for large training dataset generation&quot;" />
     <MESSAGE value="&quot;setup for cross validation experiment using large training dataset&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross validation experiment using large training dataset&quot;" />
+    <MESSAGE value="&quot;setup for final training of GNN with 1 zoom&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for final training of GNN with 1 zoom&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -38,17 +38,18 @@ def plot_cross_validation_results(directory="", space='log'):
     plt.show()
 
 
-def plot_training_loss(loss_lambda, directory=""):
+def plot_training_loss(filepath):
     """
     This function generates the same training loss plot as the function in the GNN training folder but it does so by
-    using a ready cross validation dictionary specified by its respective value of lambda.
+    using a ready dictionary specified by its respective value of lambda.
     """
-    # Load the required cross validation dictionary corresponding to the input value of lambda
-    cross_validation_dict = torch.load(directory + 'cross_validation_dict_' + str(loss_lambda) + '.pkl')
+    # Load the required dictionary corresponding to the input filename
+    dictionary = torch.load(filepath)
 
     # Having obtained the above dictionary, construct the lists of first, second loss terms and overall losses
-    loss_terms_1 = cross_validation_dict['loss term 1']
-    loss_terms_2_times_lambda = [cross_validation_dict['loss term 2'][i] * loss_lambda for i in
+    loss_lambda = dictionary['lambda']
+    loss_terms_1 = dictionary['loss term 1']
+    loss_terms_2_times_lambda = [dictionary['loss term 2'][i] * loss_lambda for i in
                                  range(len(loss_terms_1))]
     overall_losses = [loss_terms_1[i] + loss_terms_2_times_lambda[i] for i in range(len(loss_terms_1))]
 
@@ -66,7 +67,7 @@ def plot_training_loss(loss_lambda, directory=""):
 
 
 def main():
-    plot_training_loss(0.066538, directory='../learnt_parameters/GNN_1_zoom_2_results/')
+    plot_training_loss('../learnt_parameters/training_dict_1_zoom.pkl')
     # plot_cross_validation_results(directory='../learnt_parameters/GNN_1_zoom_2_results/', space='lin')
 
 

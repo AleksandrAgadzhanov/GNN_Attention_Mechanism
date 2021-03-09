@@ -53,6 +53,9 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     gnn = GraphNeuralNetwork(temp_simplified_model, temp_input_size, temp_input_feature_size, temp_relu_feature_size,
                              temp_output_feature_size, training_mode=True, device=device)
 
+    # TODO
+    gnn.load_parameters('gnn_parameters_1_zoom.pkl')
+
     if device == 'cuda' and torch.cuda.is_available():
         for dict_idx in range(len(list_of_feature_dicts)):
             list_of_feature_dicts[dict_idx]['input'] = list_of_feature_dicts[dict_idx]['input'].cuda()
@@ -144,7 +147,7 @@ def main():
                                                          0.0001, 50, 0.066538,
                                                          output_filename='gnn_parameters_1_zoom.pkl',
                                                          log_filename='training_log.txt', device='cuda')
-    torch.save(mean_epoch_losses, 'learnt_parameters/training_loss_1_zoom.pkl')
+    torch.save(mean_epoch_losses, 'learnt_parameters/training_loss_1_zoom_part_2.pkl')
 
 
 if __name__ == '__main__':
