@@ -1,6 +1,7 @@
 import torch
 import mlogger
 import argparse
+import time
 from exp_utils.model_utils import load_verified_data, match_with_properties
 from helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
 
@@ -62,7 +63,7 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
 
 
 def pgd_attack_properties_restarts(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                                   num_trials, log_filename=None, subset=None, device='cpu'):
+                                   num_trials, output_filename, log_filename=None, subset=None, device='cpu'):
     """
     This function acts as the 2nd baseline to compare the pgd_gnn_attack_property() function against. It initialises a
     specified number of trial random PGD attacks and performs a specified number of iterations of gradient ascent. For
@@ -83,8 +84,11 @@ def pgd_attack_properties_restarts(properties_filename, model_name, epsilon_fact
         images, true_labels, test_labels, epsilons = match_with_subset(subset, images, true_labels, test_labels,
                                                                        epsilons)
 
-    # Now attack each property in turn for the specified number of trials
-    num_successful_attacks = 0  # counter of properties which were successfully PGD attacked
+    # Now attack each property in turn for the specified number of trials. Initialise the counter of properties which
+    # were successfully PGD attacked as well as the start time of the experiment. Also initialise the output dictionary
+    num_successful_attacks = 0
+    start_time = time.time()
+    output_dict = {'times': [], 'attack_success_rates': []}
     for i in range(len(images)):
         # First, simplify the network by adding the final layer and merging the last two layers into one,
         # incorporating the information about the true and test classes into the network
@@ -114,21 +118,27 @@ def pgd_attack_properties_restarts(properties_filename, model_name, epsilon_fact
                 with mlogger.stdout_to('GNN_framework/' + log_filename):
                     print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
-    # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
-    attack_success_rate = 100.0 * num_successful_attacks / len(images)
+        # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
+        attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
-    if log_filename is not None:
-        with mlogger.stdout_to(log_filename):
-            print('\nAttack success rate: ' + str(attack_success_rate))
-    else:
-        print('\nAttack success rate: ' + str(attack_success_rate))
+        # Store the time and current attack success rate in the output dictioanary
+        output_dict['times'].append(time.time() - start_time)
+        output_dict['attack_success_rates'].append(attack_success_rate)
 
-    return attack_success_rate
+    # Finally, store the output dictionary in the prescribed location in the current folder
+    torch.save(output_dict, 'GNN_framework/' + output_filename)
 
 
 def main():
-    pgd_attack_properties_restarts('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 90,
-                                   log_filename='baseline_log.txt', device='cuda')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--filename', type=str)
+    args = parser.parse_args()
+    properties_filename = args.filename + '.pkl'
+    log_filename = args.filename + 'log.txt'
+    output_filename = args.filename + '_dict.pkl'
+
+    pgd_attack_properties_restarts(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 90, output_filename,
+                                   log_filename=log_filename, device='cuda')
 
 
 if __name__ == '__main__':

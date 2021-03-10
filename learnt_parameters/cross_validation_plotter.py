@@ -67,7 +67,7 @@ def plot_training_loss(filepath):
 
 
 def main():
-    plot_training_loss('../learnt_parameters/training_dict_1_zoom.pkl')
+    plot_training_loss('training_dict_1_zoom.pkl')
     # plot_cross_validation_results(directory='../learnt_parameters/GNN_1_zoom_2_results/', space='lin')
 
 

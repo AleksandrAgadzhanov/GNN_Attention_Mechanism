@@ -53,9 +53,6 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     gnn = GraphNeuralNetwork(temp_simplified_model, temp_input_size, temp_input_feature_size, temp_relu_feature_size,
                              temp_output_feature_size, training_mode=True, device=device)
 
-    # TODO
-    gnn.load_parameters('gnn_parameters_1_zoom.pkl')
-
     if device == 'cuda' and torch.cuda.is_available():
         for dict_idx in range(len(list_of_feature_dicts)):
             list_of_feature_dicts[dict_idx]['input'] = list_of_feature_dicts[dict_idx]['input'].cuda()

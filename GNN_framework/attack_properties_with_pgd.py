@@ -1,5 +1,7 @@
 import torch
 import mlogger
+import time
+import argparse
 from exp_utils.model_utils import load_verified_data, match_with_properties
 from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
@@ -7,8 +9,8 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, log_filename=None,
-                              subset=None, device='cpu'):
+                              num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, output_filename,
+                              log_filename=None, subset=None, device='cpu'):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -27,13 +29,18 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         images, true_labels, test_labels, epsilons = match_with_subset(subset, images, true_labels, test_labels,
                                                                        epsilons)
 
-    # Now attack each property in turn by calling the appropriate function
-    num_successful_attacks = 0  # counter of properties which were successfully PGD attacked
+    # Now attack each property in turn by calling the appropriate function. Initialise the counter of properties which
+    # were successfully PGD attacked as well as the the starting time of the experiment. Also initialise the output
+    # dictionary containing the empty lists of times and corresponding attack success rates
+    num_successful_attacks = 0
+    start_time = time.time()
+    output_dict = {'times': [], 'attack success rates': []}
     for i in range(len(images)):
         # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating
         # the information about the true and test classes into the network
         simplified_model = simplify_model(model, true_labels[i], test_labels[i])
 
+        # Use the special function which attacks one particular property using the GNN
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_attack_epochs,
                                                          num_trials, num_restarts, gnn_parameters_filename,
@@ -56,10 +63,15 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         if successful_attack_flag:
             num_successful_attacks += 1
 
-    # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
-    attack_success_rate = 100.0 * num_successful_attacks / len(images)
+        # Calculate the current attack success rate for the properties in the file provided
+        attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
-    return attack_success_rate
+        # Store the time and corresponding current attack success rate in the output dictionary
+        output_dict['times'].append(time.time() - start_time)
+        output_dict['attack success rates'].append(attack_success_rate)
+
+    # Finally, store the output dictionary in the prescribed location in the current folder
+    torch.save(output_dict, 'GNN_framework/' + output_filename)
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
@@ -155,7 +167,15 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
 
 def main():
-    pgd_gnn_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 1, 10, 0, "stub.pkl", device='cuda')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--filename', type=str)
+    args = parser.parse_args()
+    properties_filename = args.filename + '.pkl'
+    log_filename = 'gnn_' + args.filename + 'log.txt'
+    output_filename = 'gnn_' + args.filename + '_dict.pkl'
+
+    pgd_gnn_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 1, 30, 2,
+                              'gnn_parameters_1_zoom.pkl', output_filename, log_filename=log_filename, device='cuda')
 
 
 if __name__ == '__main__':
