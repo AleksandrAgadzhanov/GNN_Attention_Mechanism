@@ -368,7 +368,7 @@ class GraphNeuralNetwork:
         gnn_neural_networks = self.get_auxiliary_networks_list()
 
         # Load the list of state dictionaries from the specified filename
-        state_dicts_list = torch.load('learnt_parameters/' + filename)
+        state_dicts_list = torch.load('experiment_results/' + filename)
 
         # Now load the appropriate state dictionary into each of these networks
         for index, gnn_neural_network in enumerate(gnn_neural_networks):

@@ -3,7 +3,7 @@ import torch
 from matplotlib import pyplot as plt
 
 
-def plot_cross_validation_results(directory="", space='log'):
+def plot_cross_validation_results(directory, space='log'):
     """
     This function plots a graph of the attack success rate against the cross-validation hyper-parameter lambda on the
     log-linear scale. It uses all the .pkl cross validation dictionaries it finds in the current directory for plotting.
@@ -62,13 +62,50 @@ def plot_training_loss(filepath):
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.title('Loss terms progression vs epoch number (Lambda: ' + str(loss_lambda) + ')')
-    plt.xticks(range(0, len(loss_terms_1) + 1, 5), range(0, len(loss_terms_1) + 1, 5))
+    plt.xticks(range(0, len(loss_terms_1) + 1, 10), range(0, len(loss_terms_1) + 1, 10))
+    plt.show()
+
+
+def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
+    """
+    This function produces two plots of attack success rate versus time on the same figure: one using the dictionary
+    corresponding to the GNN attacks and one using the dictionary corresponding to the baseline attacks.
+    """
+    # First, load the required dictionaries from each specified filepath
+    gnn_dict = torch.load(filepath_gnn_dict)
+    baseline_dict = torch.load(filepath_baseline_dict)
+
+    # Extract the times and corresponding attack success rates from the dictionaries
+    gnn_times = gnn_dict['times']
+    baseline_times = baseline_dict['times']
+    gnn_attack_success_rates = gnn_dict['attack success rates']
+    baseline_attack_success_rates = baseline_dict['attack success rates']
+
+    # Convert the times from seconds to hours for better visualisation
+    gnn_times = [1.0 * time / 3600 for time in gnn_times]
+    baseline_times = [1.0 * time / 3600 for time in baseline_times]
+
+    # Finally, produce an annotated plot
+    plt.plot(gnn_times, gnn_attack_success_rates, color='b', label='GNN attacks')
+    plt.plot(baseline_times, baseline_attack_success_rates, color='r', label='Baseline attacks')
+    plt.title(title)
+    plt.xlabel('Time (hrs)')
+    plt.ylabel('Attack success rate (%)')
+    plt.grid()
+    plt.legend()
+    plt.ylim([0, 100])
+    plt.yticks(range(0, 101, 10), range(0, 101, 10))
+    plt.text(gnn_times[-1], gnn_attack_success_rates[-1], str(round(gnn_attack_success_rates[-1], 1)))
+    plt.text(baseline_times[-1], baseline_attack_success_rates[-1], str(round(baseline_attack_success_rates[-1], 1)))
     plt.show()
 
 
 def main():
-    plot_training_loss('training_dict_1_zoom.pkl')
+    # plot_training_loss('../experiment_results/GNN_1_zoom/training_dict.pkl')
     # plot_cross_validation_results(directory='../learnt_parameters/GNN_1_zoom_2_results/', space='lin')
+    plot_attack_success_rates('GNN_1_zoom/test_attacks_gnn_dict.pkl',
+                              'GNN_1_zoom/test_attacks_baseline_dict.pkl',
+                              'Comparison of the GNN and baseline attacks (easy test dataset)')
 
 
 if __name__ == '__main__':

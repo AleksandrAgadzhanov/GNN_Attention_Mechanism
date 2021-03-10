@@ -123,10 +123,10 @@ def pgd_attack_properties_restarts(properties_filename, model_name, epsilon_fact
 
         # Store the time and current attack success rate in the output dictioanary
         output_dict['times'].append(time.time() - start_time)
-        output_dict['attack_success_rates'].append(attack_success_rate)
+        output_dict['attack success rates'].append(attack_success_rate)
 
     # Finally, store the output dictionary in the prescribed location in the current folder
-    torch.save(output_dict, 'GNN_framework/' + output_filename)
+    torch.save(output_dict, 'experiment_results/' + output_filename)
 
 
 def main():
@@ -134,7 +134,7 @@ def main():
     parser.add_argument('--filename', type=str)
     args = parser.parse_args()
     properties_filename = args.filename + '.pkl'
-    log_filename = args.filename + 'log.txt'
+    log_filename = args.filename + '_log.txt'
     output_filename = args.filename + '_dict.pkl'
 
     pgd_attack_properties_restarts(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 90, output_filename,

@@ -8,7 +8,8 @@ import glob
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
-                                     output_filename=None, log_filename=None, device='cpu'):
+                                     parameters_output_filename, losses_output_filename, log_filename=None,
+                                     device='cpu'):
     """
     This function performs training of a Graph Neural Network by utilising supervised learning. After the parameters of
     the Graph Neural Network are learned, they are stored in a desired file.
@@ -120,31 +121,22 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         else:
             print("Epoch " + str(epoch + 1) + " complete")
 
-    if output_filename is not None:
-        # Finally, after training is finished, if an output filename was specified, construct a list of all the state
-        # dictionaries of the auxiliary neural networks of the GNN and save it
-        gnn_state_dicts_list = []
+    # Finally, after training is finished, if an output filename was specified, construct a list of all the state
+    # dictionaries of the auxiliary neural networks of the GNN and save it
+    gnn_state_dicts_list = []
 
-        gnn_neural_networks = [gnn.forward_input_update_nn,
-                               gnn.forward_relu_update_nn,
-                               gnn.forward_output_update_nn,
-                               gnn.backward_relu_update_nn,
-                               gnn.backward_input_update_nn,
-                               gnn.bounds_update_nn]
-        for gnn_neural_network in gnn_neural_networks:
-            gnn_state_dicts_list.append(gnn_neural_network.state_dict())
+    gnn_neural_networks = gnn.get_auxiliary_networks_list()
+    for gnn_neural_network in gnn_neural_networks:
+        gnn_state_dicts_list.append(gnn_neural_network.state_dict())
 
-        torch.save(gnn_state_dicts_list, 'learnt_parameters/' + output_filename)
+    torch.save(gnn_state_dicts_list, 'experiment_results/' + parameters_output_filename)
 
-    return mean_epoch_losses
+    # Save the losses dictionary in a separate filename
+    torch.save(mean_epoch_losses, 'experiment_results/' + losses_output_filename)
 
 
 def main():
-    mean_epoch_losses = generate_gnn_training_parameters('train_val_SAT_jade_combined_dataset.pkl', 'cifar_base_kw',
-                                                         0.0001, 50, 0.066538,
-                                                         output_filename='gnn_parameters_1_zoom.pkl',
-                                                         log_filename='training_log.txt', device='cuda')
-    torch.save(mean_epoch_losses, 'learnt_parameters/training_loss_1_zoom_part_2.pkl')
+    pass
 
 
 if __name__ == '__main__':

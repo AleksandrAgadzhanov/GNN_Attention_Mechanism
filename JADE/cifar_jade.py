@@ -5,10 +5,15 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_framework/attack_properties_with_pgd.py --filename base_easy_SAT_jade",
-        "python GNN_framework/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade",
-        "python GNN_framework/baselines.py --filename base_easy_SAT_jade",
-        "python GNN_framework/baselines.py --filename easy_base_easy_SAT_jade"]
+jobs = ["python GNN_training/cross_validation --start_lambda 0.001 --end_lambda 0.00278256",
+        "python GNN_training/cross_validation --start_lambda 0.00359381 --end_lambda 0.01",
+        "python GNN_training/cross_validation --start_lambda 0.01 --end_lambda 0.0278256",
+        "python GNN_training/cross_validation --start_lambda 0.0359381 --end_lambda 0.1",
+        "python GNN_training/cross_validation --start_lambda 0.1 --end_lambda 0.278256",
+        "python GNN_training/cross_validation --start_lambda 0.359381 --end_lambda 1.0",
+        "python GNN_training/cross_validation --start_lambda 1.0 --end_lambda 2.78256",
+        "python GNN_training/cross_validation --start_lambda 3.59381 --end_lambda 10.0"
+        ]
 
 
 def run_command(command):

@@ -48,10 +48,10 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
         if log_filename is not None:
             if successful_attack_flag:
-                with mlogger.stdout_to('GNN_training/' + log_filename):
+                with mlogger.stdout_to('GNN_framework/' + log_filename):
                     print('Image ' + str(i + 1) + ' was attacked successfully')
             else:
-                with mlogger.stdout_to('GNN_training/' + log_filename):
+                with mlogger.stdout_to('GNN_framework/' + log_filename):
                     print('Image ' + str(i + 1) + ' was NOT attacked successfully')
         else:
             if successful_attack_flag:
@@ -71,7 +71,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         output_dict['attack success rates'].append(attack_success_rate)
 
     # Finally, store the output dictionary in the prescribed location in the current folder
-    torch.save(output_dict, 'GNN_framework/' + output_filename)
+    torch.save(output_dict, 'experiment_results/' + output_filename)
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
@@ -98,7 +98,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
         # If the attack was successful, the procedure can be terminated and True can be returned
         if successful_attack_flag:
             if log_filename is not None:
-                with mlogger.stdout_to('GNN_training/' + log_filename):
+                with mlogger.stdout_to('GNN_framework/' + log_filename):
                     print("Initial PGD attack succeeded")
             else:
                 print("Initial PGD attack succeeded")
@@ -145,7 +145,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                 # continue
                 if successful_attack_flag:
                     if log_filename is not None:
-                        with mlogger.stdout_to('GNN_training/' + log_filename):
+                        with mlogger.stdout_to('GNN_framework/' + log_filename):
                             print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
                                   str(attack_epoch + 1) + "; Restart " + str(restart) + ")")
                     else:
@@ -171,7 +171,7 @@ def main():
     parser.add_argument('--filename', type=str)
     args = parser.parse_args()
     properties_filename = args.filename + '.pkl'
-    log_filename = 'gnn_' + args.filename + 'log.txt'
+    log_filename = 'gnn_' + args.filename + '_log.txt'
     output_filename = 'gnn_' + args.filename + '_dict.pkl'
 
     pgd_gnn_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 1, 30, 2,
