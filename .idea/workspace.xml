@@ -10,29 +10,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for attacking the test datasets experiment&quot;">
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/easy_test_attacks_baseline_dict.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/easy_test_attacks_gnn_dict.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/easy_test_attacks_gnn_vs_baseline.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/test_attacks_gnn_vs_baseline.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/test_attacks_baseline_dict.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/test_attacks_gnn_dict.pkl" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/training_loss_plotter.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/cross_validation_results_1_zoom_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/cross_validation_1st_iteration.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/cross_validation_results_1_zoom_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/cross_validation_2nd_iteration.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/pgd_attacks_0_001.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/pgd_attacks_0_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphs/training_loss_1_zoom.png" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/training_loss.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/learnt_parameters/cross_validation_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/learnt_parameters/gnn_parameters_1_zoom.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/gnn_parameters.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/learnt_parameters/training_dict_1_zoom.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/training_dict.pkl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,13 +188,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00105" summary="&quot;setup for training dataset generation&quot;">
-      <created>1614011301622</created>
-      <option name="number" value="00105" />
-      <option name="presentableId" value="LOCAL-00105" />
-      <option name="project" value="LOCAL" />
-      <updated>1614011301622</updated>
     </task>
     <task id="LOCAL-00106" summary="&quot;setup for validation dataset generation&quot;">
       <created>1614027084032</created>
@@ -550,7 +525,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615364645514</updated>
     </task>
-    <option name="localTasksCounter" value="154" />
+    <task id="LOCAL-00154" summary="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;">
+      <created>1615378158573</created>
+      <option name="number" value="00154" />
+      <option name="presentableId" value="LOCAL-00154" />
+      <option name="project" value="LOCAL" />
+      <updated>1615378158573</updated>
+    </task>
+    <option name="localTasksCounter" value="155" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -566,7 +548,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;fixed the function reconnecting the last layer of the GNN underlying network&quot;" />
     <MESSAGE value="&quot;fixed the issue with the host ID of the Gurobi license&quot;" />
     <MESSAGE value="&quot;prepared code for test run of cross validation on JADE&quot;" />
     <MESSAGE value="&quot;commit&quot;" />
@@ -591,7 +572,8 @@
     <MESSAGE value="&quot;setup for cross validation experiment using large training dataset&quot;" />
     <MESSAGE value="&quot;setup for final training of GNN with 1 zoom&quot;" />
     <MESSAGE value="&quot;setup for attacking the test datasets experiment&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for attacking the test datasets experiment&quot;" />
+    <MESSAGE value="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

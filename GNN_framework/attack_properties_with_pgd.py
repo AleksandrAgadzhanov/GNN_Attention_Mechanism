@@ -10,7 +10,7 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
                               num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, output_filename,
-                              log_filename=None, subset=None, device='cpu'):
+                              log_filepath=None, subset=None, device='cpu'):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -44,14 +44,14 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_attack_epochs,
                                                          num_trials, num_restarts, gnn_parameters_filename,
-                                                         log_filename, device=device)
+                                                         log_filepath, device=device)
 
-        if log_filename is not None:
+        if log_filepath is not None:
             if successful_attack_flag:
-                with mlogger.stdout_to('GNN_framework/' + log_filename):
+                with mlogger.stdout_to(log_filepath):
                     print('Image ' + str(i + 1) + ' was attacked successfully')
             else:
-                with mlogger.stdout_to('GNN_framework/' + log_filename):
+                with mlogger.stdout_to(log_filepath):
                     print('Image ' + str(i + 1) + ' was NOT attacked successfully')
         else:
             if successful_attack_flag:
@@ -75,7 +75,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, log_filename=None,
+                            num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, log_filepath=None,
                             device='cpu'):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
@@ -97,8 +97,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
         # If the attack was successful, the procedure can be terminated and True can be returned
         if successful_attack_flag:
-            if log_filename is not None:
-                with mlogger.stdout_to('GNN_framework/' + log_filename):
+            if log_filepath is not None:
+                with mlogger.stdout_to(log_filepath):
                     print("Initial PGD attack succeeded")
             else:
                 print("Initial PGD attack succeeded")
@@ -144,8 +144,8 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                 # If the attack was successful, the procedure can be terminated and True can be returned, otherwise
                 # continue
                 if successful_attack_flag:
-                    if log_filename is not None:
-                        with mlogger.stdout_to('GNN_framework/' + log_filename):
+                    if log_filepath is not None:
+                        with mlogger.stdout_to(log_filepath):
                             print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
                                   str(attack_epoch + 1) + "; Restart " + str(restart) + ")")
                     else:
@@ -171,11 +171,11 @@ def main():
     parser.add_argument('--filename', type=str)
     args = parser.parse_args()
     properties_filename = args.filename + '.pkl'
-    log_filename = 'gnn_' + args.filename + '_log.txt'
+    log_filepath = 'GNN_framework/gnn_' + args.filename + '_log.txt'
     output_filename = 'gnn_' + args.filename + '_dict.pkl'
 
     pgd_gnn_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 1, 30, 2,
-                              'gnn_parameters_1_zoom.pkl', output_filename, log_filename=log_filename, device='cuda')
+                              'gnn_parameters_1_zoom.pkl', output_filename, log_filepath=log_filepath, device='cuda')
 
 
 if __name__ == '__main__':

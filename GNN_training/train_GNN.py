@@ -8,8 +8,7 @@ import glob
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
-                                     parameters_output_filename, losses_output_filename, log_filename=None,
-                                     device='cpu'):
+                                     parameters_output_filename, log_filepath=None, device='cpu'):
     """
     This function performs training of a Graph Neural Network by utilising supervised learning. After the parameters of
     the Graph Neural Network are learned, they are stored in a desired file.
@@ -115,8 +114,8 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         mean_epoch_losses['loss term 2'].append(epoch_loss_term_2 / len(list_of_feature_dicts))
 
         # Print a message to the terminal at the end of each epoch
-        if log_filename is not None:
-            with mlogger.stdout_to('GNN_training/' + log_filename):
+        if log_filepath is not None:
+            with mlogger.stdout_to(log_filepath):
                 print("Epoch " + str(epoch + 1) + " complete")
         else:
             print("Epoch " + str(epoch + 1) + " complete")
@@ -131,8 +130,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
     torch.save(gnn_state_dicts_list, 'experiment_results/' + parameters_output_filename)
 
-    # Save the losses dictionary in a separate filename
-    torch.save(mean_epoch_losses, 'experiment_results/' + losses_output_filename)
+    return mean_epoch_losses
 
 
 def main():
