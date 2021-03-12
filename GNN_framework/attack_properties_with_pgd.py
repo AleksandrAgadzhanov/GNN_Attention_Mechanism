@@ -9,8 +9,8 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, output_filename,
-                              log_filepath=None, subset=None, device='cpu'):
+                              num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename,
+                              output_filename=None, log_filepath=None, subset=None, device='cpu'):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
     for the function which attacks each property in turn by calling this function for each property.
@@ -30,11 +30,13 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
                                                                        epsilons)
 
     # Now attack each property in turn by calling the appropriate function. Initialise the counter of properties which
-    # were successfully PGD attacked as well as the the starting time of the experiment. Also initialise the output
-    # dictionary containing the empty lists of times and corresponding attack success rates
+    # were successfully PGD attacked, the starting time of the experiment and the attack success rate. Also initialise
+    # the output dictionary containing the empty lists of times and corresponding attack success rates
     num_successful_attacks = 0
+    attack_success_rate = 0
     start_time = time.time()
     output_dict = {'times': [], 'attack success rates': []}
+
     for i in range(len(images)):
         # First, simplify the network by adding the final layer and merging the last two layers into one, incorporating
         # the information about the true and test classes into the network
@@ -66,12 +68,19 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         # Calculate the current attack success rate for the properties in the file provided
         attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
-        # Store the time and corresponding current attack success rate in the output dictionary
-        output_dict['times'].append(time.time() - start_time)
-        output_dict['attack success rates'].append(attack_success_rate)
+        # If, the output filename was provided, store the time and corresponding current attack success rate in the
+        # output dictionary
+        if output_filename is not None:
+            output_dict['times'].append(time.time() - start_time)
+            output_dict['attack success rates'].append(attack_success_rate)
 
-    # Finally, store the output dictionary in the prescribed location in the current folder
-    torch.save(output_dict, 'experiment_results/' + output_filename)
+    # Finally, if the output filename was provided, store the output dictionary in the prescribed location in the
+    # current folder
+    if output_filename is not None:
+        torch.save(output_dict, 'experiment_results/' + output_filename)
+    # Otherwise, simply return the final attack success rate
+    else:
+        return attack_success_rate
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,

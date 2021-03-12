@@ -22,8 +22,8 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
 
     # Train the GNN using the current value of lambda and output the learnt parameters in the temporary file
     output_dict = generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate,
-                                                   num_training_epochs, loss_lambda, parameters_filename, log_filepath,
-                                                   device=device)
+                                                   num_training_epochs, loss_lambda, parameters_filename,
+                                                   log_filepath=log_filepath, device=device)
 
     torch.save(output_dict, output_dictionary_filepath)
 
@@ -45,7 +45,8 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
     validation_attack_success_rate = pgd_gnn_attack_properties(validation_properties_filename, model_name,
                                                                epsilon_factor, pgd_learning_rate, num_iterations,
                                                                num_attack_epochs, num_trials, num_restarts,
-                                                               parameters_filename, log_filepath, device=device)
+                                                               parameters_filename, log_filepath=log_filepath,
+                                                               device=device)
 
     if log_filepath is not None:
         with mlogger.stdout_to(log_filepath):
