@@ -102,10 +102,11 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
 
 def main():
     # plot_training_loss('../experiment_results/GNN_1_zoom/training_dict.pkl')
-    # plot_cross_validation_results(directory='../learnt_parameters/GNN_1_zoom_2_results/', space='lin')
-    plot_attack_success_rates('GNN_1_zoom/test_attacks_gnn_dict.pkl',
-                              'GNN_1_zoom/test_attacks_baseline_dict.pkl',
-                              'Comparison of the GNN and baseline attacks (easy test dataset)')
+    plot_cross_validation_results(directory='../experiment_results/GNN_2_zooms/cross_validation_1st_iteration/',
+                                  space='log')
+    # plot_attack_success_rates('GNN_1_zoom/test_attacks_gnn_dict.pkl',
+    #                           'GNN_1_zoom/test_attacks_baseline_dict.pkl',
+    #                           'Comparison of the GNN and baseline attacks (easy test dataset)')
 
 
 if __name__ == '__main__':
