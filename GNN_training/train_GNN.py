@@ -134,7 +134,11 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    pass
+    mean_epoch_losses = generate_gnn_training_parameters('train_val_SAT_jade_combined_dataset.pkl', 'cifar_base_kw',
+                                                         0.0001, 100, 0.04, 'gnn_parameters.pkl',
+                                                         log_filepath='GNN_training/training_log.txt',
+                                                         device='cuda')
+    torch.save(mean_epoch_losses, 'experiment_results/training_loss.pkl')
 
 
 if __name__ == '__main__':
