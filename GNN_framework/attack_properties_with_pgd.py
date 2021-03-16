@@ -9,7 +9,7 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename,
+                              num_attack_epochs, num_trials, num_restarts, gnn_parameters_filepath,
                               output_filename=None, log_filepath=None, subset=None, device='cpu'):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
@@ -45,7 +45,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         # Use the special function which attacks one particular property using the GNN
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_attack_epochs,
-                                                         num_trials, num_restarts, gnn_parameters_filename,
+                                                         num_trials, num_restarts, gnn_parameters_filepath,
                                                          log_filepath, device=device)
 
         if log_filepath is not None:
@@ -84,7 +84,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_attack_epochs, num_trials, num_restarts, gnn_parameters_filename, log_filepath=None,
+                            num_attack_epochs, num_trials, num_restarts, gnn_parameters_filepath, log_filepath=None,
                             device='cpu'):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
@@ -126,7 +126,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                                  relu_feature_vectors_list[0].size()[0], output_feature_vectors.size()[0])
 
         # Load the learnt GNN parameters into the GNN
-        gnn.load_parameters(gnn_parameters_filename)
+        gnn.load_parameters(gnn_parameters_filepath)
 
         # Follow the GNN framework approach for a specified number of epochs
         for attack_epoch in range(num_attack_epochs):
@@ -183,8 +183,9 @@ def main():
     log_filepath = 'GNN_framework/gnn_' + args.filename + '_log.txt'
     output_filename = 'gnn_' + args.filename + '_dict.pkl'
 
-    pgd_gnn_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 1, 30, 2,
-                              'gnn_parameters_1_zoom.pkl', output_filename, log_filepath=log_filepath, device='cuda')
+    pgd_gnn_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 2, 15, 2,
+                              'experiment_results/GNN_2_zooms/gnn_parameters.pkl', output_filename,
+                              log_filepath=log_filepath, device='cuda')
 
 
 if __name__ == '__main__':

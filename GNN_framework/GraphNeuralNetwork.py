@@ -360,7 +360,7 @@ class GraphNeuralNetwork:
                     parameter.requires_grad_(True)
                 yield parameter
 
-    def load_parameters(self, filename):
+    def load_parameters(self, filepath):
         """
         This function loads the parameters learnt through training into the auxiliary neural networks of the GNN.
         """
@@ -368,7 +368,7 @@ class GraphNeuralNetwork:
         gnn_neural_networks = self.get_auxiliary_networks_list()
 
         # Load the list of state dictionaries from the specified filename
-        state_dicts_list = torch.load('experiment_results/' + filename)
+        state_dicts_list = torch.load(filepath)
 
         # Now load the appropriate state dictionary into each of these networks
         for index, gnn_neural_network in enumerate(gnn_neural_networks):
