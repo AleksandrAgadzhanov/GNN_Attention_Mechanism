@@ -10,16 +10,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for training GNN with 2 zooms&quot;">
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/easy_test_attacks_baseline_dict.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/gnn_parameters.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/cross_validation_2nd_iteration.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/training_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/test_attacks_baseline_dict.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/training_dict.pkl" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for attacking experiment (2 GNN zooms)&quot;">
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/easy_test_attacks_gnn_dict.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/easy_test_attacks_gnn_vs_baseline.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/test_attacks_gnn_vs_baseline.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/test_attacks_gnn_dict.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/GraphNeuralNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/launch_init.sh" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/launch_init.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
@@ -61,6 +58,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\GNN_2_zooms" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\learnt_parameters_2" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\JADE" />
     </key>
@@ -195,13 +193,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00110" summary="&quot;setup for cross validation experiment&quot;">
-      <created>1614078165694</created>
-      <option name="number" value="00110" />
-      <option name="presentableId" value="LOCAL-00110" />
-      <option name="project" value="LOCAL" />
-      <updated>1614078165694</updated>
     </task>
     <task id="LOCAL-00111" summary="&quot;setup for cross validation experiment&quot;">
       <created>1614079507304</created>
@@ -539,7 +530,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615801729117</updated>
     </task>
-    <option name="localTasksCounter" value="159" />
+    <task id="LOCAL-00159" summary="&quot;setup for attacking experiment (2 GNN zooms)&quot;">
+      <created>1615887719364</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
+      <option name="project" value="LOCAL" />
+      <updated>1615887719364</updated>
+    </task>
+    <option name="localTasksCounter" value="160" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -555,7 +553,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;fixed the issue with the host ID of the Gurobi license&quot;" />
     <MESSAGE value="&quot;prepared code for test run of cross validation on JADE&quot;" />
     <MESSAGE value="&quot;commit&quot;" />
     <MESSAGE value="&quot;setup for new training dataset generation&quot;" />
@@ -580,7 +577,8 @@
     <MESSAGE value="&quot;setup for final training of GNN with 1 zoom&quot;" />
     <MESSAGE value="&quot;setup for attacking the test datasets experiment&quot;" />
     <MESSAGE value="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;" />
+    <MESSAGE value="&quot;setup for attacking experiment (2 GNN zooms)&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for attacking experiment (2 GNN zooms)&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
