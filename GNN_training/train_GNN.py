@@ -8,7 +8,7 @@ import glob
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
-                                     parameters_output_filename, log_filepath=None, device='cpu'):
+                                     parameters_output_filepath, log_filepath=None, device='cpu'):
     """
     This function performs training of a Graph Neural Network by utilising supervised learning. After the parameters of
     the Graph Neural Network are learned, they are stored in a desired file.
@@ -128,17 +128,13 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     for gnn_neural_network in gnn_neural_networks:
         gnn_state_dicts_list.append(gnn_neural_network.state_dict())
 
-    torch.save(gnn_state_dicts_list, 'experiment_results/' + parameters_output_filename)
+    torch.save(gnn_state_dicts_list, parameters_output_filepath)
 
     return mean_epoch_losses
 
 
 def main():
-    mean_epoch_losses = generate_gnn_training_parameters('train_val_SAT_jade_combined_dataset.pkl', 'cifar_base_kw',
-                                                         0.0001, 100, 0.04, 'gnn_parameters.pkl',
-                                                         log_filepath='GNN_training/training_log.txt',
-                                                         device='cuda')
-    torch.save(mean_epoch_losses, 'experiment_results/training_loss.pkl')
+    pass
 
 
 if __name__ == '__main__':

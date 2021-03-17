@@ -15,14 +15,14 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
     # Start the timer
     start_time = time.time()
 
-    # Initialize the filename in which the parameters for the given value of lambda and will be stored. Also initialize
-    # the filepath where the output dictionary for the given value of lambda will be stored
-    parameters_filename = 'gnn_parameters_' + str(loss_lambda) + '.pkl'
+    # Initialize the filepath in which the parameters and the output dictionary for the given value of lambda and will
+    # be stored
+    parameters_filepath = 'experiment_results/gnn_parameters_' + str(loss_lambda) + '.pkl'
     output_dictionary_filepath = 'experiment_results/cross_validation_dict_' + str(loss_lambda) + '.pkl'
 
     # Train the GNN using the current value of lambda and output the learnt parameters in the temporary file
     output_dict = generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate,
-                                                   num_training_epochs, loss_lambda, parameters_filename,
+                                                   num_training_epochs, loss_lambda, parameters_filepath,
                                                    log_filepath=log_filepath, device=device)
 
     torch.save(output_dict, output_dictionary_filepath)
@@ -45,7 +45,7 @@ def cross_validate_gnn(loss_lambda, training_dataset_filename, validation_proper
     validation_attack_success_rate = pgd_gnn_attack_properties(validation_properties_filename, model_name,
                                                                epsilon_factor, pgd_learning_rate, num_iterations,
                                                                num_attack_epochs, num_trials, num_restarts,
-                                                               parameters_filename, log_filepath=log_filepath,
+                                                               parameters_filepath, log_filepath=log_filepath,
                                                                device=device)
 
     if log_filepath is not None:
