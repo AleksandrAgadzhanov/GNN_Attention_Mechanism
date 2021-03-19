@@ -116,9 +116,11 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
         # Print a message to the terminal at the end of each epoch
         if log_filepath is not None:
             with mlogger.stdout_to(log_filepath):
-                print("Epoch " + str(epoch + 1) + " complete")
+                print("Epoch " + str(epoch + 1) + " complete. Mean epoch loss: " +
+                      str(epoch_loss_term_1 / len(list_of_feature_dicts)))
         else:
-            print("Epoch " + str(epoch + 1) + " complete")
+            print("Epoch " + str(epoch + 1) + " complete. Mean epoch loss: " +
+                  str(epoch_loss_term_1 / len(list_of_feature_dicts)))
 
     # Finally, after training is finished, if an output filename was specified, construct a list of all the state
     # dictionaries of the auxiliary neural networks of the GNN and save it

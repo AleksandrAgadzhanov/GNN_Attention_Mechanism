@@ -10,10 +10,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross-validation experiment (3 GNN zooms)&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for GNN training (3 GNN zooms)&quot;">
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_3_zooms/gnn_parameters.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_3_zooms/training_dict.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -188,13 +188,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00114" summary="&quot;setup for cross validation experiment&quot;">
-      <created>1614171179790</created>
-      <option name="number" value="00114" />
-      <option name="presentableId" value="LOCAL-00114" />
-      <option name="project" value="LOCAL" />
-      <updated>1614171179790</updated>
     </task>
     <task id="LOCAL-00115" summary="&quot;presumably fixed numerical instability issues when computing intermediate bounds&quot;">
       <created>1614197800836</created>
@@ -532,7 +525,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616053817883</updated>
     </task>
-    <option name="localTasksCounter" value="163" />
+    <task id="LOCAL-00163" summary="&quot;setup for GNN training (3 GNN zooms)&quot;">
+      <created>1616146795749</created>
+      <option name="number" value="00163" />
+      <option name="presentableId" value="LOCAL-00163" />
+      <option name="project" value="LOCAL" />
+      <updated>1616146795750</updated>
+    </task>
+    <option name="localTasksCounter" value="164" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -548,7 +548,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;commit&quot;" />
     <MESSAGE value="&quot;setup for new training dataset generation&quot;" />
     <MESSAGE value="&quot;modified cross validation script to use a single lambda value&quot;" />
     <MESSAGE value="&quot;incorporated new solver function and set up training dataset generation&quot;" />
@@ -573,7 +572,8 @@
     <MESSAGE value="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;" />
     <MESSAGE value="&quot;setup for attacking experiment (2 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for cross-validation experiment (3 GNN zooms)&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross-validation experiment (3 GNN zooms)&quot;" />
+    <MESSAGE value="&quot;setup for GNN training (3 GNN zooms)&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for GNN training (3 GNN zooms)&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
