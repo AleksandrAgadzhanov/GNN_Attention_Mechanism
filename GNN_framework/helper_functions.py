@@ -122,7 +122,6 @@ def generate_gradient_info_dict(gradients):
     """
     This function generates the dictionary of containing information about gradients during the PGD attack.
     """
-    # TODO decide whether it is the gradients or their magnitudes that matter
     # First take the absolute value since it is the magnitudes of gradients that matter since loss is always moving in
     # the same direction (increasing) and the pixel values may decrease or increase
     # gradient_magnitudes = torch.abs(gradients)
