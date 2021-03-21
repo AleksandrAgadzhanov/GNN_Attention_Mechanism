@@ -139,6 +139,10 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
             # For a specified number of random restarts, perform randomly initialised PGD attacks on the new subdomain
             for trial in range(num_trials):
 
+                # TODO
+                if attack_epoch == num_attack_epochs - 1 and trial == 6:
+                    break
+
                 # Perturb each pixel within the updated domain bounds
                 perturbed_image = perturb_image(lower_bound, upper_bound)
 
@@ -162,14 +166,17 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                               str(attack_epoch + 1) + "; Restart " + str(restart) + ")")
                     return True
 
-            # Otherwise, update all the feature vectors using new information
-            input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
-                                                                   gradient_info_dict)
+            # Otherwise, update all the feature vectors using new information if the attack epoch number is not the last
+            # one
+            if attack_epoch != num_attack_epochs - 1:
+                input_feature_vectors = generate_input_feature_vectors(lower_bound, upper_bound, perturbed_image,
+                                                                       gradient_info_dict)
 
-            relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
-                                                                                                     lower_bound,
-                                                                                                     upper_bound,
-                                                                                                     perturbed_image)
+                relu_feature_vectors_list, output_feature_vectors = generate_relu_output_feature_vectors(simplified_model,
+                                                                                                         lower_bound,
+                                                                                                         upper_bound,
+                                                                                                         perturbed_image
+                                                                                                         )
 
     # If the limit on the number of restarts was reached and no PGD attack was successful, return False
     return False

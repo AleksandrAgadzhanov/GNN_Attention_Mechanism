@@ -73,13 +73,14 @@ def main():
     log_filepath = 'GNN_training/cross_validation_log_' + str(args.start_lambda) + '_to_' + str(args.end_lambda) + '.pkl'
 
     import numpy as np
+    import math
 
-    loss_lambdas = np.linspace(args.start_lambda, args.end_lambda, num=5)
+    loss_lambdas = np.logspace(math.log10(args.start_lambda), math.log10(args.end_lambda), num=5)
     loss_lambdas = [round(loss_lambda, 6) for loss_lambda in loss_lambdas]
 
     for loss_lambda in loss_lambdas:
         cross_validate_gnn(loss_lambda, 'train_SAT_jade_combined_dataset.pkl', 'val_SAT_jade.pkl', 'cifar_base_kw',
-                           0.0001, 30, 0.1, 100, 3, 10, 2, log_filepath=log_filepath, device='cuda')
+                           0.0001, 30, 0.1, 100, 4, 8, 2, log_filepath=log_filepath, device='cuda')
 
 
 if __name__ == '__main__':
