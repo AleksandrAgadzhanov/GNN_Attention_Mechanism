@@ -17,7 +17,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     # the model. If the reduced training dataset is specified, extract the first 1000 entries from the training dataset
     if training_dataset_filename == 'train_SAT_jade_reduced_dataset.pkl':
         # First, extract all the parts of the training dataset into a list
-        filenames_list = glob.glob('../cifar_exp/train_SAT_jade_combined_dataset_*')
+        filenames_list = glob.glob('cifar_exp/train_SAT_jade_combined_dataset_*')
 
         # Now, leave only the first 3 parts of the training dataset (1221 properties)
         filenames_list = filenames_list[:3]
@@ -143,9 +143,9 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 def main():
     mean_epoch_losses = generate_gnn_training_parameters('train_SAT_jade_reduced_dataset.pkl', 'cifar_base_kw',
-                                                         0.00001, 50, 0.05, 'experiment_results/stub_parameters.pkl',
+                                                         0.00001, 50, 0.058718, 'experiment_results/stub_parameters.pkl',
                                                          log_filepath='GNN_training/training_log.txt', device='cuda')
-    mean_epoch_losses['lambda'] = 0.05
+    mean_epoch_losses['lambda'] = 0.058718
     torch.save(mean_epoch_losses, 'experiment_results/training_dict.pkl')
 
 
