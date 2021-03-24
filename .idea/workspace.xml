@@ -10,11 +10,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for training (4 GNN zooms)&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;changed GNN learning rate and started using reduced training dataset&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +63,7 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\cifar_exp" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.train_GNN">
+  <component name="RunManager" selected="Python.plotter (1)">
     <configuration name="cross_validation_plotter (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -174,9 +171,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.plotter (1)" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.temp" />
-        <item itemvalue="Python.plotter (1)" />
         <item itemvalue="Python.temp (1)" />
         <item itemvalue="Python.cross_validation_plotter (1)" />
       </list>
@@ -190,20 +187,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00122" summary="&quot;incorporated both trials and restarts into the GNN framework&quot;">
-      <created>1614291677786</created>
-      <option name="number" value="00122" />
-      <option name="presentableId" value="LOCAL-00122" />
-      <option name="project" value="LOCAL" />
-      <updated>1614291677786</updated>
-    </task>
-    <task id="LOCAL-00123" summary="&quot;setup for big cross validation experiment&quot;">
-      <created>1614292116492</created>
-      <option name="number" value="00123" />
-      <option name="presentableId" value="LOCAL-00123" />
-      <option name="project" value="LOCAL" />
-      <updated>1614292116492</updated>
     </task>
     <task id="LOCAL-00124" summary="&quot;setup for big cross validation experiment&quot;">
       <created>1614293273168</created>
@@ -534,7 +517,21 @@
       <option name="project" value="LOCAL" />
       <updated>1616490920139</updated>
     </task>
-    <option name="localTasksCounter" value="171" />
+    <task id="LOCAL-00171" summary="&quot;changed GNN learning rate and started using reduced training dataset&quot;">
+      <created>1616575053678</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
+      <option name="project" value="LOCAL" />
+      <updated>1616575053678</updated>
+    </task>
+    <task id="LOCAL-00172" summary="&quot;changed GNN learning rate and started using reduced training dataset&quot;">
+      <created>1616575108857</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
+      <option name="project" value="LOCAL" />
+      <updated>1616575108857</updated>
+    </task>
+    <option name="localTasksCounter" value="173" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -550,7 +547,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;made log filename a variable&quot;" />
     <MESSAGE value="&quot;setup for training dataset generation&quot;" />
     <MESSAGE value="&quot;setup for validation dataset generation&quot;" />
     <MESSAGE value="&quot;presumably fixed numerical instability issues when computing intermediate bounds&quot;" />
@@ -575,7 +571,8 @@
     <MESSAGE value="&quot;setup for GNN testing (3 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for cross-validation (4 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for training (4 GNN zooms)&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for training (4 GNN zooms)&quot;" />
+    <MESSAGE value="&quot;changed GNN learning rate and started using reduced training dataset&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;changed GNN learning rate and started using reduced training dataset&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
