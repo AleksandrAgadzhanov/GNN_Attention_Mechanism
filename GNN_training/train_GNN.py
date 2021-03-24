@@ -14,15 +14,21 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     the Graph Neural Network are learned, they are stored in a desired file.
     """
     # First, load the training dataset which is a list of feature dictionaries from the specified filename. Also load
-    # the model. If the combined training dataset is specified, construct it from its constituent parts
-    if training_dataset_filename == 'train_SAT_jade_combined_dataset.pkl':
+    # the model. If the reduced training dataset is specified, extract the first 1000 entries from the training dataset
+    if training_dataset_filename == 'train_SAT_jade_reduced_dataset.pkl':
         # First, extract all the parts of the training dataset into a list
-        filenames_list = glob.glob('cifar_exp/train_SAT_jade_combined_dataset_*')
+        filenames_list = glob.glob('../cifar_exp/train_SAT_jade_combined_dataset_*')
 
-        # Finally, construct the list of dictionaries fromm the parts of the overall training dataset
+        # Now, leave only the first 3 parts of the training dataset (1221 properties)
+        filenames_list = filenames_list[:3]
+
+        # Construct the list of dictionaries fromm the parts of the overall training dataset
         list_of_feature_dicts = []
         for filename in filenames_list:
             list_of_feature_dicts += torch.load(filename)
+
+        # Finally, leave only the first 1000 properties
+        list_of_feature_dicts = list_of_feature_dicts[:1000]
 
     # If the combined training and validation dataset is specified, construct it from all the relevant parts
     elif training_dataset_filename == 'train_val_SAT_jade_combined_dataset.pkl':
@@ -136,10 +142,10 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    mean_epoch_losses = generate_gnn_training_parameters('train_val_SAT_jade_combined_dataset.pkl', 'cifar_base_kw',
-                                                         0.0001, 100, 0.058718, 'experiment_results/gnn_parameters.pkl',
+    mean_epoch_losses = generate_gnn_training_parameters('train_SAT_jade_reduced_dataset.pkl', 'cifar_base_kw',
+                                                         0.00001, 50, 0.05, 'experiment_results/stub_parameters.pkl',
                                                          log_filepath='GNN_training/training_log.txt', device='cuda')
-    mean_epoch_losses['lambda'] = 0.058718
+    mean_epoch_losses['lambda'] = 0.05
     torch.save(mean_epoch_losses, 'experiment_results/training_dict.pkl')
 
 
