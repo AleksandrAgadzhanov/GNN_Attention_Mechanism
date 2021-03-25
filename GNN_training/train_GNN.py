@@ -151,7 +151,7 @@ def main():
     log_filepath = 'GNN_training/training_log_' + str(args.loss_lambda) + '.txt'
 
     mean_epoch_losses = generate_gnn_training_parameters('train_SAT_jade_reduced_dataset.pkl', 'cifar_base_kw',
-                                                         0.000001, 50, args.loss_lambda, parameters_filename,
+                                                         0.000001, 100, args.loss_lambda, parameters_filename,
                                                          log_filepath=log_filepath, device='cuda')
 
     torch.save(mean_epoch_losses, 'experiment_results/training_dict_' + str(args.loss_lambda) + '.pkl')

@@ -1,6 +1,6 @@
 from exp_utils.model_utils import load_verified_data
+from GNN_framework.baselines import pgd_attack_properties
 import torch
-import random
 import copy
 import pandas as pd
 import numpy as np
@@ -448,9 +448,6 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 
 def main():
-    subset = random.sample(list(range(640)), 25)
-
-    epsilon_percents = [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]
     attack_success_rates_random = []
     attack_success_rates_heuristic = []
     for epsilon_percent in epsilon_percents:
