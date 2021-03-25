@@ -5,6 +5,7 @@ from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import simplify_model
 from GNN_training.helper_functions import compute_loss
 import glob
+import argparse
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
@@ -71,8 +72,8 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     # Initialise the optimizer on the parameters of the GNN
     optimizer = torch.optim.Adam(gnn.parameters(), lr=gnn_learning_rate)
 
-    # Initialize the dictionary to store both epoch loss terms progression in
-    mean_epoch_losses = {'loss term 1': [], 'loss term 2': []}
+    # Initialize the dictionary to store both epoch loss terms progression and the lambda parameter in
+    training_dict = {'loss term 1': [], 'loss term 2': [], 'lambda': loss_lambda}
 
     # Follow the training algorithm for a specified number of epochs
     for epoch in range(num_epochs):
@@ -116,8 +117,8 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             optimizer.step()
 
         # Append the mean epoch losses during the current epoch to the list
-        mean_epoch_losses['loss term 1'].append(epoch_loss_term_1 / len(list_of_feature_dicts))
-        mean_epoch_losses['loss term 2'].append(epoch_loss_term_2 / len(list_of_feature_dicts))
+        training_dict['loss term 1'].append(epoch_loss_term_1 / len(list_of_feature_dicts))
+        training_dict['loss term 2'].append(epoch_loss_term_2 / len(list_of_feature_dicts))
 
         # Print a message to the terminal at the end of each epoch
         if log_filepath is not None:
@@ -138,15 +139,22 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
     torch.save(gnn_state_dicts_list, parameters_output_filepath)
 
-    return mean_epoch_losses
+    return training_dict
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--loss_lambda', type=float)
+    args = parser.parse_args()
+
+    parameters_filename = 'experiment_results/stub_parameters_' + str(args.loss_lambda) + '.pkl'
+    log_filepath = 'GNN_training/training_log_' + str(args.loss_lambda) + '.txt'
+
     mean_epoch_losses = generate_gnn_training_parameters('train_SAT_jade_reduced_dataset.pkl', 'cifar_base_kw',
-                                                         0.000001, 100, 0.2, 'experiment_results/stub_parameters.pkl',
-                                                         log_filepath='GNN_training/training_log.txt', device='cuda')
-    mean_epoch_losses['lambda'] = 0.2
-    torch.save(mean_epoch_losses, 'experiment_results/training_dict.pkl')
+                                                         0.00001, 50, args.loss_lambda, parameters_filename,
+                                                         log_filepath=log_filepath, device='cuda')
+
+    torch.save(mean_epoch_losses, 'experiment_results/training_dict' + str(args.loss_lambda) + '.pkl')
 
 
 if __name__ == '__main__':
