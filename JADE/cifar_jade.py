@@ -5,7 +5,15 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/train_GNN.py"]
+jobs = ["python GNN_training/train_GNN.py --loss_lambda 0.001",
+        "python GNN_training/train_GNN.py --loss_lambda 0.005",
+        "python GNN_training/train_GNN.py --loss_lambda 0.01",
+        "python GNN_training/train_GNN.py --loss_lambda 0.05",
+        "python GNN_training/train_GNN.py --loss_lambda 0.1",
+        "python GNN_training/train_GNN.py --loss_lambda 0.5",
+        "python GNN_training/train_GNN.py --loss_lambda 1.0",
+        "python GNN_training/train_GNN.py --loss_lambda 5.0",
+        "python GNN_training/train_GNN.py --loss_lambda 10.0"]
 
 
 def run_command(command):
