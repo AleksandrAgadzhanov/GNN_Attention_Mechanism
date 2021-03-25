@@ -4,7 +4,7 @@ from GNN_framework.helper_functions import perturb_image, gradient_ascent
 from GNN_training.helper_functions import generate_feature_dict, compute_pixel_scores
 
 
-def pgd_branch_and_bound(simplified_model, image, epsilon, pgd_learning_rate, num_iterations, timeout):
+def pgd_branch_and_bound(simplified_model, image, epsilon, pgd_learning_rate, num_iterations, timeout, device='cpu'):
     """
     This function tries to successfully perform a PGD attack on a given image by following the Branch & Bound algorithm,
     generating subdomains in the process for the training dataset which it then returns as a list of dictionaries
@@ -23,8 +23,8 @@ def pgd_branch_and_bound(simplified_model, image, epsilon, pgd_learning_rate, nu
                                                                  upper_bound, pgd_learning_rate, num_iterations)
 
     # Construct the first dictionary to be appended to the output list by using a special function
-    feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, image, perturbed_image, epsilon,
-                                         gradient_info_dict)
+    feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, image, gradient_info_dict,
+                                         device=device)
     list_of_feature_dicts.append(feature_dict)
 
     # If the attack was successful, then the only subdomain to be returned is the original one
@@ -52,8 +52,8 @@ def pgd_branch_and_bound(simplified_model, image, epsilon, pgd_learning_rate, nu
             perturbed_image.requires_grad_(True)
             successful_attack_flag, gradient_info_dict = gradient_ascent(simplified_model, perturbed_image, lower_bound,
                                                                          upper_bound, pgd_learning_rate, num_iterations)
-            feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, image, perturbed_image,
-                                                 epsilon, gradient_info_dict)
+            feature_dict = generate_feature_dict(simplified_model, lower_bound, upper_bound, image, gradient_info_dict,
+                                                 device=device)
             list_of_feature_dicts.append(feature_dict)
 
             # If the PGD attack was successful, return the list of the subdomains

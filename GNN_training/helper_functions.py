@@ -141,7 +141,8 @@ def compute_loss(old_lower_bound, old_upper_bound, new_lower_bound, new_upper_bo
                                              torch.add(old_upper_bound, -old_lower_bound))
     loss_term_2 = torch.sum(normalised_bound_differences) / num_pixels
 
-    # Return the overall loss which is simply the sum of the two terms computed above
+    # Return the overall loss which is simply the sum of the two terms computed above as well as the first and second
+    # loss terms separately
     loss = loss_term_1 + loss_lambda * loss_term_2
 
     return loss, loss_term_1, loss_term_2

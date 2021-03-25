@@ -5,15 +5,14 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/train_GNN.py --loss_lambda 0.001",
-        "python GNN_training/train_GNN.py --loss_lambda 0.005",
-        "python GNN_training/train_GNN.py --loss_lambda 0.01",
-        "python GNN_training/train_GNN.py --loss_lambda 0.05",
-        "python GNN_training/train_GNN.py --loss_lambda 0.1",
-        "python GNN_training/train_GNN.py --loss_lambda 0.5",
-        "python GNN_training/train_GNN.py --loss_lambda 1.0",
-        "python GNN_training/train_GNN.py --loss_lambda 5.0",
-        "python GNN_training/train_GNN.py --loss_lambda 10.0"]
+jobs = ["python GNN_training/train_GNN.py --start_lambda 0.001 --end_lambda 0.005 --num 9",
+        "python GNN_training/train_GNN.py --start_lambda 0.0055 --end_lambda 0.0095 --num 9",
+        "python GNN_training/train_GNN.py --start_lambda 0.01 --end_lambda 0.05 --num 9",
+        "python GNN_training/train_GNN.py --start_lambda 0.055 --end_lambda 0.095 --num 9",
+        "python GNN_training/train_GNN.py --start_lambda 0.1 --end_lambda 0.5 --num 9",
+        "python GNN_training/train_GNN.py --start_lambda 0.55 --end_lambda 0.95 --num 9",
+        "python GNN_training/train_GNN.py --start_lambda 1.0 --end_lambda 5.0 --num 9",
+        "python GNN_training/train_GNN.py --start_lambda 5.5 --end_lambda 10.0 --num 10"]
 
 
 def run_command(command):

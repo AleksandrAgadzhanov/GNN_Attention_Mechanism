@@ -117,20 +117,21 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
             optimizer.step()
 
         # Append the mean epoch losses during the current epoch to the list
-        training_dict['loss term 1'].append(epoch_loss_term_1 / len(list_of_feature_dicts))
-        training_dict['loss term 2'].append(epoch_loss_term_2 / len(list_of_feature_dicts))
+        mean_epoch_loss_term_1 = epoch_loss_term_1 / len(list_of_feature_dicts)
+        mean_epoch_loss_term_2 = epoch_loss_term_2 / len(list_of_feature_dicts)
+        training_dict['loss term 1'].append(mean_epoch_loss_term_1)
+        training_dict['loss term 2'].append(mean_epoch_loss_term_2)
 
         # Print a message to the terminal at the end of each epoch
         if log_filepath is not None:
             with mlogger.stdout_to(log_filepath):
-                print("Epoch " + str(epoch + 1) + " complete. Mean epoch loss: " +
-                      str(epoch_loss_term_1 / len(list_of_feature_dicts)))
+                print("Epoch " + str(epoch + 1) + " complete. Loss term 1: " + str(mean_epoch_loss_term_1) +
+                      '. Loss term 2 times lambda:' + str(mean_epoch_loss_term_2 * loss_lambda))
         else:
-            print("Epoch " + str(epoch + 1) + " complete. Mean epoch loss: " +
-                  str(epoch_loss_term_1 / len(list_of_feature_dicts)))
+            print("Epoch " + str(epoch + 1) + " complete. Loss term 1: " + str(mean_epoch_loss_term_1) +
+                  '. Loss term 2 times lambda:' + str(mean_epoch_loss_term_2 * loss_lambda))
 
-    # Finally, after training is finished, if an output filename was specified, construct a list of all the state
-    # dictionaries of the auxiliary neural networks of the GNN and save it
+    # Finally, construct a list of all the state dictionaries of the auxiliary neural networks of the GNN and save it
     gnn_state_dicts_list = []
 
     gnn_neural_networks = gnn.get_auxiliary_networks_list()
@@ -144,17 +145,24 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--loss_lambda', type=float)
+    parser.add_argument('--start_lambda', type=float)
+    parser.add_argument('--end_lambda', type=float)
+    parser.add_argument('--num', type=int)
     args = parser.parse_args()
 
-    parameters_filename = 'experiment_results/stub_parameters_' + str(args.loss_lambda) + '.pkl'
-    log_filepath = 'GNN_training/training_log_' + str(args.loss_lambda) + '.txt'
+    log_filepath = 'GNN_training/training_log_' + str(args.start_lambda) + '_to_' + str(args.end_lambda) + '.txt'
 
-    mean_epoch_losses = generate_gnn_training_parameters('train_SAT_jade_reduced_dataset.pkl', 'cifar_base_kw',
-                                                         0.000001, 100, args.loss_lambda, parameters_filename,
+    import numpy as np
+
+    loss_lambdas = np.linspace(args.start_lambda, args.end_lambda, num=10)
+
+    for loss_lambda in loss_lambdas:
+        parameters_filepath = 'experiment_results/gnn_parameters_cross_val_' + str(loss_lambda) + '.pkl'
+        training_dict = generate_gnn_training_parameters('train_SAT_jade_reduced_dataset.pkl', 'cifar_base_kw',
+                                                         0.000001, 100, loss_lambda, parameters_filepath,
                                                          log_filepath=log_filepath, device='cuda')
 
-    torch.save(mean_epoch_losses, 'experiment_results/training_dict_' + str(args.loss_lambda) + '.pkl')
+        torch.save(training_dict, 'experiment_results/training_dict_' + str(args.loss_lambda) + '.pkl')
 
 
 if __name__ == '__main__':
