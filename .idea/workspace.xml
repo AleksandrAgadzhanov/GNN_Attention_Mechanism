@@ -10,9 +10,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;changed GNN learning rate and started using reduced training dataset&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for generating permanent training dictionaries and parameters for cross validation&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,41 +187,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00127" summary="&quot;setup for big cross-validation experiment&quot;">
-      <created>1614422054509</created>
-      <option name="number" value="00127" />
-      <option name="presentableId" value="LOCAL-00127" />
-      <option name="project" value="LOCAL" />
-      <updated>1614422054509</updated>
-    </task>
-    <task id="LOCAL-00128" summary="&quot;setup for big cross-validation experiment&quot;">
-      <created>1614433751946</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
-      <option name="project" value="LOCAL" />
-      <updated>1614433751946</updated>
-    </task>
-    <task id="LOCAL-00129" summary="&quot;setup for big cross-validation experiment&quot;">
-      <created>1614437072129</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
-      <option name="project" value="LOCAL" />
-      <updated>1614437072129</updated>
-    </task>
-    <task id="LOCAL-00130" summary="&quot;setup for big cross-validation experiment&quot;">
-      <created>1614440762452</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
-      <option name="project" value="LOCAL" />
-      <updated>1614440762452</updated>
-    </task>
-    <task id="LOCAL-00131" summary="&quot;setup for training and validation dataset generation experiment&quot;">
-      <created>1614703420147</created>
-      <option name="number" value="00131" />
-      <option name="presentableId" value="LOCAL-00131" />
-      <option name="project" value="LOCAL" />
-      <updated>1614703420147</updated>
     </task>
     <task id="LOCAL-00132" summary="&quot;setup for training and validation dataset generation experiment&quot;">
       <created>1614703825604</created>
@@ -532,7 +496,42 @@
       <option name="project" value="LOCAL" />
       <updated>1616597291721</updated>
     </task>
-    <option name="localTasksCounter" value="176" />
+    <task id="LOCAL-00176" summary="&quot;setup for testing the new lower learning rate&quot;">
+      <created>1616660018894</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
+      <option name="project" value="LOCAL" />
+      <updated>1616660018894</updated>
+    </task>
+    <task id="LOCAL-00177" summary="&quot;setup for testing the new lower learning rate&quot;">
+      <created>1616665530912</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1616665530912</updated>
+    </task>
+    <task id="LOCAL-00178" summary="&quot;setup for testing the new lower learning rate&quot;">
+      <created>1616672109362</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1616672109366</updated>
+    </task>
+    <task id="LOCAL-00179" summary="&quot;setup for testing the new lower learning rate&quot;">
+      <created>1616683432392</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1616683432392</updated>
+    </task>
+    <task id="LOCAL-00180" summary="&quot;setup for generating permanent training dictionaries and parameters for cross validation&quot;">
+      <created>1616704443313</created>
+      <option name="number" value="00180" />
+      <option name="presentableId" value="LOCAL-00180" />
+      <option name="project" value="LOCAL" />
+      <updated>1616704443313</updated>
+    </task>
+    <option name="localTasksCounter" value="181" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -548,8 +547,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;setup for training dataset generation&quot;" />
-    <MESSAGE value="&quot;setup for validation dataset generation&quot;" />
     <MESSAGE value="&quot;presumably fixed numerical instability issues when computing intermediate bounds&quot;" />
     <MESSAGE value="&quot;attack experiment setup&quot;" />
     <MESSAGE value="&quot;incorporated restarts into GNN attacking framework and normalized second loss term&quot;" />
@@ -573,7 +570,9 @@
     <MESSAGE value="&quot;setup for cross-validation (4 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for training (4 GNN zooms)&quot;" />
     <MESSAGE value="&quot;changed GNN learning rate and started using reduced training dataset&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;changed GNN learning rate and started using reduced training dataset&quot;" />
+    <MESSAGE value="&quot;setup for testing the new lower learning rate&quot;" />
+    <MESSAGE value="&quot;setup for generating permanent training dictionaries and parameters for cross validation&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for generating permanent training dictionaries and parameters for cross validation&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

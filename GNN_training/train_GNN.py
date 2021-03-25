@@ -162,7 +162,7 @@ def main():
                                                          0.000001, 100, loss_lambda, parameters_filepath,
                                                          log_filepath=log_filepath, device='cuda')
 
-        torch.save(training_dict, 'experiment_results/training_dict_' + str(args.loss_lambda) + '.pkl')
+        torch.save(training_dict, 'experiment_results/training_dict_' + str(loss_lambda) + '.pkl')
 
 
 if __name__ == '__main__':
