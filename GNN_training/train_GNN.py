@@ -154,7 +154,7 @@ def main():
 
     import numpy as np
 
-    loss_lambdas = np.linspace(args.start_lambda, args.end_lambda, num=10)
+    loss_lambdas = np.linspace(args.start_lambda, args.end_lambda, num=args.num)
 
     for loss_lambda in loss_lambdas:
         parameters_filepath = 'experiment_results/gnn_parameters_cross_val_' + str(loss_lambda) + '.pkl'
