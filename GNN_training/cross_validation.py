@@ -20,7 +20,7 @@ def cross_validate_gnn(loss_lambda, validation_properties_filename, model_name, 
     if training_dataset_filename:
         # Initialize the filepath in which the GNN parameters and the training losses for the given value of lambda
         # will be stored
-        parameters_filepath = 'experiment_results/gnn_parameters_' + str(loss_lambda) + '.pkl'
+        parameters_filepath = 'experiment_results/gnn_parameters_cross_val_' + str(loss_lambda) + '.pkl'
         training_dict_filepath = 'experiment_results/training_dict_' + str(loss_lambda) + '.pkl'
 
         # Train the GNN using the current value of lambda and output the learnt parameters in the temporary file
@@ -48,8 +48,8 @@ def cross_validate_gnn(loss_lambda, validation_properties_filename, model_name, 
     # If the train argument was specified as False, skip the training stage. In this case, the parameters should lie in
     # the different directory
     else:
-        parameters_filepath = 'experiment_results/parameters_for_cross_validation/gnn_parameters_' + str(loss_lambda) \
-                              + '.pkl'
+        parameters_filepath = 'experiment_results/parameters_for_cross_validation/gnn_parameters_cross_val_' +\
+                              str(loss_lambda) + '.pkl'
 
     # Let the GNN perform PGD attacks on the validation dataset
     validation_attack_success_rate = pgd_gnn_attack_properties(validation_properties_filename, model_name,
