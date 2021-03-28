@@ -159,7 +159,7 @@ def main():
     for loss_lambda in loss_lambdas:
         parameters_filepath = 'experiment_results/gnn_parameters_cross_val_' + str(loss_lambda) + '.pkl'
         training_dict = generate_gnn_training_parameters('train_SAT_jade_reduced_dataset.pkl', 'cifar_base_kw',
-                                                         0.00001, 100, loss_lambda, parameters_filepath,
+                                                         0.000001, 200, loss_lambda, parameters_filepath,
                                                          log_filepath=log_filepath, device='cuda')
 
         torch.save(training_dict, 'experiment_results/training_dict_' + str(loss_lambda) + '.pkl')
