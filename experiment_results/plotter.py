@@ -101,9 +101,9 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
 
 
 def main():
-    # plot_training_loss('../experiment_results/training_losses/training_dict_0.09.pkl')
-    plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_1st_iteration/',
-                                  space='log')
+    plot_training_loss('../experiment_results/training_losses/training_dict_10.0.pkl')
+    # plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_1st_iteration/',
+    #                               space='log')
     # plot_attack_success_rates('GNN_3_zooms/test_attacks_gnn_dict.pkl',
     #                           'GNN_3_zooms/test_attacks_baseline_dict.pkl',
     #                           'Comparison of the GNN and baseline attacks (test dataset)')
