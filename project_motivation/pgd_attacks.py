@@ -448,10 +448,10 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 
 def main():
-    output_dict_heuristics = pgd_attack_properties_old('val_SAT_jade.pkl', 'cifar_base_kw', ['branch heuristic', 50],
+    output_dict_heuristics = pgd_attack_properties_old('val_SAT_jade.pkl', 'cifar_base_kw', ['branch heuristic', 90],
                                                        100, 0.1, 100)
     torch.save(output_dict_heuristics, 'experiment_results/output_dict_heuristics.pkl')
-    pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 101, 'output_dict_baseline.pkl',
+    pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 180, 'output_dict_baseline.pkl',
                           log_filename='baseline_log.txt', device='cuda')
 
 
