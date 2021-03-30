@@ -10,13 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross-validation experiment (1 GNN zoom)&quot;">
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for cross-validation (1 GNN zoom) and baseline vs heuristics experiments&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/parameters_for_cross_validation/gnn_parameters_cross_val_0.03.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/parameters_for_cross_validation/gnn_parameters_cross_val_0.03.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/training_losses/training_dict_0.03.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/training_losses/training_dict_0.03.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,11 +58,11 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\JADE" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\GNN_1_zoom\cross_validation_1st_iteration" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\parameters_for_cross_validation" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\training_losses" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\GNN_1_zoom\plots" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\GNN_1_zoom" />
-      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\learnt_parameters" />
     </key>
   </component>
   <component name="RunManager" selected="Python.plotter (1)">
@@ -193,13 +189,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00141" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
-      <created>1614982634943</created>
-      <option name="number" value="00141" />
-      <option name="presentableId" value="LOCAL-00141" />
-      <option name="project" value="LOCAL" />
-      <updated>1614982634943</updated>
     </task>
     <task id="LOCAL-00142" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
       <created>1614982681606</created>
@@ -537,7 +526,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617087639158</updated>
     </task>
-    <option name="localTasksCounter" value="190" />
+    <task id="LOCAL-00190" summary="&quot;setup for cross-validation (1 GNN zoom) and baseline vs heuristics experiments&quot;">
+      <created>1617112533261</created>
+      <option name="number" value="00190" />
+      <option name="presentableId" value="LOCAL-00190" />
+      <option name="project" value="LOCAL" />
+      <updated>1617112533262</updated>
+    </task>
+    <option name="localTasksCounter" value="191" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -553,7 +549,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;setup for big cross validation experiment&quot;" />
     <MESSAGE value="&quot;setup for cross validation experiment&quot;" />
     <MESSAGE value="&quot;added loss plotter function and set up for big cross-validation experiment&quot;" />
     <MESSAGE value="&quot;setup for big cross-validation experiment&quot;" />
@@ -578,7 +573,8 @@
     <MESSAGE value="&quot;setup for generating permanent GNN parameters (learning rate of 0.00001)&quot;" />
     <MESSAGE value="&quot;setup for generating permanent GNN parameters (learning rate of 0.000001 and 200 epochs)&quot;" />
     <MESSAGE value="&quot;setup for cross-validation experiment (1 GNN zoom)&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross-validation experiment (1 GNN zoom)&quot;" />
+    <MESSAGE value="&quot;setup for cross-validation (1 GNN zoom) and baseline vs heuristics experiments&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for cross-validation (1 GNN zoom) and baseline vs heuristics experiments&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

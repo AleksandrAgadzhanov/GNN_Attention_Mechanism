@@ -13,7 +13,7 @@ def pgd_attack_properties_old(properties_filename, model_name, attack_method_tri
     x_exact, y_true, image_indices, model = load_verified_data(model_name)
 
     # Load the properties DataFrame, leave only verified properties
-    properties_filepath = '../cifar_exp/' + properties_filename
+    properties_filepath = 'cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
     properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
                                                 (properties_dataframe['BSAT_KW'] == 'False') |
@@ -63,20 +63,21 @@ def pgd_attack_properties_old(properties_filename, model_name, attack_method_tri
         num_trials = attack_method_trials[1]
         attack_success_rate = pgd_attack_properties_random(model, x_exact, y_true, y_test, epsilons, epsilon_percent,
                                                            pgd_learning_rate, num_epochs, num_trials)
+        return attack_success_rate
     elif attack_method_trials[0] == 'branch random':
         num_branches = attack_method_trials[1]
         attack_success_rate = pgd_attack_properties_branch_random(model, x_exact, y_true, y_test, epsilons,
                                                                   epsilon_percent, pgd_learning_rate, num_epochs,
                                                                   num_branches)
+        return attack_success_rate
     elif attack_method_trials[0] == 'branch heuristic':
         num_branches = attack_method_trials[1]
         output_dict = pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsilons,
-                                                                     epsilon_percent, pgd_learning_rate, num_epochs,
-                                                                     num_branches)
+                                                             epsilon_percent, pgd_learning_rate, num_epochs,
+                                                             num_branches)
+        return output_dict
     else:
         raise IOError("Please enter a valid attack method (\'random\', \'branch random\' or \'branch heuristic\')")
-
-    return output_dict
 
 
 def logit_difference_loss(logits, test_class, true_class):

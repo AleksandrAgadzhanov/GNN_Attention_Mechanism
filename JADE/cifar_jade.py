@@ -5,7 +5,7 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/cross_validation.py --start_lambda 0.001 --end_lambda 0.001 --num 1",
+jobs = ["python GNN_training/train_GNN.py --start_lambda 0.001 --end_lambda 0.001 --num 1",
         "python project_motivation/pgd_attacks.py"]
 
 
