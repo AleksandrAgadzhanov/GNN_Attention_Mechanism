@@ -15,18 +15,6 @@ def pgd_attack_properties_old(properties_filename, model_name, attack_method_tri
     # Load the properties DataFrame, leave only verified properties
     properties_filepath = 'cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
-    properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
-                                                (properties_dataframe['BSAT_KW'] == 'False') |
-                                                (properties_dataframe['BSAT_gnnkwT'] == 'False') |
-                                                (properties_dataframe['GSAT'] == 'False') |
-                                                (properties_dataframe['BSAT_gnnkwTO'] == 'False')]
-
-    # Remove the single property which has the same index as one of the other properties but a different prop value
-    # (applies to base_easy.pkl only)
-    if properties_filename == 'base_easy.pkl':
-        properties_dataframe = properties_dataframe.drop(properties_dataframe[(properties_dataframe['Idx'] == 6100) &
-                                                                              (properties_dataframe[
-                                                                                   'prop'] == 9)].index)
 
     # Sort the properties DataFrame by the Idx column for the purpose of easier debugging
     properties_dataframe = properties_dataframe.sort_values(by=['Idx'], ascending=True)
