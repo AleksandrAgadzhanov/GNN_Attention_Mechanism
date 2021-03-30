@@ -5,9 +5,8 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/train_GNN.py --start_lambda 0.03 --end_lambda 0.03 --num 1",
-        "python GNN_training/train_GNN.py --start_lambda 0.09 --end_lambda 0.09 --num 1",
-        "python GNN_training/train_GNN.py --start_lambda 0.1 --end_lambda 0.1 --num 1"]
+jobs = ["python GNN_training/cross_validation.py --start_lambda 0.03 --end_lambda 0.03 --num 1",
+        "python project_motivation/pgd_attacks.py"]
 
 
 def run_command(command):

@@ -65,7 +65,7 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
         # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
         attack_success_rate = 100.0 * num_successful_attacks / len(images)
 
-        # Store the time and current attack success rate in the output dictioanary
+        # Store the time and current attack success rate in the output dictionary
         output_dict['times'].append(time.time() - start_time)
         output_dict['attack success rates'].append(attack_success_rate)
 
