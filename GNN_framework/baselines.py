@@ -3,7 +3,7 @@ import mlogger
 import argparse
 import time
 from exp_utils.model_utils import load_verified_data, match_with_properties
-from helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
+from GNN_framework.helper_functions import match_with_subset, simplify_model, perturb_image, gradient_ascent
 
 
 def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
