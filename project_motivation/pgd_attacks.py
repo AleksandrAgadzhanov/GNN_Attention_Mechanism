@@ -5,10 +5,11 @@ import copy
 import time
 import pandas as pd
 import numpy as np
+import mlogger
 
 
 def pgd_attack_properties_old(properties_filename, model_name, attack_method_trials, epsilon_percent, pgd_learning_rate,
-                              num_epochs, subset=None):
+                              num_epochs, log_filepath=None, subset=None):
     # Load all the required data for the images which were correctly verified by the model
     x_exact, y_true, image_indices, model = load_verified_data(model_name)
 
@@ -62,7 +63,7 @@ def pgd_attack_properties_old(properties_filename, model_name, attack_method_tri
         num_branches = attack_method_trials[1]
         output_dict = pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsilons,
                                                              epsilon_percent, pgd_learning_rate, num_epochs,
-                                                             num_branches)
+                                                             num_branches, log_filepath=log_filepath)
         return output_dict
     else:
         raise IOError("Please enter a valid attack method (\'random\', \'branch random\' or \'branch heuristic\')")
@@ -214,7 +215,7 @@ def pgd_attack_properties_branch_random(model, x_exact, y_true, y_test, epsilons
 
 
 def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsilons, epsilon_percent, pgd_learning_rate,
-                                           num_epochs, num_branches):
+                                           num_epochs, num_branches, log_filepath=None):
     # Initialise the counter of properties that have been still verified after the PGD attacks
     successfully_attacked_properties = 0
 
@@ -254,8 +255,13 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
             attack_success_rate = 1.0 * successfully_attacked_properties / len(x_exact)
             output_dict['times'].append(time.time() - start_time)
             output_dict['attack_success_rates'].append(attack_success_rate)
-            print('Initial PGD attack succeeded')
-            print('Image ' + str(i + 1) + ' was attacked successfully')
+            if log_filepath is not None:
+                with mlogger.stdout_to(log_filepath):
+                    print('Initial PGD attack succeeded')
+                    print('Image ' + str(i + 1) + ' was attacked successfully')
+            else:
+                print('Initial PGD attack succeeded')
+                print('Image ' + str(i + 1) + ' was attacked successfully')
             continue
 
         # SUBSEQUENT PGD ATTACKS
@@ -333,7 +339,11 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
             # the time and attack success rate in the output dictionary
             if successful_attack_flag:
                 successfully_attacked_properties += 1
-                print('Image ' + str(i + 1) + ' was attacked successfully')
+                if log_filepath is not None:
+                    with mlogger.stdout_to(log_filepath):
+                        print('Image ' + str(i + 1) + ' was attacked successfully')
+                else:
+                    print('Image ' + str(i + 1) + ' was attacked successfully')
                 break
 
             x_perturbed_2 = perturb_image_special(x_exact[i], subdomain_2_info,
@@ -353,8 +363,19 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
 
             if successful_attack_flag:
                 successfully_attacked_properties += 1
-                print('Image ' + str(i + 1) + ' was attacked successfully')
+                if log_filepath is not None:
+                    with mlogger.stdout_to(log_filepath):
+                        print('Image ' + str(i + 1) + ' was attacked successfully')
+                else:
+                    print('Image ' + str(i + 1) + ' was attacked successfully')
                 break
+
+        if not successful_attack_flag:
+            if log_filepath is not None:
+                with mlogger.stdout_to(log_filepath):
+                    print('Image ' + str(i + 1) + ' was NOT attacked successfully')
+            else:
+                print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
         # Calculate the new attack success rate and append it and the time to the output dictionary
         attack_success_rate = 1.0 * successfully_attacked_properties / len(x_exact)
@@ -448,11 +469,11 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 
 def main():
-    output_dict_heuristics = pgd_attack_properties_old('val_SAT_jade.pkl', 'cifar_base_kw', ['branch heuristic', 90],
-                                                       100, 0.1, 100)
+    output_dict_heuristics = pgd_attack_properties_old('val_SAT_jade.pkl', 'cifar_base_kw', ['branch heuristic', 50],
+                                                       100, 0.1, 100, log_filepath='project_motivation/attack_log.txt')
     torch.save(output_dict_heuristics, 'experiment_results/output_dict_heuristics.pkl')
     pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 180, 'output_dict_baseline.pkl',
-                          log_filename='baseline_log.txt', device='cuda')
+                          log_filepath='GNN_framework/baseline_log.txt')
 
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ from GNN_framework.helper_functions import match_with_subset, simplify_model, pe
 
 
 def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                          num_trials, output_filename, log_filename=None, subset=None, device='cpu'):
+                          num_trials, output_filename, log_filepath=None, subset=None, device='cpu'):
     """
     This function acts as the 2nd baseline to compare the pgd_gnn_attack_property() function against. It initialises a
     specified number of trial random PGD attacks and performs a specified number of iterations of gradient ascent. For
@@ -54,12 +54,12 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
                 num_successful_attacks += 1
                 break
 
-        if log_filename is not None:
+        if log_filepath is not None:
             if successful_attack_flag:
-                with mlogger.stdout_to('GNN_framework/' + log_filename):
+                with mlogger.stdout_to(log_filepath):
                     print('Image ' + str(i + 1) + ' was attacked successfully')
             else:
-                with mlogger.stdout_to('GNN_framework/' + log_filename):
+                with mlogger.stdout_to(log_filepath):
                     print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
         # Calculate the attack success rate for the properties in the file provided after all the PGD attacks
@@ -82,7 +82,7 @@ def main():
     output_filename = args.filename + '_dict.pkl'
 
     pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 180, output_filename,
-                          log_filename=log_filename, device='cuda')
+                          log_filepath=log_filename, device='cuda')
 
 
 if __name__ == '__main__':

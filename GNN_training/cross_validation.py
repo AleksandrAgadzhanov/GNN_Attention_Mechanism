@@ -48,7 +48,7 @@ def cross_validate_gnn(loss_lambda, validation_properties_filename, model_name, 
     # If the train argument was specified as False, skip the training stage. In this case, the parameters should lie in
     # the different directory
     else:
-        parameters_filepath = 'experiment_results/parameters_for_cross_validation/gnn_parameters_cross_val_' +\
+        parameters_filepath = 'experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_' +\
                               str(loss_lambda) + '.pkl'
 
     # Let the GNN perform PGD attacks on the validation dataset
