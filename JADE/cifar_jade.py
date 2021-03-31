@@ -5,8 +5,17 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/cross_validation.py --start_lambda 0.001 --end_lambda 0.001 --num 1",
-        "python project_motivation/pgd_attacks.py"]
+# jobs = ["python GNN_training/cross_validation.py --start_lambda 0.02 --end_lambda 0.026 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.027 --end_lambda 0.033 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.034 --end_lambda 0.04 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.041 --end_lambda 0.047 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.048 --end_lambda 0.054 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.055 --end_lambda 0.061 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.062 --end_lambda 0.068 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.069 --end_lambda 0.075 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.076 --end_lambda 0.082 --num 7",
+#         "python GNN_training/cross_validation.py --start_lambda 0.083 --end_lambda 0.09 --num 8"]
+jobs = ["python GNN_framework/baselines.py --filename val_SAT_jade"]
 
 
 def run_command(command):

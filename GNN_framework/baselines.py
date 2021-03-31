@@ -32,7 +32,7 @@ def pgd_attack_properties(properties_filename, model_name, epsilon_factor, pgd_l
     # were successfully PGD attacked as well as the start time of the experiment. Also initialise the output dictionary
     num_successful_attacks = 0
     start_time = time.time()
-    output_dict = {'times': [], 'attack_success_rates': []}
+    output_dict = {'times': [], 'attack success rates': []}
     for i in range(len(images)):
         # First, simplify the network by adding the final layer and merging the last two layers into one,
         # incorporating the information about the true and test classes into the network
@@ -81,7 +81,7 @@ def main():
     log_filename = args.filename + '_log.txt'
     output_filename = args.filename + '_dict.pkl'
 
-    pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 180, output_filename,
+    pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 101, output_filename,
                           log_filepath=log_filename, device='cuda')
 
 

@@ -12,10 +12,13 @@
   <component name="ChangeListManager">
     <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_1st_iteration/cross_validation_dict_0.001.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_1st_iteration/cross_validation_dict_0.001.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/cross_validation_1st_iteration.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/cross_validation_2nd_iteration.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/easy_test_attacks_gnn_vs_baseline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/test_attacks_gnn_vs_baseline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/training_loss.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,9 +63,9 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\JADE" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\GNN_1_zoom\cross_validation_1st_iteration" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\cross_validation_gnn_parameters" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\dictionaries_from_training" />
-      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\GNN_1_zoom\cross_validation_1st_iteration" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\parameters_for_cross_validation" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\training_losses" />
     </key>
@@ -191,20 +194,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00146" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
-      <created>1615021162543</created>
-      <option name="number" value="00146" />
-      <option name="presentableId" value="LOCAL-00146" />
-      <option name="project" value="LOCAL" />
-      <updated>1615021162543</updated>
-    </task>
-    <task id="LOCAL-00147" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
-      <created>1615022895689</created>
-      <option name="number" value="00147" />
-      <option name="presentableId" value="LOCAL-00147" />
-      <option name="project" value="LOCAL" />
-      <updated>1615022895689</updated>
     </task>
     <task id="LOCAL-00148" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
       <created>1615110449335</created>
@@ -535,7 +524,21 @@
       <option name="project" value="LOCAL" />
       <updated>1617140248760</updated>
     </task>
-    <option name="localTasksCounter" value="195" />
+    <task id="LOCAL-00195" summary="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;">
+      <created>1617181051955</created>
+      <option name="number" value="00195" />
+      <option name="presentableId" value="LOCAL-00195" />
+      <option name="project" value="LOCAL" />
+      <updated>1617181051955</updated>
+    </task>
+    <task id="LOCAL-00196" summary="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;">
+      <created>1617181112517</created>
+      <option name="number" value="00196" />
+      <option name="presentableId" value="LOCAL-00196" />
+      <option name="project" value="LOCAL" />
+      <updated>1617181112517</updated>
+    </task>
+    <option name="localTasksCounter" value="197" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
