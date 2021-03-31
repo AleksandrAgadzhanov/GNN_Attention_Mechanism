@@ -472,7 +472,7 @@ def main():
     output_dict_heuristics = pgd_attack_properties_old('val_SAT_jade.pkl', 'cifar_base_kw', ['branch heuristic', 50],
                                                        100, 0.1, 100, log_filepath='project_motivation/attack_log.txt')
     torch.save(output_dict_heuristics, 'experiment_results/output_dict_heuristics.pkl')
-    pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 180, 'output_dict_baseline.pkl',
+    pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 101, 'output_dict_baseline.pkl',
                           log_filepath='GNN_framework/baseline_log.txt')
 
 
