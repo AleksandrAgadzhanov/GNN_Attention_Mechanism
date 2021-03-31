@@ -11,14 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;">
+      <change afterPath="$PROJECT_DIR$/cifar_exp/base_easy.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_1st_iteration/cross_validation_dict_0.001.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_1st_iteration/cross_validation_dict_0.001.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/cross_validation_1st_iteration.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/cross_validation_2nd_iteration.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/easy_test_attacks_gnn_vs_baseline.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/test_attacks_gnn_vs_baseline.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/plots/training_loss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,13 +191,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00148" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
-      <created>1615110449335</created>
-      <option name="number" value="00148" />
-      <option name="presentableId" value="LOCAL-00148" />
-      <option name="project" value="LOCAL" />
-      <updated>1615110449336</updated>
     </task>
     <task id="LOCAL-00149" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
       <created>1615196163701</created>
@@ -538,7 +528,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617181112517</updated>
     </task>
-    <option name="localTasksCounter" value="197" />
+    <task id="LOCAL-00197" summary="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;">
+      <created>1617220980003</created>
+      <option name="number" value="00197" />
+      <option name="presentableId" value="LOCAL-00197" />
+      <option name="project" value="LOCAL" />
+      <updated>1617220980004</updated>
+    </task>
+    <option name="localTasksCounter" value="198" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

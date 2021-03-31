@@ -17,6 +17,15 @@ def pgd_attack_properties_old(properties_filename, model_name, attack_method_tri
     properties_filepath = 'cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
 
+    # If the properties dataset is for testing, leave only the correctly verified properties
+    if properties_filename == 'base_easy.pkl' or properties_filename == 'base_med.pkl' or \
+            properties_filename == 'base_hard.pkl':
+        properties_dataframe = properties_dataframe[(properties_dataframe['BSAT_KWOld'] == 'False') |
+                                                    (properties_dataframe['BSAT_KW'] == 'False') |
+                                                    (properties_dataframe['BSAT_gnnkwT'] == 'False') |
+                                                    (properties_dataframe['GSAT'] == 'False') |
+                                                    (properties_dataframe['BSAT_gnnkwTO'] == 'False')]
+
     # Sort the properties DataFrame by the Idx column for the purpose of easier debugging
     properties_dataframe = properties_dataframe.sort_values(by=['Idx'], ascending=True)
 
@@ -221,7 +230,7 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
 
     # Start the timer and initialise the output dictionary
     start_time = time.time()
-    output_dict = {'times': [], 'attack_success_rates': []}
+    output_dict = {'times': [], 'attack success rates': []}
 
     # Attack each property at a time
     for i in range(len(x_exact)):
@@ -254,7 +263,7 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
             successfully_attacked_properties += 1
             attack_success_rate = 1.0 * successfully_attacked_properties / len(x_exact)
             output_dict['times'].append(time.time() - start_time)
-            output_dict['attack_success_rates'].append(attack_success_rate)
+            output_dict['attack success rates'].append(attack_success_rate)
             if log_filepath is not None:
                 with mlogger.stdout_to(log_filepath):
                     print('Initial PGD attack succeeded')
@@ -380,7 +389,7 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
         # Calculate the new attack success rate and append it and the time to the output dictionary
         attack_success_rate = 1.0 * successfully_attacked_properties / len(x_exact)
         output_dict['times'].append(time.time() - start_time)
-        output_dict['attack_success_rates'].append(attack_success_rate)
+        output_dict['attack success rates'].append(attack_success_rate)
 
     return output_dict
 
@@ -469,10 +478,10 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 
 def main():
-    output_dict_heuristics = pgd_attack_properties_old('val_SAT_jade.pkl', 'cifar_base_kw', ['branch heuristic', 50],
-                                                       100, 0.1, 100, log_filepath='project_motivation/attack_log.txt')
+    output_dict_heuristics = pgd_attack_properties_old('base_easy.pkl', 'cifar_base_kw', ['branch heuristic', 50],
+                                                       150, 0.1, 100, log_filepath='project_motivation/attack_log.txt')
     torch.save(output_dict_heuristics, 'experiment_results/output_dict_heuristics.pkl')
-    pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.0, 0.1, 100, 101, 'output_dict_baseline.pkl',
+    pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.5, 0.1, 100, 101, 'output_dict_baseline.pkl',
                           log_filepath='GNN_framework/baseline_log.txt')
 
 
