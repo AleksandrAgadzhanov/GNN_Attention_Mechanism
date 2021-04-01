@@ -8,7 +8,7 @@ import mlogger
 
 
 def pgd_attack_properties_old(properties_filename, model_name, attack_method_trials, epsilon_percent, pgd_learning_rate,
-                              num_epochs, log_filepath=None, subset=None):
+                              num_epochs, num_restarts, log_filepath=None, subset=None):
     # Load all the required data for the images which were correctly verified by the model
     x_exact, y_true, image_indices, model = load_verified_data(model_name)
 
@@ -71,7 +71,7 @@ def pgd_attack_properties_old(properties_filename, model_name, attack_method_tri
         num_branches = attack_method_trials[1]
         output_dict = pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsilons,
                                                              epsilon_percent, pgd_learning_rate, num_epochs,
-                                                             num_branches, log_filepath=log_filepath)
+                                                             num_restarts, num_branches, log_filepath=log_filepath)
         return output_dict
     else:
         raise IOError("Please enter a valid attack method (\'random\', \'branch random\' or \'branch heuristic\')")
@@ -223,7 +223,7 @@ def pgd_attack_properties_branch_random(model, x_exact, y_true, y_test, epsilons
 
 
 def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsilons, epsilon_percent, pgd_learning_rate,
-                                           num_epochs, num_branches, log_filepath=None):
+                                           num_epochs, num_branches, num_restarts, log_filepath=None):
     # Initialise the counter of properties that have been still verified after the PGD attacks
     successfully_attacked_properties = 0
 
@@ -234,161 +234,164 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
     # Attack each property at a time
     for i in range(len(x_exact)):
 
-        # FIRST PGD ATTACK
+        for restart in range(num_restarts + 1):
 
-        # The first attack is the same as in the randomly initialised PGD attack case
-        lower_bound = torch.add(-epsilons[i] * (epsilon_percent / 100.0), x_exact[i])
-        upper_bound = torch.add(epsilons[i] * (epsilon_percent / 100.0), x_exact[i])
-        heuristic = None
+            # FIRST PGD ATTACK
 
-        perturbation = torch.add(-epsilons[i] * (epsilon_percent / 100.0),
-                                 2 * (epsilons[i] * (epsilon_percent / 100.0)) * torch.rand(x_exact[i].size()))
-        x_perturbed = torch.add(x_exact[i], perturbation).clone().detach().requires_grad_(True)
+            # The first attack is the same as in the randomly initialised PGD attack case
+            lower_bound = torch.add(-epsilons[i] * (epsilon_percent / 100.0), x_exact[i])
+            upper_bound = torch.add(epsilons[i] * (epsilon_percent / 100.0), x_exact[i])
+            heuristic = None
 
-        output = pgd_gradient_ascent(model, x_perturbed, lower_bound, upper_bound, y_true[i], y_test[i],
-                                     pgd_learning_rate, num_epochs, heuristic=True)
+            perturbation = torch.add(-epsilons[i] * (epsilon_percent / 100.0),
+                                     2 * (epsilons[i] * (epsilon_percent / 100.0)) * torch.rand(x_exact[i].size()))
+            x_perturbed = torch.add(x_exact[i], perturbation).clone().detach().requires_grad_(True)
 
-        # If only the flag was returned (successful attack case), then set the successful attack flag only
-        if type(output) == bool:
-            successful_attack_flag = output
-        # If both the flag and heuristic were returned, set them both
-        else:
-            successful_attack_flag = output[0]
-            heuristic = output[1]
+            output = pgd_gradient_ascent(model, x_perturbed, lower_bound, upper_bound, y_true[i], y_test[i],
+                                         pgd_learning_rate, num_epochs, heuristic=True)
 
-        # If the flag was set to True after the first attack, move on to the next image while appending time and attack
-        # success rate to the output dictionary
-        if successful_attack_flag:
-            successfully_attacked_properties += 1
+            # If only the flag was returned (successful attack case), then set the successful attack flag only
+            if type(output) == bool:
+                successful_attack_flag = output
+            # If both the flag and heuristic were returned, set them both
+            else:
+                successful_attack_flag = output[0]
+                heuristic = output[1]
+
+            # If the flag was set to True after the first attack, move on to the next image while appending time and
+            # attack success rate to the output dictionary
+            if successful_attack_flag:
+                successfully_attacked_properties += 1
+                attack_success_rate = 100.0 * successfully_attacked_properties / len(x_exact)
+                output_dict['times'].append(time.time() - start_time)
+                output_dict['attack success rates'].append(attack_success_rate)
+                if log_filepath is not None:
+                    with mlogger.stdout_to(log_filepath):
+                        print('Initial PGD attack succeeded')
+                        print('Image ' + str(i + 1) + ' was attacked successfully')
+                else:
+                    print('Initial PGD attack succeeded')
+                    print('Image ' + str(i + 1) + ' was attacked successfully')
+                continue
+
+            # SUBSEQUENT PGD ATTACKS
+
+            # Information about where splits have already been made needs to be stored. Let this information be
+            # represented by tensors of the same size as the image where each -1 corresponds to the pixel which can
+            # only be perturbed by [-eps, 0], 1 - which can be perturbed by [0, +eps] and 0 - which can be perturbed
+            # by [-eps, +eps]
+
+            # If the branch type was specified to be heuristic, initialise this storage as a list of lists [information,
+            # heuristic]
+            domain_info = [[torch.zeros(x_exact[i].size()), heuristic]]
+
+            # If the first randomly initialised PGD attack was unsuccessful, splitting procedure will be started: a
+            # selected pixel will be split and two subproblems will be generated: one where this pixel's value can be
+            # perturbed by [-eps, 0] and one where it can be perturbed by [0, +eps]
+            for num_branch in range(num_branches):
+
+                # Choose the domain and the dimension to split on. Images have size ([1, 3, 32, 32]) so it is the
+                # last three dimensions that have to be chosen
+
+                # If the branch type if heuristic, choose the above based on which subdomain contains the largest
+                # magnitude of the gradient with respect to a particular pixel
+                domain_index = 0
+                dim_indices = [0, 0, 0]
+                max_gradient_magnitude = 0  # magnitudes are dealt with so 0 is the absolute minimum
+
+                for domain_idx in range(len(domain_info)):
+                    for matrix_idx in range(len(domain_info[domain_idx][1][0])):
+                        for row_idx in range(len(domain_info[domain_idx][1][0][matrix_idx])):
+                            for value_idx in range(len(domain_info[domain_idx][1][0][matrix_idx][row_idx])):
+                                gradient_magnitude = domain_info[domain_idx][1][0][matrix_idx][row_idx][value_idx]
+                                info_value = domain_info[domain_idx][0][0][matrix_idx][row_idx][value_idx]
+                                # If the gradient is larger than the current maximum and splitting on the corresponding
+                                # pixel hasn't been done yet, update the variables
+                                if gradient_magnitude > max_gradient_magnitude and info_value == 0:
+                                    max_gradient_magnitude = gradient_magnitude
+                                    domain_index = domain_idx
+                                    dim_indices = [matrix_idx, row_idx, value_idx]
+
+                # Same as in the branch random case but now lists are involved
+                subdomain_1_list = copy.deepcopy(domain_info[domain_index])
+                subdomain_2_list = copy.deepcopy(domain_info[domain_index])
+                subdomain_1_list[0][0][dim_indices[0]][dim_indices[1]][dim_indices[2]] = -1
+                subdomain_2_list[0][0][dim_indices[0]][dim_indices[1]][dim_indices[2]] = 1
+
+                # Same as in the branch random case but now subdomain information tensors should be set explicitly
+                domain_info.pop(domain_index)
+                domain_info.append(subdomain_1_list)
+                domain_info.append(subdomain_2_list)
+                subdomain_1_info = subdomain_1_list[0]
+                subdomain_2_info = subdomain_2_list[0]
+
+                # Perturb all the pixels of both subdomains and get the corresponding bounds for clipping values
+                x_perturbed_1 = perturb_image_special(x_exact[i], subdomain_1_info,
+                                                      epsilons[i] * (epsilon_percent / 100.0)).requires_grad_(True)
+                lower_bound_1, upper_bound_1 = get_bounds_special(x_exact[i], subdomain_1_info,
+                                                                  epsilons[i] * (epsilon_percent / 100.0))
+
+                # Attack both subdomains using gradient ascent
+                # If the specified branch type is heuristic, heuristic parameter is specified to pgd_gradient_ascent
+                output_1 = pgd_gradient_ascent(model, x_perturbed_1, lower_bound_1, upper_bound_1, y_true[i], y_test[i],
+                                               pgd_learning_rate, num_epochs, heuristic=True)
+
+                # If only the flag was returned (successful attack case), then set the successful attack flag only
+                if type(output_1) == bool:
+                    successful_attack_flag = output_1
+                # If both the flag and heuristic were returned, set them both and update the heuristic information of
+                # the subdomain at index -2
+                else:
+                    successful_attack_flag = output_1[0]
+                    heuristic_1 = output_1[1]
+                    domain_info[-2][1] = heuristic_1
+
+                # If the attack is successful, move on to the next image by breaking out of the branching loop while
+                # storing the time and attack success rate in the output dictionary
+                if successful_attack_flag:
+                    successfully_attacked_properties += 1
+                    if log_filepath is not None:
+                        with mlogger.stdout_to(log_filepath):
+                            print('Image ' + str(i + 1) + ' was attacked successfully')
+                    else:
+                        print('Image ' + str(i + 1) + ' was attacked successfully')
+                    break
+
+                x_perturbed_2 = perturb_image_special(x_exact[i], subdomain_2_info,
+                                                      epsilons[i] * (epsilon_percent / 100.0)).requires_grad_(True)
+                lower_bound_2, upper_bound_2 = get_bounds_special(x_exact[i], subdomain_2_info,
+                                                                  epsilons[i] * (epsilon_percent / 100.0))
+
+                output_2 = pgd_gradient_ascent(model, x_perturbed_2, lower_bound_2, upper_bound_2, y_true[i], y_test[i],
+                                               pgd_learning_rate, num_epochs, heuristic=True)
+
+                if type(output_2) == bool:
+                    successful_attack_flag = output_2
+                else:
+                    successful_attack_flag = output_2[0]
+                    heuristic_2 = output_2[1]
+                    domain_info[-1][1] = heuristic_2  # information about heuristic of the last subdomain is updated
+
+                if successful_attack_flag:
+                    successfully_attacked_properties += 1
+                    if log_filepath is not None:
+                        with mlogger.stdout_to(log_filepath):
+                            print('Image ' + str(i + 1) + ' was attacked successfully')
+                    else:
+                        print('Image ' + str(i + 1) + ' was attacked successfully')
+                    break
+
+            if not successful_attack_flag:
+                if log_filepath is not None:
+                    with mlogger.stdout_to(log_filepath):
+                        print('Image ' + str(i + 1) + ' was NOT attacked successfully')
+                else:
+                    print('Image ' + str(i + 1) + ' was NOT attacked successfully')
+
+            # Calculate the new attack success rate and append it and the time to the output dictionary
             attack_success_rate = 100.0 * successfully_attacked_properties / len(x_exact)
             output_dict['times'].append(time.time() - start_time)
             output_dict['attack success rates'].append(attack_success_rate)
-            if log_filepath is not None:
-                with mlogger.stdout_to(log_filepath):
-                    print('Initial PGD attack succeeded')
-                    print('Image ' + str(i + 1) + ' was attacked successfully')
-            else:
-                print('Initial PGD attack succeeded')
-                print('Image ' + str(i + 1) + ' was attacked successfully')
-            continue
-
-        # SUBSEQUENT PGD ATTACKS
-
-        # Information about where splits have already been made needs to be stored. Let this information be represented
-        # by tensors of the same size as the image where each -1 corresponds to the pixel which can only be perturbed by
-        # [-eps, 0], 1 - which can be perturbed by [0, +eps] and 0 - which can be perturbed by [-eps, +eps]
-
-        # If the branch type was specified to be heuristic, initialise this storage as a list of lists [information,
-        # heuristic]
-        domain_info = [[torch.zeros(x_exact[i].size()), heuristic]]
-
-        # If the first randomly initialised PGD attack was unsuccessful, splitting procedure will be started: a selected
-        # pixel will be split and two subproblems will be generated: one where this pixel's value can be perturbed by
-        # [-eps, 0] and one where it can be perturbed by [0, +eps]
-        for num_branch in range(num_branches):
-
-            # Choose the domain and the dimension to split on. Images have size ([1, 3, 32, 32]) so it is the
-            # last three dimensions that have to be chosen
-
-            # If the branch type if heuristic, choose the above based on which subdomain contains the largest magnitude
-            # of the gradient with respect to a particular pixel
-            domain_index = 0
-            dim_indices = [0, 0, 0]
-            max_gradient_magnitude = 0  # magnitudes are dealt with so 0 is the absolute minimum
-
-            for domain_idx in range(len(domain_info)):
-                for matrix_idx in range(len(domain_info[domain_idx][1][0])):
-                    for row_idx in range(len(domain_info[domain_idx][1][0][matrix_idx])):
-                        for value_idx in range(len(domain_info[domain_idx][1][0][matrix_idx][row_idx])):
-                            gradient_magnitude = domain_info[domain_idx][1][0][matrix_idx][row_idx][value_idx]
-                            info_value = domain_info[domain_idx][0][0][matrix_idx][row_idx][value_idx]
-                            # If the gradient is larger than the current maximum and splitting on the corresponding
-                            # pixel hasn't been done yet, update the variables
-                            if gradient_magnitude > max_gradient_magnitude and info_value == 0:
-                                max_gradient_magnitude = gradient_magnitude
-                                domain_index = domain_idx
-                                dim_indices = [matrix_idx, row_idx, value_idx]
-
-            # Same as in the branch random case but now lists are involved
-            subdomain_1_list = copy.deepcopy(domain_info[domain_index])
-            subdomain_2_list = copy.deepcopy(domain_info[domain_index])
-            subdomain_1_list[0][0][dim_indices[0]][dim_indices[1]][dim_indices[2]] = -1
-            subdomain_2_list[0][0][dim_indices[0]][dim_indices[1]][dim_indices[2]] = 1
-
-            # Same as in the branch random case but now subdomain information tensors should be set explicitly
-            domain_info.pop(domain_index)
-            domain_info.append(subdomain_1_list)
-            domain_info.append(subdomain_2_list)
-            subdomain_1_info = subdomain_1_list[0]
-            subdomain_2_info = subdomain_2_list[0]
-
-            # Perturb all the pixels of both subdomains and get the corresponding bounds for clipping values
-            x_perturbed_1 = perturb_image_special(x_exact[i], subdomain_1_info,
-                                                  epsilons[i] * (epsilon_percent / 100.0)).requires_grad_(True)
-            lower_bound_1, upper_bound_1 = get_bounds_special(x_exact[i], subdomain_1_info,
-                                                              epsilons[i] * (epsilon_percent / 100.0))
-
-            # Attack both subdomains using gradient ascent
-            # If the specified branch type is heuristic, heuristic parameter is specified to pgd_gradient_ascent
-            output_1 = pgd_gradient_ascent(model, x_perturbed_1, lower_bound_1, upper_bound_1, y_true[i], y_test[i],
-                                           pgd_learning_rate, num_epochs, heuristic=True)
-
-            # If only the flag was returned (successful attack case), then set the successful attack flag only
-            if type(output_1) == bool:
-                successful_attack_flag = output_1
-            # If both the flag and heuristic were returned, set them both and update the heuristic information of the
-            # subdomain at index -2
-            else:
-                successful_attack_flag = output_1[0]
-                heuristic_1 = output_1[1]
-                domain_info[-2][1] = heuristic_1
-
-            # If the attack is successful, move on to the next image by breaking out of the branching loop while storing
-            # the time and attack success rate in the output dictionary
-            if successful_attack_flag:
-                successfully_attacked_properties += 1
-                if log_filepath is not None:
-                    with mlogger.stdout_to(log_filepath):
-                        print('Image ' + str(i + 1) + ' was attacked successfully')
-                else:
-                    print('Image ' + str(i + 1) + ' was attacked successfully')
-                break
-
-            x_perturbed_2 = perturb_image_special(x_exact[i], subdomain_2_info,
-                                                  epsilons[i] * (epsilon_percent / 100.0)).requires_grad_(True)
-            lower_bound_2, upper_bound_2 = get_bounds_special(x_exact[i], subdomain_2_info,
-                                                              epsilons[i] * (epsilon_percent / 100.0))
-
-            output_2 = pgd_gradient_ascent(model, x_perturbed_2, lower_bound_2, upper_bound_2, y_true[i], y_test[i],
-                                           pgd_learning_rate, num_epochs, heuristic=True)
-
-            if type(output_2) == bool:
-                successful_attack_flag = output_2
-            else:
-                successful_attack_flag = output_2[0]
-                heuristic_2 = output_2[1]
-                domain_info[-1][1] = heuristic_2  # information about heuristic of the last subdomain is updated
-
-            if successful_attack_flag:
-                successfully_attacked_properties += 1
-                if log_filepath is not None:
-                    with mlogger.stdout_to(log_filepath):
-                        print('Image ' + str(i + 1) + ' was attacked successfully')
-                else:
-                    print('Image ' + str(i + 1) + ' was attacked successfully')
-                break
-
-        if not successful_attack_flag:
-            if log_filepath is not None:
-                with mlogger.stdout_to(log_filepath):
-                    print('Image ' + str(i + 1) + ' was NOT attacked successfully')
-            else:
-                print('Image ' + str(i + 1) + ' was NOT attacked successfully')
-
-        # Calculate the new attack success rate and append it and the time to the output dictionary
-        attack_success_rate = 100.0 * successfully_attacked_properties / len(x_exact)
-        output_dict['times'].append(time.time() - start_time)
-        output_dict['attack success rates'].append(attack_success_rate)
 
     return output_dict
 
@@ -478,10 +481,10 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 def main():
     output_dict_heuristics = pgd_attack_properties_old('base_easy.pkl', 'cifar_base_kw',
-                                                       ['branch heuristic', 50], 150, 0.1, 100,
+                                                       ['branch heuristic', 10], 150, 0.1, 100, 9,
                                                        log_filepath='project_motivation/attack_log.txt',
                                                        subset=list(range(50)))
-    torch.save(output_dict_heuristics, 'experiment_results/output_dict_heuristics.pkl')
+    torch.save(output_dict_heuristics, 'experiment_results/attack_success_rates_heuristics.pkl')
 
 
 if __name__ == '__main__':
