@@ -13,7 +13,7 @@ def pgd_attack_properties_old(properties_filename, model_name, attack_method_tri
     x_exact, y_true, image_indices, model = load_verified_data(model_name)
 
     # Load the properties DataFrame, leave only verified properties
-    properties_filepath = '../cifar_exp/' + properties_filename
+    properties_filepath = 'cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
 
     # If the properties dataset is for testing, leave only the correctly verified properties
