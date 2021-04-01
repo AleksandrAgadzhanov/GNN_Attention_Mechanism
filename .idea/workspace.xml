@@ -13,7 +13,7 @@
     <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for baseline vs heuristics experiment&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,7 +66,7 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\training_losses" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.pgd_attacks">
+  <component name="RunManager" selected="Python.plotter (1)">
     <configuration name="attack_properties_with_pgd" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -174,8 +174,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.pgd_attacks" />
         <item itemvalue="Python.plotter (1)" />
+        <item itemvalue="Python.pgd_attacks" />
         <item itemvalue="Python.attack_properties_with_pgd" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.temp" />
@@ -190,69 +190,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00150" summary="&quot;setup for final training of GNN with 1 zoom&quot;">
-      <created>1615299079519</created>
-      <option name="number" value="00150" />
-      <option name="presentableId" value="LOCAL-00150" />
-      <option name="project" value="LOCAL" />
-      <updated>1615299079520</updated>
-    </task>
-    <task id="LOCAL-00151" summary="&quot;setup for final training of GNN with 1 zoom&quot;">
-      <created>1615321571403</created>
-      <option name="number" value="00151" />
-      <option name="presentableId" value="LOCAL-00151" />
-      <option name="project" value="LOCAL" />
-      <updated>1615321571403</updated>
-    </task>
-    <task id="LOCAL-00152" summary="&quot;setup for attacking the test datasets experiment&quot;">
-      <created>1615364460894</created>
-      <option name="number" value="00152" />
-      <option name="presentableId" value="LOCAL-00152" />
-      <option name="project" value="LOCAL" />
-      <updated>1615364460894</updated>
-    </task>
-    <task id="LOCAL-00153" summary="&quot;setup for attacking the test datasets experiment&quot;">
-      <created>1615364645514</created>
-      <option name="number" value="00153" />
-      <option name="presentableId" value="LOCAL-00153" />
-      <option name="project" value="LOCAL" />
-      <updated>1615364645514</updated>
-    </task>
-    <task id="LOCAL-00154" summary="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;">
-      <created>1615378158573</created>
-      <option name="number" value="00154" />
-      <option name="presentableId" value="LOCAL-00154" />
-      <option name="project" value="LOCAL" />
-      <updated>1615378158573</updated>
-    </task>
-    <task id="LOCAL-00155" summary="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;">
-      <created>1615379088920</created>
-      <option name="number" value="00155" />
-      <option name="presentableId" value="LOCAL-00155" />
-      <option name="project" value="LOCAL" />
-      <updated>1615379088920</updated>
-    </task>
-    <task id="LOCAL-00156" summary="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;">
-      <created>1615536308557</created>
-      <option name="number" value="00156" />
-      <option name="presentableId" value="LOCAL-00156" />
-      <option name="project" value="LOCAL" />
-      <updated>1615536308557</updated>
-    </task>
-    <task id="LOCAL-00157" summary="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;">
-      <created>1615670912401</created>
-      <option name="number" value="00157" />
-      <option name="presentableId" value="LOCAL-00157" />
-      <option name="project" value="LOCAL" />
-      <updated>1615670912402</updated>
-    </task>
-    <task id="LOCAL-00158" summary="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;">
-      <created>1615801729117</created>
-      <option name="number" value="00158" />
-      <option name="presentableId" value="LOCAL-00158" />
-      <option name="project" value="LOCAL" />
-      <updated>1615801729117</updated>
     </task>
     <task id="LOCAL-00159" summary="&quot;setup for attacking experiment (2 GNN zooms)&quot;">
       <created>1615887719364</created>
@@ -534,7 +471,70 @@
       <option name="project" value="LOCAL" />
       <updated>1617226582300</updated>
     </task>
-    <option name="localTasksCounter" value="199" />
+    <task id="LOCAL-00199" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617260818564</created>
+      <option name="number" value="00199" />
+      <option name="presentableId" value="LOCAL-00199" />
+      <option name="project" value="LOCAL" />
+      <updated>1617260818564</updated>
+    </task>
+    <task id="LOCAL-00200" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617261649884</created>
+      <option name="number" value="00200" />
+      <option name="presentableId" value="LOCAL-00200" />
+      <option name="project" value="LOCAL" />
+      <updated>1617261649884</updated>
+    </task>
+    <task id="LOCAL-00201" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617276186309</created>
+      <option name="number" value="00201" />
+      <option name="presentableId" value="LOCAL-00201" />
+      <option name="project" value="LOCAL" />
+      <updated>1617276186309</updated>
+    </task>
+    <task id="LOCAL-00202" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617276415436</created>
+      <option name="number" value="00202" />
+      <option name="presentableId" value="LOCAL-00202" />
+      <option name="project" value="LOCAL" />
+      <updated>1617276415436</updated>
+    </task>
+    <task id="LOCAL-00203" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617281582755</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
+      <option name="project" value="LOCAL" />
+      <updated>1617281582756</updated>
+    </task>
+    <task id="LOCAL-00204" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617283289427</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
+      <option name="project" value="LOCAL" />
+      <updated>1617283289427</updated>
+    </task>
+    <task id="LOCAL-00205" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617284400048</created>
+      <option name="number" value="00205" />
+      <option name="presentableId" value="LOCAL-00205" />
+      <option name="project" value="LOCAL" />
+      <updated>1617284400048</updated>
+    </task>
+    <task id="LOCAL-00206" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617285490758</created>
+      <option name="number" value="00206" />
+      <option name="presentableId" value="LOCAL-00206" />
+      <option name="project" value="LOCAL" />
+      <updated>1617285490758</updated>
+    </task>
+    <task id="LOCAL-00207" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617292761368</created>
+      <option name="number" value="00207" />
+      <option name="presentableId" value="LOCAL-00207" />
+      <option name="project" value="LOCAL" />
+      <updated>1617292761368</updated>
+    </task>
+    <option name="localTasksCounter" value="208" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

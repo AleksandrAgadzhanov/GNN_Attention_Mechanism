@@ -483,7 +483,7 @@ def main():
     output_dict_heuristics = pgd_attack_properties_old('base_easy.pkl', 'cifar_base_kw',
                                                        ['branch heuristic', 10], 150, 0.1, 100, 9,
                                                        log_filepath='project_motivation/attack_log.txt',
-                                                       subset=list(range(50)))
+                                                       subset=list(range(100)))
     torch.save(output_dict_heuristics, 'experiment_results/attack_success_rates_heuristics.pkl')
 
 
