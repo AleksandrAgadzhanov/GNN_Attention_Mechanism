@@ -104,7 +104,7 @@ def main():
     # plot_training_loss('dictionaries_from_training/training_dict_0.001.pkl')
     # plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_1st_iteration/',
     #                               space='log')
-    plot_attack_success_rates('../experiment_results/attack_success_rates_heuristics_old.pkl',
+    plot_attack_success_rates('../experiment_results/attack_success_rates_heuristics.pkl',
                               '../experiment_results/attack_success_rates_baseline_old.pkl',
                               'Comparison of the GNN and baseline attacks (test dataset)')
 

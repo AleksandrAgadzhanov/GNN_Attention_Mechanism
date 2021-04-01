@@ -16,7 +16,7 @@ import sys
 #         "python GNN_training/cross_validation.py --start_lambda 0.076 --end_lambda 0.082 --num 7",
 #         "python GNN_training/cross_validation.py --start_lambda 0.083 --end_lambda 0.09 --num 8"]
 jobs = ["python project_motivation/pgd_attacks.py",
-        "python GNN_framework/baselines.py --filename base_easy_SAT_jade"]
+        "python GNN_framework/baselines.py --filename base_easy"]
 
 
 def run_command(command):
