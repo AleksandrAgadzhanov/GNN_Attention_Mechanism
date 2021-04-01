@@ -81,7 +81,7 @@ def main():
     log_filename = args.filename + '_log.txt'
     output_filename = args.filename + '_dict.pkl'
 
-    pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.5, 0.1, 100, 51, output_filename,
+    pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 101, output_filename,
                           log_filepath=log_filename, subset=list(range(100)))
 
 

@@ -260,7 +260,7 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
         # success rate to the output dictionary
         if successful_attack_flag:
             successfully_attacked_properties += 1
-            attack_success_rate = 1.0 * successfully_attacked_properties / len(x_exact)
+            attack_success_rate = 100.0 * successfully_attacked_properties / len(x_exact)
             output_dict['times'].append(time.time() - start_time)
             output_dict['attack success rates'].append(attack_success_rate)
             if log_filepath is not None:
@@ -386,7 +386,7 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
                 print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
         # Calculate the new attack success rate and append it and the time to the output dictionary
-        attack_success_rate = 1.0 * successfully_attacked_properties / len(x_exact)
+        attack_success_rate = 100.0 * successfully_attacked_properties / len(x_exact)
         output_dict['times'].append(time.time() - start_time)
         output_dict['attack success rates'].append(attack_success_rate)
 
@@ -477,8 +477,9 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 
 def main():
-    output_dict_heuristics = pgd_attack_properties_old('base_easy.pkl', 'cifar_base_kw', ['branch heuristic', 25],
-                                                       150, 0.1, 100, log_filepath='project_motivation/attack_log.txt',
+    output_dict_heuristics = pgd_attack_properties_old('base_easy_SAT_jade.pkl', 'cifar_base_kw',
+                                                       ['branch heuristic', 50], 100, 0.1, 100,
+                                                       log_filepath='project_motivation/attack_log.txt',
                                                        subset=list(range(100)))
     torch.save(output_dict_heuristics, 'experiment_results/output_dict_heuristics.pkl')
 
