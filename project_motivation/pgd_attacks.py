@@ -1,5 +1,4 @@
 from exp_utils.model_utils import load_verified_data
-from GNN_framework.baselines import pgd_attack_properties
 import torch
 import copy
 import time
@@ -14,7 +13,7 @@ def pgd_attack_properties_old(properties_filename, model_name, attack_method_tri
     x_exact, y_true, image_indices, model = load_verified_data(model_name)
 
     # Load the properties DataFrame, leave only verified properties
-    properties_filepath = 'cifar_exp/' + properties_filename
+    properties_filepath = '../cifar_exp/' + properties_filename
     properties_dataframe = pd.read_pickle(properties_filepath)
 
     # If the properties dataset is for testing, leave only the correctly verified properties
@@ -478,11 +477,10 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 
 def main():
-    output_dict_heuristics = pgd_attack_properties_old('base_easy.pkl', 'cifar_base_kw', ['branch heuristic', 50],
-                                                       150, 0.1, 100, log_filepath='project_motivation/attack_log.txt')
+    output_dict_heuristics = pgd_attack_properties_old('base_easy.pkl', 'cifar_base_kw', ['branch heuristic', 25],
+                                                       150, 0.1, 100, log_filepath='project_motivation/attack_log.txt',
+                                                       subset=list(range(100)))
     torch.save(output_dict_heuristics, 'experiment_results/output_dict_heuristics.pkl')
-    pgd_attack_properties('val_SAT_jade.pkl', 'cifar_base_kw', 1.5, 0.1, 100, 101, 'output_dict_baseline.pkl',
-                          log_filepath='GNN_framework/baseline_log.txt')
 
 
 if __name__ == '__main__':

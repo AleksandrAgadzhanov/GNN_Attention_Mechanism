@@ -10,11 +10,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;">
-      <change afterPath="$PROJECT_DIR$/cifar_exp/base_easy.pkl" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for baseline vs heuristics experiment&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_motivation/pgd_attacks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +66,7 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\training_losses" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.plotter (1)">
+  <component name="RunManager" selected="Python.pgd_attacks">
     <configuration name="attack_properties_with_pgd" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -89,6 +88,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="pgd_attacks" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNN_Attention_Mechanism" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project_motivation" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project_motivation/pgd_attacks.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="plotter (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -102,27 +122,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/experiment_results/plotter.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="temp (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="GNN_Attention_Mechanism" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/learnt_parameters" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/learnt_parameters/temp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -175,11 +174,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.pgd_attacks" />
         <item itemvalue="Python.plotter (1)" />
         <item itemvalue="Python.attack_properties_with_pgd" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.temp" />
-        <item itemvalue="Python.temp (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -191,13 +190,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00149" summary="&quot;setup for cross validation experiment using large training dataset&quot;">
-      <created>1615196163701</created>
-      <option name="number" value="00149" />
-      <option name="presentableId" value="LOCAL-00149" />
-      <option name="project" value="LOCAL" />
-      <updated>1615196163701</updated>
     </task>
     <task id="LOCAL-00150" summary="&quot;setup for final training of GNN with 1 zoom&quot;">
       <created>1615299079519</created>
@@ -535,7 +527,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617220980004</updated>
     </task>
-    <option name="localTasksCounter" value="198" />
+    <task id="LOCAL-00198" summary="&quot;setup for baseline vs heuristics experiment&quot;">
+      <created>1617226582300</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
+      <option name="project" value="LOCAL" />
+      <updated>1617226582300</updated>
+    </task>
+    <option name="localTasksCounter" value="199" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -551,7 +550,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;setup for big cross-validation experiment&quot;" />
     <MESSAGE value="&quot;setup for training and validation dataset generation experiment&quot;" />
     <MESSAGE value="&quot;setup for cross-validation experiment (modified gradient generation)&quot;" />
     <MESSAGE value="&quot;setup for next iteration of cross-validation experiment&quot;" />
@@ -576,7 +574,8 @@
     <MESSAGE value="&quot;setup for cross-validation (1 GNN zoom) and baseline vs heuristics experiments&quot;" />
     <MESSAGE value="&quot;setup for baseline vs heuristics and baseline attack experiments&quot;" />
     <MESSAGE value="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;" />
+    <MESSAGE value="&quot;setup for baseline vs heuristics experiment&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for baseline vs heuristics experiment&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
