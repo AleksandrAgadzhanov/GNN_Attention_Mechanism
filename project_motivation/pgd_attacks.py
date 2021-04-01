@@ -265,9 +265,6 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
             # attack success rate to the output dictionary
             if successful_attack_flag:
                 successfully_attacked_properties += 1
-                attack_success_rate = 100.0 * successfully_attacked_properties / len(x_exact)
-                output_dict['times'].append(time.time() - start_time)
-                output_dict['attack success rates'].append(attack_success_rate)
                 if log_filepath is not None:
                     with mlogger.stdout_to(log_filepath):
                         print('Initial PGD attack succeeded')
@@ -384,17 +381,17 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
                         print('Image ' + str(i + 1) + ' was attacked successfully')
                     break
 
-            if not successful_attack_flag:
-                if log_filepath is not None:
-                    with mlogger.stdout_to(log_filepath):
-                        print('Image ' + str(i + 1) + ' was NOT attacked successfully')
-                else:
+        if not successful_attack_flag:
+            if log_filepath is not None:
+                with mlogger.stdout_to(log_filepath):
                     print('Image ' + str(i + 1) + ' was NOT attacked successfully')
+            else:
+                print('Image ' + str(i + 1) + ' was NOT attacked successfully')
 
-            # Calculate the new attack success rate and append it and the time to the output dictionary
-            attack_success_rate = 100.0 * successfully_attacked_properties / len(x_exact)
-            output_dict['times'].append(time.time() - start_time)
-            output_dict['attack success rates'].append(attack_success_rate)
+        # Calculate the new attack success rate and append it and the time to the output dictionary
+        attack_success_rate = 100.0 * successfully_attacked_properties / len(x_exact)
+        output_dict['times'].append(time.time() - start_time)
+        output_dict['attack success rates'].append(attack_success_rate)
 
     return output_dict
 
