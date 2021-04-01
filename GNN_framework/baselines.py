@@ -78,11 +78,11 @@ def main():
     parser.add_argument('--filename', type=str)
     args = parser.parse_args()
     properties_filename = args.filename + '.pkl'
-    log_filename = args.filename + '_log.txt'
+    log_filepath = 'experiment_results/' + args.filename + '_log.txt'
     output_filename = args.filename + '_dict.pkl'
 
-    pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 101, output_filename,
-                          log_filepath=log_filename, subset=list(range(100)))
+    pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 51, output_filename,
+                          log_filepath=log_filepath, subset=list(range(100)))
 
 
 if __name__ == '__main__':

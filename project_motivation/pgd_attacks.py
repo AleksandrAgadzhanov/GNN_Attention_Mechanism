@@ -478,7 +478,7 @@ def get_bounds_special(x_exact, information_tensor, epsilon):
 
 def main():
     output_dict_heuristics = pgd_attack_properties_old('base_easy_SAT_jade.pkl', 'cifar_base_kw',
-                                                       ['branch heuristic', 50], 100, 0.1, 100,
+                                                       ['branch heuristic', 25], 100, 0.1, 100,
                                                        log_filepath='project_motivation/attack_log.txt',
                                                        subset=list(range(100)))
     torch.save(output_dict_heuristics, 'experiment_results/output_dict_heuristics.pkl')
