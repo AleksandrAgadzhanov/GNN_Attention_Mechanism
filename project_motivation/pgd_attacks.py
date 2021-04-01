@@ -233,8 +233,11 @@ def pgd_attack_properties_branch_heuristic(model, x_exact, y_true, y_test, epsil
 
     # Attack each property at a time
     for i in range(len(x_exact)):
+        successful_attack_flag = False
 
         for restart in range(num_restarts + 1):
+            if successful_attack_flag:
+                break
 
             # FIRST PGD ATTACK
 
