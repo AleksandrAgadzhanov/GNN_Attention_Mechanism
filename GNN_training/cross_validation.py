@@ -92,7 +92,8 @@ def main():
 
     for loss_lambda in loss_lambdas:
         cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 60, 2,
-                           log_filepath=log_filepath, device='cuda')
+                           training_dataset_filename='train_SAT_jade_reduced_dataset.pkl', log_filepath=log_filepath,
+                           device='cuda')
 
 
 if __name__ == '__main__':
