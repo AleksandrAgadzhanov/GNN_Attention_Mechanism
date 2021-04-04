@@ -1,5 +1,6 @@
 import glob
 import torch
+import matplotlib
 from matplotlib import pyplot as plt
 
 
@@ -23,6 +24,18 @@ def plot_cross_validation_results(directory, space='log'):
     # Extract the attack success rates from the dictionaries
     attack_success_rates = [cross_validation_dict['attack success rate'] for cross_validation_dict in
                             cross_validation_dicts]
+
+    # Find the value of lambda for which the attack success rate on the validation dataset was the largest
+    max_attack_success_rate_index = 0
+    max_attack_success_rate = 0
+    for i in range(len(attack_success_rates)):
+        if attack_success_rates[i] > max_attack_success_rate:
+            max_attack_success_rate = attack_success_rates[i]
+            max_attack_success_rate_index = i
+
+    # Print this value of lambda to the terminal
+    print("Attack success rate on the validation dataset was the largest for lambda = " +
+          str(lambdas[max_attack_success_rate_index]) + " (" + str(max_attack_success_rate) + ")")
 
     # Finally, plot the attack success rates vs lambda values on the log-linear scale
     if space == 'log':
@@ -85,28 +98,38 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
     gnn_times = [1.0 * time / 3600 for time in gnn_times]
     baseline_times = [1.0 * time / 3600 for time in baseline_times]
 
+    # Set the correct font
+    font = {'family': 'arial',
+            'size': 30}
+    matplotlib.rc('font', **font)
+
     # Finally, produce an annotated plot
-    plt.plot(gnn_times, gnn_attack_success_rates, color='b', label='GNN attacks')
-    plt.plot(baseline_times, baseline_attack_success_rates, color='r', label='Baseline attacks')
+    plt.plot(gnn_times, gnn_attack_success_rates, color='b', label='Heuristics-based method', linewidth=3.0)
+    plt.plot(baseline_times, baseline_attack_success_rates, color='r', label='Baseline method', linewidth=3.0)
+    plt.hlines(gnn_attack_success_rates[-1], 0, gnn_times[-1], colors='k', linestyles='dashed', linewidth=3.0)
+    plt.hlines(baseline_attack_success_rates[-1], 0, baseline_times[-1], colors='k',
+               linestyles='dashed', linewidth=3.0)
     plt.title(title)
-    plt.xlabel('Time (hrs)')
+    plt.xlabel('Time (hours)')
     plt.ylabel('Attack success rate (%)')
     plt.grid()
     plt.legend()
+    plt.xlim([0, max(baseline_times[-1], gnn_times[-1])])
     plt.ylim([0, 100])
     plt.yticks(range(0, 101, 10), range(0, 101, 10))
-    plt.text(gnn_times[-1], gnn_attack_success_rates[-1], str(round(gnn_attack_success_rates[-1], 1)))
-    plt.text(baseline_times[-1], baseline_attack_success_rates[-1], str(round(baseline_attack_success_rates[-1], 1)))
+    plt.text(gnn_times[-1] / 2 - 0.3, gnn_attack_success_rates[-1] + 3, str(round(gnn_attack_success_rates[-1], 1)) + '%')
+    plt.text(baseline_times[-1] / 2 - 0.12, baseline_attack_success_rates[-1] - 5, str(round(baseline_attack_success_rates[-1], 1)) +
+             '%')
     plt.show()
 
 
 def main():
-    # plot_training_loss('dictionaries_from_training/training_dict_0.001.pkl')
-    plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_1st_iteration/',
-                                  space='log')
+    # plot_training_loss('../experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.053.pkl')
+    plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/',
+                                  space='lin')
     # plot_attack_success_rates('../experiment_results/attack_success_rates_heuristics.pkl',
-    #                           '../experiment_results/atttack_success_rates_baseline.pkl',
-    #                           'Comparison of the GNN and baseline attacks (test dataset)')
+    #                           '../experiment_results/attack_success_rates_baseline.pkl',
+    #                           'Comparison of the heuristics-based and baseline attacks')
 
 
 if __name__ == '__main__':

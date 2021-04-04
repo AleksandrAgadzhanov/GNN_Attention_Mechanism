@@ -5,7 +5,6 @@ from GNN_framework.GraphNeuralNetwork import GraphNeuralNetwork
 from GNN_framework.helper_functions import simplify_model
 from GNN_training.helper_functions import compute_loss
 import glob
-import argparse
 
 
 def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_learning_rate, num_epochs, loss_lambda,
@@ -144,25 +143,12 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--start_lambda', type=float)
-    parser.add_argument('--end_lambda', type=float)
-    parser.add_argument('--num', type=int)
-    args = parser.parse_args()
+    training_dict = generate_gnn_training_parameters('train_val_SAT_jade_combined_dataset.pkl', 'cifar_base_kw',
+                                                     0.000001, 200, 0.053,
+                                                     'experiment_results/gnn_1_zoom_parameters.pkl',
+                                                     log_filepath='GNN_training/training_log.txt', device='cuda')
 
-    log_filepath = 'GNN_training/training_log_' + str(args.start_lambda) + '_to_' + str(args.end_lambda) + '.txt'
-
-    import numpy as np
-
-    loss_lambdas = np.linspace(args.start_lambda, args.end_lambda, num=args.num)
-
-    for loss_lambda in loss_lambdas:
-        parameters_filepath = 'experiment_results/gnn_parameters_cross_val_' + str(loss_lambda) + '.pkl'
-        training_dict = generate_gnn_training_parameters('train_SAT_jade_reduced_dataset.pkl', 'cifar_base_kw',
-                                                         0.000001, 200, loss_lambda, parameters_filepath,
-                                                         log_filepath=log_filepath, device='cuda')
-
-        torch.save(training_dict, 'experiment_results/training_dict_' + str(loss_lambda) + '.pkl')
+    torch.save(training_dict, 'experiment_results/training_dict_gnn_1_zoom.pkl')
 
 
 if __name__ == '__main__':

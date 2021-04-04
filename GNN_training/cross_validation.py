@@ -16,7 +16,7 @@ def cross_validate_gnn(loss_lambda, validation_properties_filename, model_name, 
     # Start the timer
     start_time = time.time()
 
-    # If the train argument was specified as True, train the GNN first
+    # If the train argument was provided, train the GNN first
     if training_dataset_filename:
         # Initialize the filepath in which the GNN parameters and the training losses for the given value of lambda
         # will be stored
