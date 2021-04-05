@@ -7,7 +7,7 @@ from GNN_training.train_GNN import generate_gnn_training_parameters
 
 
 def cross_validate_gnn(loss_lambda, validation_properties_filename, model_name, pgd_learning_rate, num_iterations,
-                       num_attack_epochs, num_trials, num_restarts, training_dataset_filename=None,
+                       num_attack_epochs, num_trials, num_initialisations, training_dataset_filename=None,
                        gnn_learning_rate=0.000001, num_training_epochs=100, log_filepath=None, epsilon_factor=1.0,
                        device='cpu'):
     """
@@ -54,7 +54,7 @@ def cross_validate_gnn(loss_lambda, validation_properties_filename, model_name, 
     # Let the GNN perform PGD attacks on the validation dataset
     validation_attack_success_rate = pgd_gnn_attack_properties(validation_properties_filename, model_name,
                                                                epsilon_factor, pgd_learning_rate, num_iterations,
-                                                               num_attack_epochs, num_trials, num_restarts,
+                                                               num_attack_epochs, num_trials, num_initialisations,
                                                                parameters_filepath, log_filepath=log_filepath,
                                                                device=device)
 
@@ -88,12 +88,11 @@ def main():
     import numpy as np
 
     loss_lambdas = np.linspace(args.start_lambda, args.end_lambda, num=args.num)
-    loss_lambdas = [round(loss_lambda, 6) for loss_lambda in loss_lambdas]
+    loss_lambdas = [round(loss_lambda, 3) for loss_lambda in loss_lambdas]
 
     for loss_lambda in loss_lambdas:
-        cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 60, 2,
-                           training_dataset_filename='train_SAT_jade_reduced_dataset.pkl', log_filepath=log_filepath,
-                           device='cuda')
+        cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 30, 10,
+                           log_filepath=log_filepath, device='cuda')
 
 
 if __name__ == '__main__':

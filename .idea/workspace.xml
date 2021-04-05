@@ -11,10 +11,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for GNN testing (1 GNN zoom)&quot;">
-      <change afterPath="$PROJECT_DIR$/experiment_results/baseline_dict_easy_test_dataset.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/baseline_dict_test_dataset.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/gnn_dict_easy_test_dataset.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/gnn_dict_test_dataset.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/gnn_parameters_1_zoom.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/gnn_parameters.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/training_dict_gnn_1_zoom.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/training_dict.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,20 +196,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00163" summary="&quot;setup for GNN training (3 GNN zooms)&quot;">
-      <created>1616146795749</created>
-      <option name="number" value="00163" />
-      <option name="presentableId" value="LOCAL-00163" />
-      <option name="project" value="LOCAL" />
-      <updated>1616146795750</updated>
-    </task>
-    <task id="LOCAL-00164" summary="&quot;setup for GNN training (3 GNN zooms)&quot;">
-      <created>1616178633091</created>
-      <option name="number" value="00164" />
-      <option name="presentableId" value="LOCAL-00164" />
-      <option name="project" value="LOCAL" />
-      <updated>1616178633091</updated>
     </task>
     <task id="LOCAL-00165" summary="&quot;setup for GNN training (3 GNN zooms)&quot;">
       <created>1616229700146</created>
@@ -534,7 +526,21 @@
       <option name="project" value="LOCAL" />
       <updated>1617570403828</updated>
     </task>
-    <option name="localTasksCounter" value="212" />
+    <task id="LOCAL-00212" summary="&quot;setup for GNN testing (1 GNN zoom)&quot;">
+      <created>1617606176909</created>
+      <option name="number" value="00212" />
+      <option name="presentableId" value="LOCAL-00212" />
+      <option name="project" value="LOCAL" />
+      <updated>1617606176909</updated>
+    </task>
+    <task id="LOCAL-00213" summary="&quot;setup for GNN testing (1 GNN zoom)&quot;">
+      <created>1617606232027</created>
+      <option name="number" value="00213" />
+      <option name="presentableId" value="LOCAL-00213" />
+      <option name="project" value="LOCAL" />
+      <updated>1617606232027</updated>
+    </task>
+    <option name="localTasksCounter" value="214" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

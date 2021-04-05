@@ -9,7 +9,7 @@ from GNN_framework.features_generation import generate_input_feature_vectors, ge
 
 
 def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, pgd_learning_rate, num_iterations,
-                              num_attack_epochs, num_trials, num_restarts, gnn_parameters_filepath,
+                              num_attack_epochs, num_trials, num_initialisations, gnn_parameters_filepath,
                               output_filename=None, log_filepath=None, subset=None, device='cpu'):
     """
     This function acts aims to find adversarial examples for each property in the file specified. It acts as a container
@@ -45,7 +45,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         # Use the special function which attacks one particular property using the GNN
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_attack_epochs,
-                                                         num_trials, num_restarts, gnn_parameters_filepath,
+                                                         num_trials, num_initialisations, gnn_parameters_filepath,
                                                          log_filepath, device=device)
 
         if log_filepath is not None:
@@ -84,8 +84,8 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
 
 
 def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pgd_learning_rate, num_iterations,
-                            num_attack_epochs, num_trials, num_restarts, gnn_parameters_filepath, log_filepath=None,
-                            device='cpu'):
+                            num_attack_epochs, num_trials, num_initialisations, gnn_parameters_filepath,
+                            log_filepath=None, device='cpu'):
     """
     This function performs the PGD attack on the specified property characterised by its image, corresponding simplified
     model and epsilon value by utilising the GNN framework. The first PGD attack is important so a number of restarts is
@@ -93,7 +93,7 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
     after each such update a specified number of trial PGD attacks are performed on the new domain.
     """
     # For a specified number of restarts
-    for restart in range(num_restarts + 1):
+    for initialisation in range(num_initialisations):
 
         # First, perturb the image randomly within the allowed bounds and perform a PGD attack
         lower_bound = torch.add(-epsilon * epsilon_factor, image)
@@ -155,10 +155,10 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                     if log_filepath is not None:
                         with mlogger.stdout_to(log_filepath):
                             print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
-                                  str(attack_epoch + 1) + "; Restart " + str(restart) + ")")
+                                  str(attack_epoch + 1) + "; Restart " + str(initialisation + 1) + ")")
                     else:
                         print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
-                              str(attack_epoch + 1) + "; Restart " + str(restart) + ")")
+                              str(attack_epoch + 1) + "; Restart " + str(initialisation + 1) + ")")
                     return True
 
             # Otherwise, update all the feature vectors using new information if the attack epoch number is not the last
