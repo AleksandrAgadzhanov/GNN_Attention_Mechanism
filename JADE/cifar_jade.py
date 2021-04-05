@@ -6,9 +6,7 @@ import sys
 
 
 jobs = ["python GNN_framework/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade",
-        "python GNN_framework/baselines.py --filename easy_base_easy_SAT_jade",
-        "python GNN_framework/attack_properties_with_pgd.py --filename base_easy_SAT_jade",
-        "python GNN_framework/baselines.py --filename base_easy_SAT_jade"]
+        "python GNN_framework/attack_properties_with_pgd.py --filename base_easy_SAT_jade"]
 
 
 def run_command(command):
