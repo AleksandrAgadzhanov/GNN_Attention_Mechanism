@@ -186,7 +186,7 @@ def main():
     output_filename = 'gnn_' + args.filename + '_dict.pkl'
 
     pgd_gnn_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 1, 60, 2,
-                              'experiment_results/GNN_1_zooms/gnn_parameters_1_zoom.pkl', output_filename,
+                              'experiment_results/GNN_1_zoom/gnn_parameters_1_zoom.pkl', output_filename,
                               log_filepath=log_filepath, device='cuda')
 
 
