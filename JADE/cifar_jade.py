@@ -5,16 +5,25 @@ import argparse
 import sys
 
 
-jobs = ["python GNN_training/cross_validation.py --start_lambda 0.001 --end_lambda 0.005 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.006 --end_lambda 0.009 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 0.01 --end_lambda 0.05 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.06 --end_lambda 0.09 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 0.1 --end_lambda 0.5 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.6 --end_lambda 0.9 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 1.0 --end_lambda 5.0 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 6.0 --end_lambda 10.0 --num 5",
-        "python GNN_framework/baselines.py --filename base_easy_SAT_jade",
-        "python GNN_framework/baselines.py --filename easy_base_easy_SAT_jade"]
+# jobs = ["python GNN_training/cross_validation.py --start_lambda 0.001 --end_lambda 0.005 --num 5",
+#         "python GNN_training/cross_validation.py --start_lambda 0.006 --end_lambda 0.009 --num 4",
+#         "python GNN_training/cross_validation.py --start_lambda 0.01 --end_lambda 0.05 --num 5",
+#         "python GNN_training/cross_validation.py --start_lambda 0.06 --end_lambda 0.09 --num 4",
+#         "python GNN_training/cross_validation.py --start_lambda 0.1 --end_lambda 0.5 --num 5",
+#         "python GNN_training/cross_validation.py --start_lambda 0.6 --end_lambda 0.9 --num 4",
+#         "python GNN_training/cross_validation.py --start_lambda 1.0 --end_lambda 5.0 --num 5",
+#         "python GNN_training/cross_validation.py --start_lambda 6.0 --end_lambda 10.0 --num 5"]
+
+
+jobs = ["python GNN_framework/baselines.py --filename val_SAT_jade",
+        "python GNN_training/cross_validation.py --start_lambda 0.051 --end_lambda 0.055 --num 5",
+        "python GNN_training/cross_validation.py --start_lambda 0.056 --end_lambda 0.059 --num 4",
+        "python GNN_training/cross_validation.py --start_lambda 0.061 --end_lambda 0.065 --num 5",
+        "python GNN_training/cross_validation.py --start_lambda 0.066 --end_lambda 0.069 --num 4",
+        "python GNN_training/cross_validation.py --start_lambda 0.071 --end_lambda 0.075 --num 5",
+        "python GNN_training/cross_validation.py --start_lambda 0.076 --end_lambda 0.079 --num 4",
+        "python GNN_training/cross_validation.py --start_lambda 0.081 --end_lambda 0.085 --num 5",
+        "python GNN_training/cross_validation.py --start_lambda 0.086 --end_lambda 0.089 --num 4"]
 
 
 def run_command(command):

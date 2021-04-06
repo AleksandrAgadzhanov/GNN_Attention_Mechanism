@@ -2,6 +2,7 @@ import mlogger
 import torch
 import time
 import argparse
+import glob
 from GNN_framework.attack_properties_with_pgd import pgd_gnn_attack_properties
 from GNN_training.train_GNN import generate_gnn_training_parameters
 
@@ -90,9 +91,17 @@ def main():
     loss_lambdas = np.linspace(args.start_lambda, args.end_lambda, num=args.num)
     loss_lambdas = [round(loss_lambda, 3) for loss_lambda in loss_lambdas]
 
+    filepaths_list = glob.glob('experiment_results/cross_validation_gnn_parameters/gnn_*')
+    filenames_list = [filepath[51:] for filepath in filepaths_list]
+
     for loss_lambda in loss_lambdas:
-        cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 10, 10,
-                           log_filepath=log_filepath, device='cuda')
+        if ('gnn_parameters_cross_val_' + str(loss_lambda) + '.pkl') in filenames_list:
+            cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 10, 10,
+                               log_filepath=log_filepath, device='cuda')
+        else:
+            cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 10, 10,
+                               training_dataset_filename='train_SAT_jade_reduced_dataset.pkl',
+                               log_filepath=log_filepath, device='cuda')
 
 
 if __name__ == '__main__':
