@@ -14,10 +14,8 @@ import sys
 #         "python GNN_training/cross_validation.py --start_lambda 1.0 --end_lambda 5.0 --num 5",
 #         "python GNN_training/cross_validation.py --start_lambda 6.0 --end_lambda 10.0 --num 5"]
 
-jobs = ["python GNN_training/cross_validation.py --start_lambda 7.0 --end_lambda 7.0 --num 1",
-        "python GNN_training/cross_validation.py --start_lambda 8.0 --end_lambda 8.0 --num 1",
-        "python GNN_training/cross_validation.py --start_lambda 9.0 --end_lambda 9.0 --num 1",
-        "python GNN_training/cross_validation.py --start_lambda 10.0 --end_lambda 10.0 --num 1"]
+jobs = ["python project_motivation/pgd_attacks.py",
+        "python GNN_framework/baselines.py --filename base_easy_SAT_jade"]
 
 
 def run_command(command):
