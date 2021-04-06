@@ -91,7 +91,7 @@ def main():
     loss_lambdas = [round(loss_lambda, 3) for loss_lambda in loss_lambdas]
 
     for loss_lambda in loss_lambdas:
-        cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 30, 10,
+        cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 10, 10,
                            log_filepath=log_filepath, device='cuda')
 
 
