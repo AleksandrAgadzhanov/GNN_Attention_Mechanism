@@ -15,8 +15,8 @@ import sys
 #         "python GNN_training/cross_validation.py --start_lambda 6.0 --end_lambda 10.0 --num 5"]
 
 
-jobs = ["python GNN_framework/attack_properties_with_pgd.py --filename base_easy_SAT_jade",
-        "python GNN_framework/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade"]
+jobs = ["python GNN_framework/baselines.py --filename base_easy_SAT_jade",
+        "python GNN_framework/baselines.py --filename easy_base_easy_SAT_jade"]
 
 
 def run_command(command):

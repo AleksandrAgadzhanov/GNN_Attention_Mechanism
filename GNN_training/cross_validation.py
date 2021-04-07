@@ -101,7 +101,7 @@ def main():
         else:
             cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 10, 10,
                                training_dataset_filename='train_SAT_jade_reduced_dataset.pkl',
-                               log_filepath=log_filepath, device='cuda')
+                               gnn_learning_rate=0.000001, log_filepath=log_filepath, device='cuda')
 
 
 if __name__ == '__main__':

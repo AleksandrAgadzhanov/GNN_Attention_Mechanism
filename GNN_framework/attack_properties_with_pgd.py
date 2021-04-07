@@ -46,7 +46,7 @@ def pgd_gnn_attack_properties(properties_filename, model_name, epsilon_factor, p
         successful_attack_flag = pgd_gnn_attack_property(simplified_model, images[i], epsilons[i], epsilon_factor,
                                                          pgd_learning_rate, num_iterations, num_attack_epochs,
                                                          num_trials, num_initialisations, gnn_parameters_filepath,
-                                                         log_filepath, device=device)
+                                                         log_filepath=log_filepath, device=device)
 
         if log_filepath is not None:
             if successful_attack_flag:
@@ -155,10 +155,10 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                     if log_filepath is not None:
                         with mlogger.stdout_to(log_filepath):
                             print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
-                                  str(attack_epoch + 1) + "; Restart " + str(initialisation + 1) + ")")
+                                  str(attack_epoch + 1) + "; Initialisation " + str(initialisation + 1) + ")")
                     else:
                         print("PGD attack succeeded during: (Trial " + str(trial + 1) + "; Attack Epoch " +
-                              str(attack_epoch + 1) + "; Restart " + str(initialisation + 1) + ")")
+                              str(attack_epoch + 1) + "; Initialisation " + str(initialisation + 1) + ")")
                     return True
 
             # Otherwise, update all the feature vectors using new information if the attack epoch number is not the last
