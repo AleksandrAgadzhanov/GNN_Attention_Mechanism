@@ -15,15 +15,7 @@ import sys
 #         "python GNN_training/cross_validation.py --start_lambda 6.0 --end_lambda 10.0 --num 5"]
 
 
-jobs = ["python GNN_framework/baselines.py --filename val_SAT_jade",
-        "python GNN_training/cross_validation.py --start_lambda 0.051 --end_lambda 0.055 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.056 --end_lambda 0.059 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 0.061 --end_lambda 0.065 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.066 --end_lambda 0.069 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 0.071 --end_lambda 0.075 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.076 --end_lambda 0.079 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 0.081 --end_lambda 0.085 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.086 --end_lambda 0.089 --num 4"]
+jobs = ["python GNN_training/train_GNN.py"]
 
 
 def run_command(command):

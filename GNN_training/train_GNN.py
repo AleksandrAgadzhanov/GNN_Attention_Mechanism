@@ -144,7 +144,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 def main():
     training_dict = generate_gnn_training_parameters('train_val_SAT_jade_combined_dataset.pkl', 'cifar_base_kw',
-                                                     0.000001, 100, 0.053,
+                                                     0.000001, 25, 0.076,
                                                      'experiment_results/gnn_1_zoom_parameters.pkl',
                                                      log_filepath='GNN_training/training_log.txt', device='cuda')
 
