@@ -10,7 +10,184 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for baseline testing and 1st iteration of cross-validation (1 GNN zoom)&quot;" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for baseline testing and 1st iteration of cross-validation (1 GNN zoom)&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.001.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.002.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.003.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.004.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.005.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.006.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.007.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.008.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.009.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.01.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.02.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.021.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.023.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.024.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.025.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.026.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.028.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.029.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.03.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.031.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.032.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.033.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.034.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.035.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.036.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.037.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.038.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.039.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.04.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.041.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.042.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.043.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.044.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.045.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.046.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.047.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.048.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.049.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.05.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.051.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.052.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.053.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.054.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.055.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.056.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.057.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.058.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.059.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.06.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.061.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.062.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.063.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.065.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.066.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.067.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.068.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.069.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.07.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.071.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.073.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.074.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.075.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.076.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.077.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.079.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.08.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.09.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.1.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.2.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.3.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.4.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.5.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.6.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.7.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.8.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.9.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_1.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_10.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_2.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_3.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_4.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_5.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_6.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_7.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_8.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_9.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.001.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.002.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.003.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.004.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.005.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.006.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.007.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.008.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.009.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.01.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.02.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.021.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.023.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.024.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.025.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.026.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.028.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.029.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.03.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.031.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.032.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.033.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.034.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.035.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.036.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.037.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.038.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.039.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.04.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.041.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.042.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.043.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.044.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.045.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.046.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.047.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.048.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.049.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.05.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.051.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.052.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.053.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.054.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.055.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.056.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.057.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.058.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.059.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.06.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.061.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.062.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.063.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.065.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.066.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.067.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.068.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.069.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.07.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.071.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.073.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.074.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.075.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.076.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.077.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.079.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.08.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.09.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.1.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.2.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.3.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.4.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.5.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.6.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.7.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.8.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.9.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_1.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_10.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_2.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_3.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_4.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_5.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_6.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_7.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_8.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_9.0.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -170,10 +347,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.plotter (1)" />
-        <item itemvalue="Python.attack_properties_with_pgd" />
-        <item itemvalue="Python.pgd_attacks" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.temp" />
+        <item itemvalue="Python.attack_properties_with_pgd" />
+        <item itemvalue="Python.pgd_attacks" />
       </list>
     </recent_temporary>
   </component>
@@ -185,13 +362,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00178" summary="&quot;setup for testing the new lower learning rate&quot;">
-      <created>1616672109362</created>
-      <option name="number" value="00178" />
-      <option name="presentableId" value="LOCAL-00178" />
-      <option name="project" value="LOCAL" />
-      <updated>1616672109366</updated>
     </task>
     <task id="LOCAL-00179" summary="&quot;setup for testing the new lower learning rate&quot;">
       <created>1616683432392</created>
@@ -529,7 +699,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617885505886</updated>
     </task>
-    <option name="localTasksCounter" value="227" />
+    <task id="LOCAL-00227" summary="&quot;setup for baseline testing and 1st iteration of cross-validation (1 GNN zoom)&quot;">
+      <created>1617899811750</created>
+      <option name="number" value="00227" />
+      <option name="presentableId" value="LOCAL-00227" />
+      <option name="project" value="LOCAL" />
+      <updated>1617899811750</updated>
+    </task>
+    <option name="localTasksCounter" value="228" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
