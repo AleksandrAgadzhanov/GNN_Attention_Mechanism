@@ -10,15 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for baseline testing&quot;">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/baselines.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/baselines.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/baseline_dict_easy_test_dataset.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/baseline_dict_test_dataset.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
-    </list>
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for baseline testing and 1st iteration of cross-validation (1 GNN zoom)&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -193,13 +185,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00175" summary="&quot;changed GNN learning rate and started using reduced training dataset&quot;">
-      <created>1616597291721</created>
-      <option name="number" value="00175" />
-      <option name="presentableId" value="LOCAL-00175" />
-      <option name="project" value="LOCAL" />
-      <updated>1616597291721</updated>
     </task>
     <task id="LOCAL-00176" summary="&quot;setup for testing the new lower learning rate&quot;">
       <created>1616660018894</created>
@@ -537,7 +522,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617835670426</updated>
     </task>
-    <option name="localTasksCounter" value="224" />
+    <task id="LOCAL-00224" summary="&quot;setup for baseline testing and 1st iteration of cross-validation (1 GNN zoom)&quot;">
+      <created>1617867322743</created>
+      <option name="number" value="00224" />
+      <option name="presentableId" value="LOCAL-00224" />
+      <option name="project" value="LOCAL" />
+      <updated>1617867322743</updated>
+    </task>
+    <option name="localTasksCounter" value="225" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -553,7 +545,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;setup for attacking the test datasets experiment&quot;" />
     <MESSAGE value="&quot;setup for cross validation experiment with 2 zooms of GNN&quot;" />
     <MESSAGE value="&quot;setup for attacking experiment (2 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for cross-validation experiment (3 GNN zooms)&quot;" />
@@ -578,7 +569,8 @@
     <MESSAGE value="&quot;setup for GNN training (1 GNN zoom)&quot;" />
     <MESSAGE value="&quot;setup for GNN testing (1 GNN zoom)&quot;" />
     <MESSAGE value="&quot;setup for baseline testing&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for baseline testing&quot;" />
+    <MESSAGE value="&quot;setup for baseline testing and 1st iteration of cross-validation (1 GNN zoom)&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for baseline testing and 1st iteration of cross-validation (1 GNN zoom)&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
