@@ -124,12 +124,12 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
 
 
 def main():
-    # plot_training_loss('../experiment_results/GNN_1_zoom/training_dict.pkl')
+    plot_training_loss('../experiment_results/GNN_1_zoom/training_dict.pkl')
     # plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/',
     #                               space='lin')
-    plot_attack_success_rates('../experiment_results/easy_base_easy_SAT_jade_dict.pkl',
-                              '../experiment_results/base_easy_SAT_jade_dict.pkl',
-                              '')
+    # plot_attack_success_rates('../experiment_results/easy_base_easy_SAT_jade_dict.pkl',
+    #                           '../experiment_results/base_easy_SAT_jade_dict.pkl',
+    #                           '')
 
 
 if __name__ == '__main__':

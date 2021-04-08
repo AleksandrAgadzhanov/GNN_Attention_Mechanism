@@ -81,7 +81,7 @@ def main():
     log_filepath = 'GNN_framework/' + args.filename + '_log.txt'
     output_filename = args.filename + '_dict.pkl'
 
-    pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 153, output_filename,
+    pgd_attack_properties(properties_filename, 'cifar_base_kw', 1.0, 0.1, 100, 90, output_filename,
                           log_filepath=log_filepath, device='cuda')
 
 
