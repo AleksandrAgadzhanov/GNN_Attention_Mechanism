@@ -127,8 +127,8 @@ def main():
     # plot_training_loss('../experiment_results/GNN_1_zoom/training_dict.pkl')
     # plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/',
     #                               space='lin')
-    plot_attack_success_rates('../experiment_results/GNN_1_zoom/gnn_dict_test_dataset.pkl',
-                              '../experiment_results/baseline_dict_test_dataset.pkl',
+    plot_attack_success_rates('../experiment_results/easy_base_easy_SAT_jade_dict.pkl',
+                              '../experiment_results/base_easy_SAT_jade_dict.pkl',
                               '')
 
 
