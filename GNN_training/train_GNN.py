@@ -14,8 +14,18 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
     the Graph Neural Network are learned, they are stored in a desired file.
     """
     # First, load the training dataset which is a list of feature dictionaries from the specified filename. Also load
-    # the model. If the combined training and validation dataset is specified, construct it from all the relevant parts
-    if training_dataset_filename == 'train_val_SAT_jade_combined_dataset.pkl':
+    # the model. If the combined training dataset is specified, construct it from all the relevant parts
+    if training_dataset_filename == 'train_SAT_jade_combined_dataset.pkl':
+        # First, extract all the parts of the training dataset into a list
+        training_filenames_list = glob.glob('cifar_exp/train_SAT_jade_combined_dataset_*')
+
+        # Construct the list of dictionaries fromm the parts of the overall training dataset
+        list_of_feature_dicts = []
+        for filename in training_filenames_list:
+            list_of_feature_dicts += torch.load(filename)
+
+    # If the combined training and validation dataset is specified, construct it from all the relevant parts
+    elif training_dataset_filename == 'train_val_SAT_jade_combined_dataset.pkl':
         # First, extract all the parts of the training dataset into a list
         training_filenames_list = glob.glob('cifar_exp/train_SAT_jade_combined_dataset_*')
 
