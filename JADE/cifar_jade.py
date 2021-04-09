@@ -15,7 +15,8 @@ import sys
 #         "python GNN_training/cross_validation.py --start_lambda 6.0 --end_lambda 10.0 --num 5"]
 
 
-jobs = ["python GNN_training/cross_validation.py --start_lambda 0.4 --end_lambda 0.4 --num 1"]
+jobs = ["python GNN_training/cross_validation.py --start_lambda 0.001 --end_lambda 0.001 --num 1",
+        "python GNN_training/cross_validation.py --start_lambda 10.0 --end_lambda 10.0 --num 1"]
 
 
 def run_command(command):
