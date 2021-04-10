@@ -9,7 +9,7 @@ from GNN_training.train_GNN import generate_gnn_training_parameters
 
 def cross_validate_gnn(loss_lambda, validation_properties_filename, model_name, pgd_learning_rate, num_iterations,
                        num_attack_epochs, num_trials, num_initialisations, training_dataset_filename=None,
-                       gnn_learning_rate=0.000001, num_training_epochs=30, log_filepath=None, epsilon_factor=1.0,
+                       gnn_learning_rate=0.00001, num_training_epochs=30, log_filepath=None, epsilon_factor=1.0,
                        device='cpu'):
     """
     This function performs the cross-validation procedure using a single value of lambda.
@@ -101,7 +101,7 @@ def main():
         else:
             cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 1, 29, 3,
                                training_dataset_filename='train_SAT_jade_combined_dataset.pkl',
-                               gnn_learning_rate=0.000001, num_training_epochs=30, log_filepath=log_filepath,
+                               gnn_learning_rate=0.00001, num_training_epochs=30, log_filepath=log_filepath,
                                device='cuda')
 
 
