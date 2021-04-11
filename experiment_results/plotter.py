@@ -74,6 +74,7 @@ def plot_training_loss(filepath):
     plt.grid()
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
+    plt.ylim([0, max(overall_losses)])
     plt.title('Loss terms progression vs epoch number (Lambda: ' + str(loss_lambda) + ')')
     plt.xticks(range(0, len(loss_terms_1) + 1, 10), range(0, len(loss_terms_1) + 1, 10))
     plt.show()
