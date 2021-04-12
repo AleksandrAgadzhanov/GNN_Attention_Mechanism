@@ -4,13 +4,16 @@ import torch as th
 import argparse
 import sys
 
-
-jobs = ["python GNN_training/train_GNN.py",
-        "python GNN_training/cross_validation.py --start_lambda 0.6 --end_lambda 0.6 --num 1",
-        "python GNN_training/cross_validation.py --start_lambda 0.7 --end_lambda 0.7 --num 1",
-        "python GNN_training/cross_validation.py --start_lambda 0.8 --end_lambda 0.8 --num 1",
-        "python GNN_training/cross_validation.py --start_lambda 0.9 --end_lambda 0.9 --num 1",
-        "python GNN_training/cross_validation.py --start_lambda 1.0 --end_lambda 1.0 --num 1"]
+jobs = ["python GNN_training/attack_properties_with_pgd.py --filename base_easy_SAT_jade",
+        "python GNN_training/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade",
+        "python GNN_training/cross_validation.py --start_lambda 0.031 --end_lambda 0.035 --num 5",
+        "python GNN_training/cross_validation.py --start_lambda 0.036 --end_lambda 0.039 --num 4",
+        "python GNN_training/cross_validation.py --start_lambda 0.041 --end_lambda 0.045 --num 5",
+        "python GNN_training/cross_validation.py --start_lambda 0.046 --end_lambda 0.049 --num 4",
+        "python GNN_training/cross_validation.py --start_lambda 0.051 --end_lambda 0.055 --num 5",
+        "python GNN_training/cross_validation.py --start_lambda 0.056 --end_lambda 0.059 --num 4",
+        "python GNN_training/cross_validation.py --start_lambda 0.061 --end_lambda 0.065 --num 5",
+        "python GNN_training/cross_validation.py --start_lambda 0.066 --end_lambda 0.069 --num 4"]
 
 
 # jobs = ["python GNN_training/cross_validation.py --start_lambda 0.031 --end_lambda 0.035 --num 5",
