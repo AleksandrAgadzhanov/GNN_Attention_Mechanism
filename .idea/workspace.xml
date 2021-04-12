@@ -10,118 +10,37 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for 2nd iteration of cross-validation (GNN 1 zoom)&quot;">
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.031.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.032.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.033.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.034.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.035.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.036.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.037.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.038.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.039.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.041.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.042.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.043.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.044.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.045.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.046.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.047.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.048.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.049.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.051.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.052.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.053.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.054.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.055.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.056.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.057.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.058.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.059.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.061.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.062.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.063.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.064.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.065.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.066.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.067.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.068.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/cross_validation_dict_0.069.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.031.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.032.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.033.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.034.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.035.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.036.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.037.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.038.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.039.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.041.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.042.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.044.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.045.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.046.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.047.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.048.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.049.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.051.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.052.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.053.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.054.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.055.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.056.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.057.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.058.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.059.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.061.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.062.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.063.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.064.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.065.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.066.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.067.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.068.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.069.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.031.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.032.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.033.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.034.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.035.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.036.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.037.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.038.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.039.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.041.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.042.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.044.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.045.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.046.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.047.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.048.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.049.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.051.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.052.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.053.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.054.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.055.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.056.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.057.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.058.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.059.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.061.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.062.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.063.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.064.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.065.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.066.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.067.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.068.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/cross_validation_training_losses/training_dict_0.069.pkl" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for final GNN training (GNN 1 zoom) and 1st iteration of cross-validation (GNN 2 zooms)&quot;">
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/gnn_parameters.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/training_dict.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.01.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.02.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.03.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.04.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.05.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.06.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.07.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.08.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.09.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.1.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.2.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.3.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.4.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_1st_iteration/cross_validation_dict_0.5.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/easy_test_attacks_baseline_dict.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/easy_test_attacks_gnn_dict.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/gnn_parameters.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/cross_validation_1st_iteration.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/cross_validation_2nd_iteration.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/easy_test_attacks_gnn_vs_baseline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/test_attacks_gnn_vs_baseline.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/plots/training_loss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/test_attacks_baseline_dict.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/test_attacks_gnn_dict.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/training_dict.pkl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -167,11 +86,11 @@
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\JADE" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\GNN_1_zoom" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\GNN_1_zoom\cross_validation_1st_iteration" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\cross_validation_gnn_parameters" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\dictionaries_from_training" />
       <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\parameters_for_cross_validation" />
-      <recent name="C:\Users\user\Desktop\4YP\GNN_Attention_Mechanism\experiment_results\training_losses" />
     </key>
   </component>
   <component name="RunManager" selected="Python.plotter (1)">
@@ -196,27 +115,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pgd_attacks" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="GNN_Attention_Mechanism" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project_motivation" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project_motivation/pgd_attacks.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="plotter (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="GNN_Attention_Mechanism" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -230,6 +128,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/experiment_results/plotter.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="temp (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="GNN_Attention_Mechanism" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/experiment_results" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/experiment_results/temp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -283,10 +202,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.plotter (1)" />
+        <item itemvalue="Python.temp (1)" />
         <item itemvalue="Python.train_GNN" />
         <item itemvalue="Python.temp" />
         <item itemvalue="Python.attack_properties_with_pgd" />
-        <item itemvalue="Python.pgd_attacks" />
       </list>
     </recent_temporary>
   </component>
@@ -298,13 +217,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00186" summary="&quot;setup for generating permanent GNN parameters (learning rate of 0.00001)&quot;">
-      <created>1616949634619</created>
-      <option name="number" value="00186" />
-      <option name="presentableId" value="LOCAL-00186" />
-      <option name="project" value="LOCAL" />
-      <updated>1616949634619</updated>
     </task>
     <task id="LOCAL-00187" summary="&quot;setup for generating permanent GNN parameters (learning rate of 0.000001 and 200 epochs)&quot;">
       <created>1616966230549</created>
@@ -642,7 +554,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618139818035</updated>
     </task>
-    <option name="localTasksCounter" value="235" />
+    <task id="LOCAL-00235" summary="&quot;setup for final GNN training (GNN 1 zoom) and 1st iteration of cross-validation (GNN 2 zooms)&quot;">
+      <created>1618219010682</created>
+      <option name="number" value="00235" />
+      <option name="presentableId" value="LOCAL-00235" />
+      <option name="project" value="LOCAL" />
+      <updated>1618219010683</updated>
+    </task>
+    <option name="localTasksCounter" value="236" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -658,7 +577,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;setup for GNN training (3 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for GNN testing (3 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for cross-validation (4 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for training (4 GNN zooms)&quot;" />
@@ -683,7 +601,8 @@
     <MESSAGE value="&quot;setup for testing 0.000001 learning rate&quot;" />
     <MESSAGE value="&quot;setup for 1st iteration of cross-validation (GNN 1 zoom)&quot;" />
     <MESSAGE value="&quot;setup for 2nd iteration of cross-validation (GNN 1 zoom)&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for 2nd iteration of cross-validation (GNN 1 zoom)&quot;" />
+    <MESSAGE value="&quot;setup for final GNN training (GNN 1 zoom) and 1st iteration of cross-validation (GNN 2 zooms)&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for final GNN training (GNN 1 zoom) and 1st iteration of cross-validation (GNN 2 zooms)&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
