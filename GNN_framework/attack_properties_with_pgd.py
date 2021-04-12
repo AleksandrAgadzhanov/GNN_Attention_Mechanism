@@ -138,6 +138,11 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
 
             # For a specified number of random restarts, perform randomly initialised PGD attacks on the new subdomain
             for trial in range(num_trials):
+
+                # TODO
+                if attack_epoch == 1 and trial == 14:
+                    break
+
                 # Perturb each pixel within the updated domain bounds
                 perturbed_image = perturb_image(lower_bound, upper_bound)
 

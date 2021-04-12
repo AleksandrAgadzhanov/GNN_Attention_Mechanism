@@ -74,6 +74,7 @@ def plot_training_loss(filepath):
     plt.grid()
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
+    plt.xlim([0, len(loss_terms_1)])
     plt.ylim([0, max(overall_losses)])
     plt.title('Loss terms progression vs epoch number (Lambda: ' + str(loss_lambda) + ')')
     plt.xticks(range(0, len(loss_terms_1) + 1, 10), range(0, len(loss_terms_1) + 1, 10))
@@ -125,9 +126,9 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
 
 
 def main():
-    # plot_training_loss('../experiment_results/cross_validation_training_losses/training_dict_0.07.pkl')
-    plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_1st_iteration/',
-                                  space='log')
+    plot_training_loss('../experiment_results/cross_validation_training_losses/training_dict_0.033.pkl')
+    # plot_cross_validation_results(directory='../experiment_results/GNN_1_zoom/cross_validation_2nd_iteration/',
+    #                               space='lin')
     # plot_attack_success_rates('../experiment_results/easy_base_easy_SAT_jade_dict.pkl',
     #                           '../experiment_results/base_easy_SAT_jade_dict.pkl',
     #                           '')
