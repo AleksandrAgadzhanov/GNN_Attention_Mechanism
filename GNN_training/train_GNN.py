@@ -54,6 +54,7 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                              temp_output_feature_size, training_mode=True, device=device)
 
     # TODO
+    gnn.load_parameters('experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.058.pkl')
 
     if device == 'cuda' and torch.cuda.is_available():
         for dict_idx in range(len(list_of_feature_dicts)):
@@ -140,11 +141,11 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
 
 def main():
     training_dict = generate_gnn_training_parameters('train_SAT_jade_combined_dataset.pkl', 'cifar_base_kw',
-                                                     0.0001, 70, 0.033,
-                                                     'experiment_results/gnn_1_zoom_parameters.pkl',
+                                                     0.0001, 70, 0.058,
+                                                     'experiment_results/gnn_2_zooms_parameters.pkl',
                                                      log_filepath='GNN_training/training_log.txt', device='cuda')
 
-    torch.save(training_dict, 'experiment_results/training_dict_gnn_1_zoom.pkl')
+    torch.save(training_dict, 'experiment_results/training_dict_gnn_2_zooms.pkl')
 
 
 if __name__ == '__main__':

@@ -106,7 +106,7 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
     matplotlib.rc('font', **font)
 
     # Finally, produce an annotated plot
-    plt.plot(gnn_times, gnn_attack_success_rates, color='b', label='Heuristics-based method', linewidth=3.0)
+    plt.plot(gnn_times, gnn_attack_success_rates, color='b', label='GNN method', linewidth=3.0)
     plt.plot(baseline_times, baseline_attack_success_rates, color='r', label='Baseline method', linewidth=3.0)
     plt.hlines(gnn_attack_success_rates[-1], 0, gnn_times[-1], colors='k', linestyles='dashed', linewidth=3.0)
     plt.hlines(baseline_attack_success_rates[-1], 0, baseline_times[-1], colors='k',
@@ -126,11 +126,11 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
 
 
 def main():
-    plot_training_loss('GNN_1_zoom/training_dict_1_zoom.pkl')
+    plot_training_loss('cross_validation_training_losses/training_dict_0.058.pkl')
     # plot_cross_validation_results(directory='../experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/',
     #                               space='lin')
-    # plot_attack_success_rates('../experiment_results/baseline_dict_test_dataset.pkl',
-    #                           '../experiment_results/baseline_dict_easy_test_dataset.pkl',
+    # plot_attack_success_rates('GNN_1_zoom/gnn_1_zoom_dict_test_dataset.pkl',
+    #                           '../experiment_results/baseline_dict_test_dataset.pkl',
     #                           '')
 
 
