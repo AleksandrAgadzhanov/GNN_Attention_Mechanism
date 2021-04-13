@@ -54,7 +54,6 @@ def generate_gnn_training_parameters(training_dataset_filename, model_name, gnn_
                              temp_output_feature_size, training_mode=True, device=device)
 
     # TODO
-    gnn.load_parameters('experiment_results/cross_validation_gnn_parameters/gnn_parameters_cross_val_0.033.pkl')
 
     if device == 'cuda' and torch.cuda.is_available():
         for dict_idx in range(len(list_of_feature_dicts)):

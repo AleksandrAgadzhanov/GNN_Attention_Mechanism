@@ -4,7 +4,11 @@ import torch as th
 import argparse
 import sys
 
-jobs = ["python GNN_training/train_GNN.py"]
+jobs = ["python GNN_training/cross_validation.py --start_lambda 0.043 --end_lambda 0.043 --num 1",
+        "python GNN_training/cross_validation.py --start_lambda 0.044 --end_lambda 0.044 --num 1",
+        "python GNN_training/cross_validation.py --start_lambda 0.045 --end_lambda 0.045 --num 1",
+        "python GNN_framework/attack_properties_with_pgd.py --filename base_easy_SAT_jade",
+        "python GNN_framework/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade"]
 
 
 # jobs = ["python GNN_training/cross_validation.py --start_lambda 0.031 --end_lambda 0.035 --num 5",

@@ -10,49 +10,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for GNN testing (GNN 1 zoom) and 2nd iteration of cross-validation (GNN 2 zooms)&quot;">
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.031.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.032.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.033.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.034.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.035.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.036.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.037.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.038.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.039.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.041.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.042.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.046.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.047.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.048.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.049.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.051.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.052.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.053.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.054.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.055.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.056.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.057.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.058.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.059.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.061.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.062.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.063.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.064.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.065.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.066.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.067.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.068.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.069.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.3.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.4.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.5.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.6.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_2_zooms/cross_validation_2nd_iteration/cross_validation_dict_0.7.pkl" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for GNN training (1 GNN zoom)&quot;">
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/gnn_parameters_1_zoom.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/training_dict_1_zoom.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GNN_training/train_GNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/train_GNN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/GNN_1_zoom/training_dict.pkl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -230,13 +194,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00189" summary="&quot;setup for cross-validation experiment (1 GNN zoom)&quot;">
-      <created>1617087639154</created>
-      <option name="number" value="00189" />
-      <option name="presentableId" value="LOCAL-00189" />
-      <option name="project" value="LOCAL" />
-      <updated>1617087639158</updated>
     </task>
     <task id="LOCAL-00190" summary="&quot;setup for cross-validation (1 GNN zoom) and baseline vs heuristics experiments&quot;">
       <created>1617112533261</created>
@@ -574,7 +531,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618249863183</updated>
     </task>
-    <option name="localTasksCounter" value="238" />
+    <task id="LOCAL-00238" summary="&quot;setup for GNN training (1 GNN zoom)&quot;">
+      <created>1618299446091</created>
+      <option name="number" value="00238" />
+      <option name="presentableId" value="LOCAL-00238" />
+      <option name="project" value="LOCAL" />
+      <updated>1618299446095</updated>
+    </task>
+    <option name="localTasksCounter" value="239" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -606,7 +570,6 @@
     <MESSAGE value="&quot;setup for 2nd iteration of cross-validation (1 GNN zoom)&quot;" />
     <MESSAGE value="&quot;setup for the 1st iteration of cross-validation (1 GNN zoom)&quot;" />
     <MESSAGE value="&quot;setup for the 2nd iteration of cross-validation (1 GNN zoom)&quot;" />
-    <MESSAGE value="&quot;setup for GNN training (1 GNN zoom)&quot;" />
     <MESSAGE value="&quot;setup for GNN testing (1 GNN zoom)&quot;" />
     <MESSAGE value="&quot;setup for baseline testing&quot;" />
     <MESSAGE value="&quot;setup for baseline testing and 1st iteration of cross-validation (1 GNN zoom)&quot;" />
@@ -615,7 +578,8 @@
     <MESSAGE value="&quot;setup for 2nd iteration of cross-validation (GNN 1 zoom)&quot;" />
     <MESSAGE value="&quot;setup for final GNN training (GNN 1 zoom) and 1st iteration of cross-validation (GNN 2 zooms)&quot;" />
     <MESSAGE value="&quot;setup for GNN testing (GNN 1 zoom) and 2nd iteration of cross-validation (GNN 2 zooms)&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for GNN testing (GNN 1 zoom) and 2nd iteration of cross-validation (GNN 2 zooms)&quot;" />
+    <MESSAGE value="&quot;setup for GNN training (1 GNN zoom)&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for GNN training (1 GNN zoom)&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
