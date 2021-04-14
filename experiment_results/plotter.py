@@ -119,17 +119,17 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
     plt.xlim([0, max(baseline_times[-1], gnn_times[-1])])
     plt.ylim([0, 100])
     plt.yticks(range(0, 101, 10), range(0, 101, 10))
-    plt.text(gnn_times[-1] / 2 - 0.3, gnn_attack_success_rates[-1] + 3, str(round(gnn_attack_success_rates[-1], 1)) + '%')
-    plt.text(baseline_times[-1] / 2 - 0.12, baseline_attack_success_rates[-1] - 5, str(round(baseline_attack_success_rates[-1], 1)) +
+    plt.text(gnn_times[-1] / 2, gnn_attack_success_rates[-1], str(round(gnn_attack_success_rates[-1], 1)) + '%')
+    plt.text(baseline_times[-1] / 2, baseline_attack_success_rates[-1], str(round(baseline_attack_success_rates[-1], 1)) +
              '%')
     plt.show()
 
 
 def main():
-    # plot_training_loss('GNN_2_zooms/training_dict_2_zooms.pkl')
-    plot_cross_validation_results(directory='../experiment_results/GNN_3_zooms/cross_validation_1st_iteration/',
-                                  space='log')
-    # plot_attack_success_rates('GNN_1_zoom/gnn_1_zoom_dict_test_dataset.pkl',
+    plot_training_loss('GNN_2_zooms/training_dict_2_zooms.pkl')
+    # plot_cross_validation_results(directory='../experiment_results/GNN_3_zooms/cross_validation_2nd_iteration/',
+    #                               space='lin')
+    # plot_attack_success_rates('GNN_2_zooms/gnn_2_zooms_dict_test_dataset.pkl',
     #                           '../experiment_results/baseline_dict_test_dataset.pkl',
     #                           '')
 

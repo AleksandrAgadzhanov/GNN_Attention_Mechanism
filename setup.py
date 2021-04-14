@@ -10,7 +10,7 @@ here = path.abspath(path.dirname(__file__))
 setup(
     name='GNN_Attention_Mechanism',
     version='0.0.1',
-    description='Graph Neural Networks for Finding Adversarial Example',
+    description='Graph Neural Networks for Finding Adversarial Examples',
     author='Aleksandr Agadzhanov, University of Oxford',
     packages=find_packages(),
     install_requires=['matplotlib', 'numpy', 'torch', 'gurobi', 'pandas', 'mlogger', 'torchvision']

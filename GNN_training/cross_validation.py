@@ -96,10 +96,10 @@ def main():
 
     for loss_lambda in loss_lambdas:
         if ('gnn_parameters_cross_val_' + str(loss_lambda) + '.pkl') in filenames_list:
-            cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 3, 10, 3,
+            cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 4, 8, 3,
                                log_filepath=log_filepath, device='cuda')
         else:
-            cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 3, 10, 3,
+            cross_validate_gnn(loss_lambda, 'val_SAT_jade.pkl', 'cifar_base_kw', 0.1, 100, 4, 8, 3,
                                training_dataset_filename='train_SAT_jade_combined_dataset.pkl',
                                gnn_learning_rate=0.0001, num_training_epochs=30, log_filepath=log_filepath,
                                device='cuda')
