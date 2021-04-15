@@ -149,6 +149,9 @@ def pgd_gnn_attack_property(simplified_model, image, epsilon, epsilon_factor, pg
                 if num_attack_epochs == 4 and attack_epoch != 0 and trial == 7:
                     break
 
+                if num_attack_epochs == 5 and attack_epoch == 4 and trial == 5:
+                    break
+
                 # Perturb each pixel within the updated domain bounds
                 perturbed_image = perturb_image(lower_bound, upper_bound)
 
