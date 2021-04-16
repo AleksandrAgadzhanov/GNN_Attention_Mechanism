@@ -126,12 +126,12 @@ def plot_attack_success_rates(filepath_gnn_dict, filepath_baseline_dict, title):
 
 
 def main():
-    plot_training_loss('GNN_5_zooms/training_dict_5_zooms.pkl')
+    # plot_training_loss('GNN_5_zooms/training_dict_5_zooms.pkl')
     # plot_cross_validation_results(directory='../experiment_results/GNN_6_zooms/cross_validation_1st_iteration/',
     #                               space='log')
-    # plot_attack_success_rates('GNN_4_zooms/gnn_4_zooms_dict_easy_test_dataset.pkl',
-    #                           '../experiment_results/baseline_dict_easy_test_dataset.pkl',
-    #                           '')
+    plot_attack_success_rates('GNN_4_zooms/gnn_4_zooms_dict_easy_test_dataset.pkl',
+                              '../experiment_results/baseline_dict_easy_test_dataset.pkl',
+                              '')
 
 
 if __name__ == '__main__':
