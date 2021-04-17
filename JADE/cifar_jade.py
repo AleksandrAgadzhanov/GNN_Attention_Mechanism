@@ -17,15 +17,15 @@ import sys
 
 
 jobs = ["python GNN_framework/attack_properties_with_pgd.py --filename base_easy_SAT_jade",
-        "python GNN_framework/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade",
-        "python GNN_training/cross_validation.py --start_lambda 0.031 --end_lambda 0.035 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.036 --end_lambda 0.039 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 0.041 --end_lambda 0.045 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.046 --end_lambda 0.049 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 0.051 --end_lambda 0.055 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.056 --end_lambda 0.059 --num 4",
-        "python GNN_training/cross_validation.py --start_lambda 0.061 --end_lambda 0.065 --num 5",
-        "python GNN_training/cross_validation.py --start_lambda 0.066 --end_lambda 0.069 --num 4"]
+        "python GNN_framework/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade"]
+        # "python GNN_training/cross_validation.py --start_lambda 0.031 --end_lambda 0.035 --num 5",
+        # "python GNN_training/cross_validation.py --start_lambda 0.036 --end_lambda 0.039 --num 4",
+        # "python GNN_training/cross_validation.py --start_lambda 0.041 --end_lambda 0.045 --num 5",
+        # "python GNN_training/cross_validation.py --start_lambda 0.046 --end_lambda 0.049 --num 4",
+        # "python GNN_training/cross_validation.py --start_lambda 0.051 --end_lambda 0.055 --num 5",
+        # "python GNN_training/cross_validation.py --start_lambda 0.056 --end_lambda 0.059 --num 4",
+        # "python GNN_training/cross_validation.py --start_lambda 0.061 --end_lambda 0.065 --num 5",
+        # "python GNN_training/cross_validation.py --start_lambda 0.066 --end_lambda 0.069 --num 4"]
 
 
 def run_command(command):
