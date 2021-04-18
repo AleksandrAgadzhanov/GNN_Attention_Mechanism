@@ -10,15 +10,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for GNN testing (6 GNN zooms)&quot;">
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_6_zooms/gnn_6_zooms_dict_easy_test_dataset.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment_results/GNN_6_zooms/gnn_6_zooms_dict_test_dataset.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_framework/attack_properties_with_pgd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNN_training/cross_validation.py" beforeDir="false" afterPath="$PROJECT_DIR$/GNN_training/cross_validation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JADE/cifar_jade.py" beforeDir="false" afterPath="$PROJECT_DIR$/JADE/cifar_jade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/attack_success_rates_baseline_old.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/baseline_dict_old dataset.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment_results/attack_success_rates_heuristics_old.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/heuristics_dict_old_dataset.pkl" afterDir="false" />
+    <list default="true" id="52743f4d-4743-4f1b-aff7-6163744a15c1" name="Default Changelist" comment="&quot;setup for 1st iteration of cross-validation (6 GNN zooms)&quot;">
       <change beforePath="$PROJECT_DIR$/experiment_results/plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/experiment_results/plotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -196,13 +188,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1608035695897</updated>
-    </task>
-    <task id="LOCAL-00201" summary="&quot;setup for baseline vs heuristics experiment&quot;">
-      <created>1617276186309</created>
-      <option name="number" value="00201" />
-      <option name="presentableId" value="LOCAL-00201" />
-      <option name="project" value="LOCAL" />
-      <updated>1617276186309</updated>
     </task>
     <task id="LOCAL-00202" summary="&quot;setup for baseline vs heuristics experiment&quot;">
       <created>1617276415436</created>
@@ -540,7 +525,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618652002227</updated>
     </task>
-    <option name="localTasksCounter" value="250" />
+    <task id="LOCAL-00250" summary="&quot;setup for 1st iteration of cross-validation (6 GNN zooms)&quot;">
+      <created>1618730531116</created>
+      <option name="number" value="00250" />
+      <option name="presentableId" value="LOCAL-00250" />
+      <option name="project" value="LOCAL" />
+      <updated>1618730531116</updated>
+    </task>
+    <option name="localTasksCounter" value="251" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -556,7 +548,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;setup for baseline vs heuristics and baseline attack experiments&quot;" />
     <MESSAGE value="&quot;finishing generation of permanent cross-validation parameters and baseline vs heuristics experiment&quot;" />
     <MESSAGE value="&quot;setup for baseline vs heuristics experiment&quot;" />
     <MESSAGE value="&quot;setup for 2nd iteration of cross-validation (1 GNN zoom)&quot;" />
@@ -581,7 +572,8 @@
     <MESSAGE value="&quot;setup for GNN re-testing (4 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for GNN testing (5 GNN zooms) and 2nd iteration of cross-validation (6 GNN zooms)&quot;" />
     <MESSAGE value="&quot;setup for GNN testing (6 GNN zooms)&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for GNN testing (6 GNN zooms)&quot;" />
+    <MESSAGE value="&quot;setup for 1st iteration of cross-validation (6 GNN zooms)&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;setup for 1st iteration of cross-validation (6 GNN zooms)&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
