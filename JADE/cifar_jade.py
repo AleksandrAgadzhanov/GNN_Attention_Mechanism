@@ -15,11 +15,11 @@ import sys
 #         "python GNN_training/cross_validation.py --start_lambda 0.8 --end_lambda 1.0 --num 3"]
 
 
-jobs = ["python GNN_training/train_GNN.py"]
+# jobs = ["python GNN_training/train_GNN.py"]
 
 
-# jobs = ["python GNN_framework/attack_properties_with_pgd.py --filename base_easy_SAT_jade",
-#         "python GNN_framework/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade"]
+jobs = ["python GNN_framework/attack_properties_with_pgd.py --filename base_easy_SAT_jade",
+        "python GNN_framework/attack_properties_with_pgd.py --filename easy_base_easy_SAT_jade"]
 
 
 # jobs = ["python GNN_training/cross_validation.py --start_lambda 0.031 --end_lambda 0.035 --num 5",
